@@ -1,0 +1,23 @@
+LOAD DATABASE
+     FROM sqlite:///Users/Work/Desktop/ERP/hr_platform.db
+     INTO postgresql://erp_admin:MeatbalL20082012@localhost/localgov_erp
+
+WITH include drop, create tables, create indexes, reset sequences,
+     downcase identifiers,
+     batch rows = 10000,
+     batch concurrency = 1
+
+SET PostgreSQL PARAMETERS
+     maintenance_work_mem to '128MB',
+     work_mem to '12MB'
+
+CAST type datetime to timestamptz drop default drop not null using zero-dates-to-null,
+     type timestamp to timestamptz drop default drop not null using zero-dates-to-null,
+     
+     -- Tell pgloader to treat all columns as text initially
+     type tinyint to int,
+     type smallint to int,
+     type integer with autoincrement to serial,
+     type integer to int;
+
+-- After loading, we can fix specific tables with a separate SQL script

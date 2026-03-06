@@ -1,0 +1,15 @@
+INSERT INTO health_units VALUES(1,'Environmental Health Unit','HLTH-ENV-TC',TRUE,1,NULL);
+INSERT INTO health_units VALUES(2,'Health Inspectorate Unit','HLTH-HI-TC',TRUE,1,NULL);
+INSERT INTO health_units VALUES(3,'Cleansing and Pest Control Unit','HLTH-CLEAN-TC',TRUE,1,NULL);
+INSERT INTO health_units VALUES(4,'Funeral Services Unit','HLTH-FUN-TC',TRUE,1,NULL);
+INSERT INTO health_units VALUES(5,'Public Health Inspectorate Unit','HLTH-HI-MC',2,2,NULL);
+INSERT INTO health_units VALUES(6,'Health Promotions Unit','HLTH-HP-MC',2,2,NULL);
+INSERT INTO health_units VALUES(7,'Cleansing and Pest Control Unit','HLTH-CLEAN-MC',2,2,NULL);
+INSERT INTO health_units VALUES(8,'Funeral and Burial Services Unit','HLTH-FUN-MC',2,2,NULL);
+INSERT INTO health_units VALUES(9,'Health Information Systems Unit','HLTH-HIS-MC',2,2,NULL);
+INSERT INTO health_units VALUES(10,'Environmental Health Unit','HLTH-ENV-CC',3,3,NULL);
+INSERT INTO health_units VALUES(11,'Public Health Inspectorate Unit','HLTH-HI-CC',3,3,NULL);
+INSERT INTO health_units VALUES(12,'Health Promotions Unit','HLTH-HP-CC',3,3,NULL);
+INSERT INTO health_units VALUES(13,'Cleansing and Pest Control Unit','HLTH-CLEAN-CC',3,3,NULL);
+INSERT INTO health_units VALUES(14,'Funeral and Burial Services Unit','HLTH-FUN-CC',3,3,NULL);
+INSERT INTO health_units VALUES(15,'Health Information Systems Unit','HLTH-HIS-CC',3,3,NULL);

@@ -1,0 +1,10 @@
+INSERT INTO planning_units VALUES(1,'Town Planning Unit','TC-TOWN',3,TRUE,NULL);
+INSERT INTO planning_units VALUES(2,'Building Inspectorate','TC-BI',3,TRUE,NULL);
+INSERT INTO planning_units VALUES(3,'Land Survey Unit','TC-LS',3,TRUE,NULL);
+INSERT INTO planning_units VALUES(4,'Valuation Unit','TC-VAL',3,TRUE,NULL);
+INSERT INTO planning_units VALUES(5,'Town Planning Unit','MC-TOWN',8,2,NULL);
+INSERT INTO planning_units VALUES(6,'Buildings Inspectorate','MC-BI',8,2,NULL);
+INSERT INTO planning_units VALUES(7,'Land Survey Unit','MC-LS',8,2,NULL);
+INSERT INTO planning_units VALUES(8,'Town Planning Unit','CC-TOWN',13,3,NULL);
+INSERT INTO planning_units VALUES(9,'Buildings Inspectorate','CC-BI',13,3,NULL);
+INSERT INTO planning_units VALUES(10,'Land Survey Unit','CC-LS',13,3,NULL);

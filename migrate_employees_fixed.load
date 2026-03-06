@@ -1,0 +1,13 @@
+LOAD DATABASE
+     FROM sqlite:///Users/Work/Desktop/ERP/hr_platform.db
+     INTO postgresql://erp_admin:MeatbalL20082012@localhost/localgov_erp
+
+WITH include drop, create tables, create indexes, reset sequences,
+     downcase identifiers,
+     batch rows = 10000,
+     batch concurrency = 1,
+     on error resume next
+
+INCLUDING ONLY TABLE NAMES LIKE 'employees'
+
+CAST column employees.supervisor_id to text drop typemod using string;

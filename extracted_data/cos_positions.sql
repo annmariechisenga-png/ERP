@@ -1,0 +1,8 @@
+INSERT INTO cos_positions VALUES(1,'Council Secretary','LGSS/03',TRUE,NULL,TRUE,1,TRUE,'COS-SEC-TOW-01');
+INSERT INTO cos_positions VALUES(2,'Personal Secretary','LGSS/10',2,'COS-SEC-TOW-01',TRUE,1,FALSE,'COS-PERSEC-TOW-01');
+INSERT INTO cos_positions VALUES(3,'Driver','G1',TRUE,'COS-SEC-TOW-01',TRUE,1,FALSE,'COS-DRIVER-TOW-01');
+INSERT INTO cos_positions VALUES(4,'Office Orderly','G3',TRUE,'COS-SEC-TOW-01',TRUE,1,FALSE,'COS-ORD-TOW-01');
+INSERT INTO cos_positions VALUES(5,'Public Relations Officer','LGSS/08',TRUE,'COS-SEC-TOW-01',2,TRUE,1,'COS-PRO-TOW-01');
+INSERT INTO cos_positions VALUES(6,'Assistant Public Relations Officer','LGSS/10',TRUE,'COS-PRO-TOW-01',2,TRUE,FALSE,'COS-APRO-TOW-01');
+INSERT INTO cos_positions VALUES(7,'System Analyst','LGSS/08',TRUE,'COS-SEC-TOW-01',3,TRUE,1,'COS-SYS-TOW-01');
+INSERT INTO cos_positions VALUES(8,'Programmer','LGSS/10',2,'COS-SYS-TOW-01',3,TRUE,FALSE,'COS-PROG-TOW-01');

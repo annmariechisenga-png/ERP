@@ -1,0 +1,14 @@
+INSERT INTO planning_sections VALUES(1,'Council Administration','TC-ADMIN',TRUE,NULL);
+INSERT INTO planning_sections VALUES(2,'Planning Leadership','TC-LEAD',TRUE,NULL);
+INSERT INTO planning_sections VALUES(3,'Physical Planning','TC-PHYS',TRUE,NULL);
+INSERT INTO planning_sections VALUES(4,'Socio-Economic Planning','TC-SOC',TRUE,NULL);
+INSERT INTO planning_sections VALUES(5,'Specialized Units','TC-SPEC',TRUE,NULL);
+INSERT INTO planning_sections VALUES(6,'Council Administration','MC-ADMIN',2,NULL);
+INSERT INTO planning_sections VALUES(7,'Planning Leadership','MC-LEAD',2,NULL);
+INSERT INTO planning_sections VALUES(8,'Physical Planning','MC-PHYS',2,NULL);
+INSERT INTO planning_sections VALUES(9,'Valuation Section','MC-VAL',2,NULL);
+INSERT INTO planning_sections VALUES(10,'Socio-Economic Planning','MC-SOC',2,NULL);
+INSERT INTO planning_sections VALUES(11,'Council Administration','CC-ADMIN',3,NULL);
+INSERT INTO planning_sections VALUES(12,'Planning Leadership','CC-LEAD',3,NULL);
+INSERT INTO planning_sections VALUES(13,'Physical Planning','CC-PHYS',3,NULL);
+INSERT INTO planning_sections VALUES(14,'Socio-Economic Planning','CC-SOC',3,NULL);

@@ -1,0 +1,11 @@
+INSERT INTO valuation_city_positions VALUES(1,'Director','LGSS/03',TRUE,'EXEC-CLK-CIT-01','Leadership',3,TRUE,'VAL-DIR-CIT-01');
+INSERT INTO valuation_city_positions VALUES(2,'Chief Valuation Officer','LGSS/05',TRUE,'VAL-DIR-CIT-01','Leadership',3,FALSE,'VAL-CHIEF-CIT-01');
+INSERT INTO valuation_city_positions VALUES(3,'Senior Valuation Officer - Property Management','LGSS/06',TRUE,'VAL-CHIEF-CIT-01','Property Management',3,FALSE,'VAL-SRPM-CIT-01');
+INSERT INTO valuation_city_positions VALUES(4,'Valuation Officer - Property Management','LGSS/07',2,'VAL-SRPM-CIT-01','Property Management',3,FALSE,'VAL-VOPM-CIT-01');
+INSERT INTO valuation_city_positions VALUES(5,'Assistant Valuation Officer - Property Management','LGSS/10',4,'VAL-VOPM-CIT-01','Property Management',3,FALSE,'VAL-AVOPM-CIT-01');
+INSERT INTO valuation_city_positions VALUES(6,'Field Inspector','LGSS/13',5,'VAL-VOPM-CIT-01','Property Management',3,FALSE,'VAL-FI-PM-CIT-01');
+INSERT INTO valuation_city_positions VALUES(7,'Senior Valuation Officer - Property Taxation and Rating','LGSS/06',TRUE,'VAL-CHIEF-CIT-01','Taxation & Rating',3,FALSE,'VAL-SRTR-CIT-01');
+INSERT INTO valuation_city_positions VALUES(8,'Valuation Officer - Property Taxation and Rating','LGSS/07',2,'VAL-SRTR-CIT-01','Taxation & Rating',3,FALSE,'VAL-VOTR-CIT-01');
+INSERT INTO valuation_city_positions VALUES(9,'Assistant Valuation Officer - Property Taxation and Rating','LGSS/10',4,'VAL-VOTR-CIT-01','Taxation & Rating',3,FALSE,'VAL-AVOTR-CIT-01');
+INSERT INTO valuation_city_positions VALUES(10,'Field Inspector','LGSS/13',5,'VAL-VOTR-CIT-01','Taxation & Rating',3,FALSE,'VAL-FI-TR-CIT-01');
+INSERT INTO valuation_city_positions VALUES(11,'Data Entry Clerk','LGSS/13',2,'VAL-VOTR-CIT-01','Taxation & Rating',3,FALSE,'VAL-DEC-CIT-01');

@@ -1,0 +1,15 @@
+INSERT INTO procurement_positions VALUES(1,'Chief Procurement and Supplies Officer','LGSS/06',TRUE,'EXEC-SEC-TOW-01',TRUE,NULL,TRUE,1,FALSE,0,'PRO-CHIEF-TOW-01');
+INSERT INTO procurement_positions VALUES(2,'Senior Procurement and Supplies Officer','LGSS/07',TRUE,'PRO-CHIEF-TOW-01',TRUE,NULL,TRUE,FALSE,0,FALSE,'PRO-SNR-TOW-01');
+INSERT INTO procurement_positions VALUES(3,'Procurement and Supplies Officer','LGSS/08',TRUE,'PRO-SNR-TOW-01',TRUE,NULL,TRUE,FALSE,0,FALSE,'PRO-OFF-TOW-01');
+INSERT INTO procurement_positions VALUES(4,'Assistant Procurement and Supplies Officer','LGSS/10',2,'PRO-OFF-TOW-01',TRUE,NULL,TRUE,FALSE,0,FALSE,'PRO-AST-TOW-01');
+INSERT INTO procurement_positions VALUES(5,'Procurement & Supplies Officer - Health Services','LGSS/08',TRUE,'PRO-CHIEF-TOW-01',TRUE,NULL,TRUE,FALSE,0,TRUE,'PRO-HLTH-TOW-01');
+INSERT INTO procurement_positions VALUES(6,'Head - Procurement','LGSS/06',TRUE,'EXEC-CLK-MUN-01',NULL,NULL,2,TRUE,FALSE,0,'PRO-HEAD-MUN-01');
+INSERT INTO procurement_positions VALUES(7,'Senior Procurement Officer','LGSS/07',2,'PRO-HEAD-MUN-01',NULL,NULL,2,FALSE,0,FALSE,'PRO-SNR-MUN-01');
+INSERT INTO procurement_positions VALUES(8,'Procurement Officer','LGSS/08',2,'PRO-SNR-MUN-01',NULL,NULL,2,FALSE,0,FALSE,'PRO-OFF-MUN-01');
+INSERT INTO procurement_positions VALUES(9,'Procurement Assistant','LGSS/10',4,'PRO-OFF-MUN-01',NULL,NULL,2,FALSE,0,FALSE,'PRO-AST-MUN-01');
+INSERT INTO procurement_positions VALUES(10,'Procurement Officer - Health Services','LGSS/08',TRUE,'PRO-HEAD-MUN-01',NULL,NULL,2,FALSE,0,TRUE,'PRO-HLTH-MUN-01');
+INSERT INTO procurement_positions VALUES(11,'Head - Procurement','LGSS/05',TRUE,'EXEC-CLK-CIT-01',3,NULL,3,TRUE,FALSE,0,'PRO-HEAD-CIT-01');
+INSERT INTO procurement_positions VALUES(12,'Chief Procurement Officer','LGSS/06',TRUE,'PRO-HEAD-CIT-01',3,NULL,3,FALSE,0,FALSE,'PRO-CHIEF-CIT-01');
+INSERT INTO procurement_positions VALUES(13,'Senior Procurement Officer','LGSS/07',3,'PRO-CHIEF-CIT-01',3,NULL,3,FALSE,0,FALSE,'PRO-SNR-CIT-01');
+INSERT INTO procurement_positions VALUES(14,'Procurement Assistant','LGSS/10',6,'PRO-SNR-CIT-01',3,NULL,3,FALSE,0,FALSE,'PRO-AST-CIT-01');
+INSERT INTO procurement_positions VALUES(15,'Procurement Officer - Health Services','LGSS/08',TRUE,'PRO-HEAD-CIT-01',3,NULL,3,FALSE,0,TRUE,'PRO-HLTH-CIT-01');

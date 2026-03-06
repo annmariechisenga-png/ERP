@@ -1,0 +1,14 @@
+INSERT INTO audit_positions VALUES(1,'Chief Internal Auditor','LGSS/06',TRUE,'EXEC-SEC-TOW-01',TRUE,1,TRUE,FALSE,'AUD-CHIEF-TOW-01');
+INSERT INTO audit_positions VALUES(2,'Senior Internal Auditor','LGSS/07',TRUE,'AUD-CHIEF-TOW-01',TRUE,1,FALSE,0,'AUD-SNR-TOW-01');
+INSERT INTO audit_positions VALUES(3,'Internal Auditor','LGSS/08',2,'AUD-SNR-TOW-01',TRUE,1,FALSE,0,'AUD-OFF-TOW-01');
+INSERT INTO audit_positions VALUES(4,'Assistant Internal Auditor','LGSS/10',2,'AUD-OFF-TOW-01',TRUE,1,FALSE,0,'AUD-AST-TOW-01');
+INSERT INTO audit_positions VALUES(5,'Head - Internal Audit','LGSS/05',TRUE,'EXEC-CLK-MUN-01',2,2,TRUE,FALSE,'AUD-HEAD-MUN-01');
+INSERT INTO audit_positions VALUES(6,'Senior Internal Auditor','LGSS/07',TRUE,'AUD-HEAD-MUN-01',2,2,FALSE,0,'AUD-SNR-MUN-01');
+INSERT INTO audit_positions VALUES(7,'Internal Auditor','LGSS/08',2,'AUD-SNR-MUN-01',2,2,FALSE,0,'AUD-OFF-MUN-01');
+INSERT INTO audit_positions VALUES(8,'Assistant Internal Auditor','LGSS/10',8,'AUD-OFF-MUN-01',2,2,FALSE,0,'AUD-AST-MUN-01');
+INSERT INTO audit_positions VALUES(9,'Internal Audit Assistant','LGSS/13',4,'AUD-OFF-MUN-01',2,2,FALSE,0,'AUD-ASST-MUN-01');
+INSERT INTO audit_positions VALUES(10,'Head - Internal Audit','LGSS/05',TRUE,'EXEC-CLK-CIT-01',3,3,TRUE,FALSE,'AUD-HEAD-CIT-01');
+INSERT INTO audit_positions VALUES(11,'Principal Internal Auditor','LGSS/06',TRUE,'AUD-HEAD-CIT-01',3,3,FALSE,0,'AUD-PRIN-CIT-01');
+INSERT INTO audit_positions VALUES(12,'Senior Internal Auditor','LGSS/07',2,'AUD-PRIN-CIT-01',3,3,FALSE,0,'AUD-SNR-CIT-01');
+INSERT INTO audit_positions VALUES(13,'Internal Auditor','LGSS/08',4,'AUD-SNR-CIT-01',3,3,FALSE,0,'AUD-OFF-CIT-01');
+INSERT INTO audit_positions VALUES(14,'Assistant Internal Auditor','LGSS/10',8,'AUD-OFF-CIT-01',3,3,FALSE,0,'AUD-AST-CIT-01');

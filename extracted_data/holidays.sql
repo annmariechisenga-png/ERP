@@ -1,0 +1,18 @@
+INSERT INTO holidays VALUES('2026-01-01','New Year’s Day');
+INSERT INTO holidays VALUES('2026-03-09','International Women’s Day (observed)');
+INSERT INTO holidays VALUES('2026-03-12','Youth Day');
+INSERT INTO holidays VALUES('2026-04-03','Good Friday');
+INSERT INTO holidays VALUES('2026-04-04','Holy Saturday');
+INSERT INTO holidays VALUES('2026-04-05','Easter Sunday');
+INSERT INTO holidays VALUES('2026-04-06','Easter Monday');
+INSERT INTO holidays VALUES('2026-04-28','Kenneth Kaunda Day');
+INSERT INTO holidays VALUES('2026-05-01','Labour Day');
+INSERT INTO holidays VALUES('2026-05-25','Africa Freedom Day');
+INSERT INTO holidays VALUES('2026-07-06','Heroes’ Day');
+INSERT INTO holidays VALUES('2026-07-07','Unity Day');
+INSERT INTO holidays VALUES('2026-08-03','Farmers’ Day');
+INSERT INTO holidays VALUES('2026-08-13','Election Day');
+INSERT INTO holidays VALUES('2026-10-19','National Day of Prayer (observed)');
+INSERT INTO holidays VALUES('2026-10-24','Independence Day');
+INSERT INTO holidays VALUES('2026-12-25','Christmas Day');
+INSERT INTO holidays VALUES('2026-12-29','Christian Nation Declaration Day');

@@ -1,0 +1,12 @@
+INSERT INTO finance_sections VALUES(1,'Finance Leadership','FIN-LEAD-TC',TRUE,NULL);
+INSERT INTO finance_sections VALUES(2,'Finance Section','FIN-SEC-TC',TRUE,NULL);
+INSERT INTO finance_sections VALUES(3,'Finance - Health Services','FIN-HEALTH-TC',TRUE,NULL);
+INSERT INTO finance_sections VALUES(4,'Commercial & Business Development','FIN-COMM-TC',TRUE,NULL);
+INSERT INTO finance_sections VALUES(5,'Stores Section','FIN-STORE-TC',TRUE,NULL);
+INSERT INTO finance_sections VALUES(6,'Finance Leadership','FIN-LEAD-MC',2,NULL);
+INSERT INTO finance_sections VALUES(7,'Finance Section','FIN-SEC-MC',2,NULL);
+INSERT INTO finance_sections VALUES(8,'Stores Section','FIN-STORE-MC',2,NULL);
+INSERT INTO finance_sections VALUES(9,'Finance Leadership','FIN-LEAD-CC',3,NULL);
+INSERT INTO finance_sections VALUES(10,'Revenue Section','FIN-REV-CC',3,NULL);
+INSERT INTO finance_sections VALUES(11,'Expenditure Section','FIN-EXP-CC',3,NULL);
+INSERT INTO finance_sections VALUES(12,'Stores Section','FIN-STORE-CC',3,NULL);

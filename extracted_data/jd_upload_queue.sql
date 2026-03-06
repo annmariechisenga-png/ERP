@@ -1,0 +1,4 @@
+INSERT INTO jd_upload_queue VALUES(1,'JOB DESCRIPTION - DIRECTOR - FINANCE.docx','/uploads/town_finance/director.docx','completed','Director - Finance','FIN-LEAD-DIR-TOW-01',100,FALSE,'HR_Admin','2026-02-27 22:36:12');
+INSERT INTO jd_upload_queue VALUES(2,'JOB DESCRIPTION - CHIEF ACCOUNTANT.docx','/uploads/town_finance/chief_accountant.docx','completed','Chief Accountant','FIN-ACC-CHIEF-TOW-01',100,FALSE,'HR_Admin','2026-02-27 22:36:12');
+INSERT INTO jd_upload_queue VALUES(3,'JOB DESCRIPTION - DIRECTOR - FINANCE.docx','/uploads/town_finance/director_finance.docx','completed','Director - Finance','FIN-LEAD-DIR-TOW-01',100,FALSE,'HR_Admin','2026-02-27 22:38:44');
+INSERT INTO jd_upload_queue VALUES(4,'JOB DESCRIPTION - CHIEF ACCOUNTANT.docx','/uploads/town_finance/chief_accountant.docx','completed','Chief Accountant','FIN-ACC-CHIEF-TOW-01',100,FALSE,'HR_Admin','2026-02-27 22:38:44');

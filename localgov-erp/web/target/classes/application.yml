@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: localgov-erp
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/localgov_erp
+    username: erp_admin
+    password: $MeatbalL20082012$
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+  
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500, expireAfterWrite=300s
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    com.localgov: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

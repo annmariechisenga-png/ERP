@@ -1,0 +1,11 @@
+INSERT INTO legal_units VALUES(1,'Legal Services','LEG-UNIT-TC',TRUE,1,NULL);
+INSERT INTO legal_units VALUES(2,'Litigation Unit','LEG-LIT-UNIT-MC',3,2,NULL);
+INSERT INTO legal_units VALUES(3,'Deeds Unit','LEG-DEEDS-UNIT-MC',3,2,NULL);
+INSERT INTO legal_units VALUES(4,'Prosecution Unit','LEG-PROSE-UNIT-MC',3,2,NULL);
+INSERT INTO legal_units VALUES(5,'Contracts Unit','LEG-CONT-UNIT-MC',4,2,NULL);
+INSERT INTO legal_units VALUES(6,'Licensing Unit','LEG-LIC-UNIT-MC',4,2,NULL);
+INSERT INTO legal_units VALUES(7,'Estates Unit','LEG-EST-UNIT-MC',4,2,NULL);
+INSERT INTO legal_units VALUES(8,'Litigation Unit','LEG-LIT-UNIT-CC',6,3,NULL);
+INSERT INTO legal_units VALUES(9,'Deeds Unit','LEG-DEEDS-UNIT-CC',6,3,NULL);
+INSERT INTO legal_units VALUES(10,'Contracts & Licensing Unit','LEG-CONT-UNIT-CC',7,3,NULL);
+INSERT INTO legal_units VALUES(11,'Estates Unit','LEG-EST-UNIT-CC',7,3,NULL);

@@ -1,0 +1,19 @@
+LOAD DATABASE
+     FROM sqlite:///Users/Work/Desktop/ERP/hr_platform.db
+     INTO postgresql://erp_admin:MeatbalL20082012@localhost/localgov_erp
+
+WITH include drop, create tables, create indexes, reset sequences,
+     downcase identifiers,
+     batch rows = 10000,
+     batch concurrency = 1,
+     on error resume next
+
+INCLUDING ONLY TABLE NAMES LIKE 'employees'
+
+CAST column employees.carried_forward_leave to int using zero-if-null,
+     column employees.days_availed to int using zero-if-null,
+     column employees.leave_taken to int using zero-if-null,
+     column employees.leave_commuted to int using zero-if-null,
+     column employees.leave_transferred_out to int using zero-if-null,
+     column employees.leave_balance to int using zero-if-null,
+     column employees.supervisor_id to text;
