@@ -179,7 +179,7 @@ class LeaveWorkflowIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"employeeId\":" + empId
                                 + ",\"leaveType\":\"FAMILY_CARE\""
-                                + ",\"startDate\":\"2026-08-10\",\"endDate\":\"2026-08-12\""
+                                + ",\"startDate\":\"2026-09-01\",\"endDate\":\"2026-09-03\""
                                 + ",\"reason\":\"Another family care request\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(
@@ -213,7 +213,7 @@ class LeaveWorkflowIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"employeeId\":" + empId
                                 + ",\"leaveType\":\"SICK\""
-                                + ",\"startDate\":\"2026-08-10\",\"endDate\":\"2026-08-14\""
+                                + ",\"startDate\":\"2026-09-01\",\"endDate\":\"2026-09-05\""
                                 + ",\"reason\":\"Medical illness\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.daysRequested").value(5))
@@ -232,10 +232,10 @@ class LeaveWorkflowIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"employeeId\":" + empId
                                 + ",\"leaveType\":\"VACATION\""
-                                + ",\"startDate\":\"2026-08-10\",\"endDate\":\"2026-08-14\""
+                                + ",\"startDate\":\"2026-09-01\",\"endDate\":\"2026-09-05\""
                                 + ",\"reason\":\"Annual holiday\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.daysRequested").value(5))
+                .andExpect(jsonPath("$.daysRequested").value(4))
                 .andExpect(jsonPath("$.balanceType").value("VACATION_LEAVE"));
     }
 

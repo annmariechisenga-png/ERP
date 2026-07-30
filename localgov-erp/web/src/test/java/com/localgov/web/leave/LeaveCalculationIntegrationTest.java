@@ -150,7 +150,7 @@ class LeaveCalculationIntegrationTest {
                         .header("Authorization", "Bearer " + token)
                         .param("employeeId", empId)
                         .param("leaveType", "VACATION")
-                        .param("startDate", "2026-08-10")
+                        .param("startDate", "2026-09-01")
                         .param("requestedDays", "130"))
 
                 .andExpect(status().isOk())
@@ -171,7 +171,7 @@ class LeaveCalculationIntegrationTest {
                         .header("Authorization", "Bearer " + token)
                         .param("employeeId", empId)
                         .param("leaveType", "VACATION")
-                        .param("startDate", "2026-08-10")
+                        .param("startDate", "2026-09-01")
                         .param("requestedDays", "5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accumulationLimit").value(205))
