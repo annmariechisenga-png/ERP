@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+chnag<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Payslip Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #1c1e21; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e4e6eb; padding-bottom: 20px; margin-bottom: 25px; }
+        .header h1 { margin: 0; color: #1a73e8; font-size: 24px; }
+        
+        .controls { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; background: #f7f8fa; padding: 20px; border-radius: 8px; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-weight: 600; font-size: 14px; color: #4b4f56; }
+        select, input { padding: 10px; border: 1px solid #dddfe2; border-radius: 6px; font-size: 14px; min-width: 150px; }
+        
+        button { padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-primary { background-color: #1a73e8; color: white; }
+        .btn-primary:hover { background-color: #1557b0; }
+        .btn-secondary { background-color: #e4e6eb; color: #4b4f56; margin-left: 10px; }
+        .btn-secondary:hover { background-color: #d8dadf; }
+        
+        .payslip-view { border: 1px solid #e4e6eb; border-radius: 8px; padding: 40px; margin-top: 20px; display: none; background: white; position: relative; }
+        .payslip-header { text-align: center; margin-bottom: 30px; }
+        .payslip-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
+        .payslip-header p { margin: 5px 0; color: #606770; font-size: 14px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+        .section-title { font-weight: 700; border-bottom: 1px solid #e4e6eb; padding-bottom: 5px; margin-bottom: 15px; font-size: 14px; color: #1a73e8; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        table th { text-align: left; padding: 8px 0; color: #606770; font-weight: 600; }
+        table td { padding: 8px 0; border-bottom: 1px dashed #f0f2f5; }
+        .amount { text-align: right; font-family: 'Courier New', Courier, monospace; font-weight: 600; }
+        
+        .total-row { font-weight: 700; background-color: #f7f8fa; }
+        .total-row td { border-bottom: none; padding: 12px 5px; }
+        
+        .summary-box { background: #e8f0fe; border-radius: 8px; padding: 20px; margin-top: 30px; display: flex; justify-content: space-around; text-align: center; }
+        .summary-item h3 { margin: 0; font-size: 12px; color: #1a73e8; text-transform: uppercase; }
+        .summary-item p { margin: 5px 0 0; font-size: 18px; font-weight: 700; }
+        
+        .actions { margin-top: 30px; text-align: right; }
+        
+        @media print {
+            .controls, .header, .actions, .footer { display: none !important; }
+            .container { box-shadow: none; padding: 0; width: 100%; }
+            .payslip-view { border: none; display: block !important; padding: 0; }
+        }
+        
+        .loading { text-align: center; padding: 40px; color: #606770; font-style: italic; display: none; }
+        .error-msg { background: #ffebee; color: #c62828; padding: 15px; border-radius: 6px; margin-bottom: 20px; display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📑 Employee Payslip Portal</h1>
+        <p>Year: 2026</p>
+    </div>
+
+    <div id="errorBox" class="error-msg"></div>
+
+    <div class="controls">
+        <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input type="text" id="employeeId" placeholder="e.g. ZM09-LCC-2024-000001" value="CHL-2024-000001">
+        </div>
+        <div class="form-group">
+            <label for="year">Year</label>
+            <select id="year">
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="month">Month</label>
+            <select id="month">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5" selected>May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <button id="viewBtn" class="btn-primary">View Payslip</button>
+    </div>
+
+    <div id="loading" class="loading">Fetching payslip record...</div>
+
+    <div id="payslipView" class="payslip-view">
+        <div class="payslip-header">
+            <h2 id="psAuthority">LOCAL AUTHORITY</h2>
+            <p id="psPayrollBrand">Employee Payslip</p>
+            <p><strong id="psMonthYear">MAY 2026</strong></p>
+        </div>
+
+        <div class="grid">
+            <div>
+                <div class="section-title">Employee Details</div>
+                <table>
+                    <tr><td>Name</td><td id="psName">LUYANDO CHRISTOPHER SIKAZWA</td></tr>
+                    <tr><td>ID</td><td id="psId">CHL-2024-000001</td></tr>
+                    <tr><td>Grade</td><td id="psGrade">LGSS08</td></tr>
+                    <tr><td>Position</td><td id="psPosition">Public Relations Officer</td></tr>
+                </table>
+            </div>
+            <div>
+                <div class="section-title">Payment Info</div>
+                <table>
+                    <tr><td>Payslip No</td><td id="psNo">PS-CHL-202605-01539</td></tr>
+                    <tr><td>Payment Date</td><td id="psDate">2026-05-31</td></tr>
+                    <tr><td>Method</td><td>EFT</td></tr>
+                    <tr><td>Currency</td><td>ZMW</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <div class="section-title">Earnings</div>
+                <table id="earningsTable">
+                    <thead><tr><th>Description</th><th class="amount">Amount</th></tr></thead>
+                    <tbody id="earningsBody"></tbody>
+                    <tfoot><tr class="total-row"><td>Gross Pay</td><td id="psGross" class="amount">0.00</td></tr></tfoot>
+                </table>
+            </div>
+            <div>
+                <div class="section-title">Deductions</div>
+                <table id="deductionsTable">
+                    <thead><tr><th>Description</th><th class="amount">Amount</th></tr></thead>
+                    <tbody id="deductionsBody"></tbody>
+                    <tfoot><tr class="total-row"><td>Total Deductions</td><td id="psDeductions" class="amount">0.00</td></tr></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-item"><h3>Basic Salary</h3><p id="psBasic">0.00</p></div>
+            <div class="summary-item"><h3>Total Earnings</h3><p id="psGrossSum">0.00</p></div>
+            <div class="summary-item"><h3>Total Deductions</h3><p id="psDeductionsSum">0.00</p></div>
+            <div class="summary-item" style="color: #1a73e8;"><h3>Net Pay</h3><p id="psNet">0.00</p></div>
+        </div>
+
+        <div class="actions">
+            <button onclick="window.print()" class="btn-secondary">🖨️ Print</button>
+            <button id="downloadBtn" class="btn-primary">⬇️ Download PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:3001/api';
+    
+    document.getElementById('viewBtn').addEventListener('click', async () => {
+        const empId = document.getElementById('employeeId').value;
+        const year = document.getElementById('year').value;
+        const month = document.getElementById('month').value;
+        
+        if (!empId) { alert('Please enter Employee ID'); return; }
+        
+        const errorBox = document.getElementById('errorBox');
+        const loading = document.getElementById('loading');
+        const view = document.getElementById('payslipView');
+        
+        errorBox.style.display = 'none';
+        view.style.display = 'none';
+        loading.style.display = 'block';
+        
+        try {
+            const response = await fetch(`${API_BASE}/payslip/${empId}/${year}/${month}`);
+            const data = await response.json();
+            
+            if (!data.success) {
+                throw new Error(data.error || 'Record not found for this period');
+            }
+            
+            const ps = data.payslip;
+            
+            // Populate header
+            document.getElementById('psAuthority').textContent = ps.header.authorityName;
+            document.getElementById('psMonthYear').textContent = `${ps.header.payrollMonthLabel}`;
+            document.getElementById('psNo').textContent = ps.header.payslipNo;
+            document.getElementById('psDate').textContent = ps.payment.valueDate;
+            
+            // Populate Employee
+            document.getElementById('psName').textContent = ps.employee.fullName;
+            document.getElementById('psId').textContent = ps.employee.employeeId;
+            document.getElementById('psGrade').textContent = ps.employee.grade;
+            document.getElementById('psPosition').textContent = ps.employee.position;
+            
+            // Populate Earnings
+            const earningsBody = document.getElementById('earningsBody');
+            earningsBody.innerHTML = '';
+            ps.earnings.items.forEach(item => {
+                earningsBody.innerHTML += `<tr><td>${item.description}</td><td class="amount">${item.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td></tr>`;
+            });
+            document.getElementById('psGross').textContent = ps.earnings.totalEarnings.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('psGrossSum').textContent = ps.earnings.totalEarnings.toLocaleString(undefined, {minimumFractionDigits: 2});
+            
+            // Populate Deductions
+            const deductionsBody = document.getElementById('deductionsBody');
+            deductionsBody.innerHTML = '';
+            ps.deductions.items.forEach(item => {
+                deductionsBody.innerHTML += `<tr><td>${item.description}</td><td class="amount">${item.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td></tr>`;
+            });
+            document.getElementById('psDeductions').textContent = ps.deductions.totalDeductions.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('psDeductionsSum').textContent = ps.deductions.totalDeductions.toLocaleString(undefined, {minimumFractionDigits: 2});
+            
+            // Summary
+            document.getElementById('psBasic').textContent = ps.summary.basicSalary.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('psNet').textContent = ps.summary.netPay.toLocaleString(undefined, {minimumFractionDigits: 2});
+            
+            // Setup download link
+            document.getElementById('downloadBtn').onclick = () => {
+                window.location.href = `${API_BASE}/payslip/download/${empId}/${year}/${month}`;
+            };
+            
+            loading.style.display = 'none';
+            view.style.display = 'block';
+            
+        } catch (error) {
+            loading.style.display = 'none';
+            errorBox.textContent = error.message;
+            errorBox.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

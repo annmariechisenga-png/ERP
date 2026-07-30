@@ -1,1 +1,0 @@
-INSERT INTO leave_requests VALUES(1,101,'Sick Leave',3,'2026-03-01',NULL,'Accepted',NULL,NULL,NULL,NULL,FALSE,'2026-03-04',NULL,'scan_123.pdf',TRUE,FALSE,NULL);

@@ -1,0 +1,165 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+COUNC-SEC,Council Secretary,LGSS03,1,Council Administration,,Town
+ENG-ELEC-HEAD,Electrical Engineer,LGSS07,1,Electrical Unit,ENG-ASST-DIR,Town
+ENG-ELEC-CHIEF,Chief Electrical Engineer,LGSS06,1,Electrical Unit,ENG-ASST-DIR,Town
+ENG-ELEC-ASST,Assistant Electrical Engineer,LGSS10,1,Electrical Unit,ENG-ELEC-HEAD,Town
+ENG-ELEC-TECH,Electrician,LGSS14,2,Electrical Unit,ENG-ELEC-HEAD,Town
+ENG-MAINT-SUP,Maintenance Superintendent,LGSS10,1,Maintenance Unit,ENG-ASST-DIR,Town
+ENG-PLUM,Plumber,LGSS15,2,Maintenance Unit,ENG-MAINT-SUP,Town
+ENG-BRICK,Bricklayer,LGSS15,2,Maintenance Unit,ENG-MAINT-SUP,Town
+ENG-CARP,Carpenter,LGSS15,2,Maintenance Unit,ENG-MAINT-SUP,Town
+ENG-PAINT,Painter,LGSS15,1,Maintenance Unit,ENG-MAINT-SUP,Town
+ENG-GENWORK,General Worker,G3,3,Maintenance Unit,ENG-MAINT-SUP,Town
+ENG-QSURV,Quantity Surveyor,LGSS07,1,Quantity Surveying Unit,ENG-ASST-DIR,Town
+ENG-QSURV-ASST,Assistant Quantity Surveyor,LGSS10,2,Quantity Surveying Unit,ENG-QSURV,Town
+ENG-ARCH,Architect,LGSS07,1,Architecture Unit,ENG-ASST-DIR,Town
+ENG-ARCH-ASST,Assistant Architect,LGSS10,2,Architecture Unit,ENG-ARCH,Town
+ENG-CLERK,Senior Clerk of Works,LGSS10,1,Architecture Unit,ENG-ARCH,Town
+ENG-DRAFT,Draughtsman,LGSS15,1,Architecture Unit,ENG-ARCH,Town
+ENG-PARK-MGR,Parks Manager,LGSS07,1,Parks and Gardens Unit,ENG-ASST-DIR,Town
+ENG-PARK-SUP,Parks Supervisor,LGSS15,1,Parks and Gardens Unit,ENG-PARK-MGR,Town
+ENG-PARK-WORK,General Worker,G1,4,Parks and Gardens Unit,ENG-PARK-SUP,Town
+ENG-CIVIL,Civil Engineer,LGSS07,1,Roads and Drainages Unit,ENG-ASST-DIR,Town
+ENG-CIVIL-ASST,Assistant Civil Engineer,LGSS10,2,Roads and Drainages Unit,ENG-CIVIL,Town
+ENG-CIVIL-TECH,Engineering Assistant,LGSS14,2,Roads and Drainages Unit,ENG-CIVIL,Town
+ENG-MECH,Mechanical Engineer,LGSS07,1,Mechanical Services Unit,ENG-ASST-DIR,Town
+ENG-MECH-ASST,Assistant Mechanical Engineer,LGSS10,1,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-MOTOR,Motor Vehicle Examiner,LGSS11,1,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-AUTO,Auto Electrician,LGSS14,1,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-MECH-TECH,Mechanic,LGSS14,2,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-EXCAV,Excavator Operator,LGSS14,1,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-SCALER,Scaler Operator,LGSS14,1,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-HANDY,Mechanical Handyman,G1,2,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-WELDER,Welder,LGSS15,1,Vehicle Maintenance Services Sub-Unit,ENG-MECH,Town
+ENG-FIRE-DIV,Divisional Fire Officer,LGSS08,1,Fire and Rescue Services Unit,ENG-ASST-DIR,Town
+ENG-FIRE-STN,Station Officer,LGSS11,1,Fire and Rescue Services Unit,ENG-FIRE-DIV,Town
+ENG-FIRE-SUB,Sub-Officer,LGSS12,1,Fire and Rescue Services Unit,ENG-FIRE-STN,Town
+ENG-FIRE-LEAD,Leading Firefighter,LGSS13,2,Fire and Rescue Services Unit,ENG-FIRE-STN,Town
+ENG-FIRE,Fire Fighter,LGSS14,4,Fire and Rescue Services Unit,ENG-FIRE-LEAD,Town
+ENG-FIRE-DRV,Fire Fighter Driver,LGSS14,2,Fire and Rescue Services Unit,ENG-FIRE-LEAD,Town
+ENG-WATSAN,Water and Sanitation Engineer,LGSS07,1,Rural Water and Sanitation Unit,ENG-ASST-DIR,Town
+TOWN-CLERK,Town Clerk,LGSS02,1,Council Administration,,Town
+ENG-DIR,Director - Engineering,LGSS04,1,Engineering Department,TOWN-CLERK,Town
+ENG-ELEC-CHIEF,Chief Electrical Engineer,LGSS06,1,Electrical Engineering Unit,ENG-CONSTR-ASSTDIR,Town
+ENG-ELEC-ENG07,Electrical Engineer,LGSS07,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,Town
+ENG-ELEC-ASST,Assistant Electrical Engineer,LGSS10,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,Town
+ENG-ELEC-SUPT,Superintendent,LGSS12,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,Town
+ENG-ELEC-ASSTSUPT,Assistant Superintendent,LGSS13,1,Electrical Engineering Unit,ENG-ELEC-SUPT,Town
+ENG-ELEC-SENASSIST,Senior Engineering Assistant,LGSS13,1,Electrical Engineering Unit,ENG-ELEC-SUPT,Town
+ENG-ELEC-WORKSUP,Works Supervisor,LGSS14,1,Electrical Engineering Unit,ENG-ELEC-SUPT,Town
+ENG-ELEC-TECH,Electrician,LGSS14,5,Electrical Engineering Unit,ENG-ELEC-WORKSUP,Town
+ENG-ELEC-FOREMAN,Foreman,LGSS14,1,Electrical Engineering Unit,ENG-ELEC-WORKSUP,Town
+ENG-ELEC-ASSTFORE,Assistant Foreman,LGSS17,1,Electrical Engineering Unit,ENG-ELEC-FOREMAN,Town
+ENG-QSURV-CHIEF,Chief Quantity Surveyor,LGSS06,1,Quantity Surveying Unit,ENG-CONSTR-ASSTDIR,Town
+ENG-QSURV07,Quantity Surveyor,LGSS07,3,Quantity Surveying Unit,ENG-QSURV-CHIEF,Town
+ENG-QSURV-ASST,Assistant Quantity Surveyor,LGSS10,3,Quantity Surveying Unit,ENG-QSURV07,Town
+ENG-QSURV-SENASSIST,Senior Quantity Surveying Assistant,LGSS13,1,Quantity Surveying Unit,ENG-QSURV-ASST,Town
+ENG-QSURV-ASSIST,Quantity Surveying Assistant,LGSS14,1,Quantity Surveying Unit,ENG-QSURV-ASST,Town
+ENG-ARCH-CHIEF,Chief Architect,LGSS06,1,Architecture Unit,ENG-CONSTR-ASSTDIR,Town
+ENG-ARCH07,Architect,LGSS07,3,Architecture Unit,ENG-ARCH-CHIEF,Town
+ENG-ARCH-ASST,Assistant Architect,LGSS10,2,Architecture Unit,ENG-ARCH07,Town
+ENG-ARCH-ASSIST,Architectural Assistant,LGSS14,1,Architecture Unit,ENG-ARCH-ASST,Town
+ENG-ARCH-FOREMAN,Foreman,LGSS14,2,Architecture Unit,ENG-ARCH-ASST,Town
+ENG-ARCH-ASSTFORE,Assistant Foreman,LGSS17,2,Architecture Unit,ENG-ARCH-FOREMAN,Town
+ENG-ARCH-SENCLERK,Senior Clerk of Works,LGSS10,2,Architecture Unit,ENG-ARCH07,Town
+ENG-ARCH-CLERK,Clerk of Works,LGSS12,2,Architecture Unit,ENG-ARCH-SENCLERK,Town
+ENG-ARCH-DRAFT,Draughtsman,LGSS15,1,Architecture Unit,ENG-ARCH07,Town
+ENG-MAINT-SUPT,Maintenance Superintendent,LGSS10,1,Maintenance Unit,ENG-CONSTR-ASSTDIR,Town
+ENG-MAINT-ASSTSUPT,Assistant Superintendent,LGSS12,1,Maintenance Unit,ENG-MAINT-SUPT,Town
+ENG-MAINT-FOREMAN,Foreman,LGSS14,2,Maintenance Unit,ENG-MAINT-SUPT,Town
+ENG-MAINT-PLUM,Plumber,LGSS15,2,Maintenance Unit,ENG-MAINT-FOREMAN,Town
+ENG-MAINT-BRICK,Bricklayer,LGSS15,2,Maintenance Unit,ENG-MAINT-FOREMAN,Town
+ENG-MAINT-CARP,Carpenter,LGSS15,2,Maintenance Unit,ENG-MAINT-FOREMAN,Town
+ENG-MAINT-PAINT,Painter,LGSS15,1,Maintenance Unit,ENG-MAINT-FOREMAN,Town
+ENG-MAINT-GENWORK,General Worker,G3,4,Maintenance Unit,ENG-MAINT-FOREMAN,Town
+ENG-PARK-MGR,Parks Manager,LGSS07,1,Parks & Gardens Unit,ENG-CONSTR-ASSTDIR,Town
+ENG-PARK-SUPT,Superintendent,LGSS12,1,Parks & Gardens Unit,ENG-PARK-MGR,Town
+ENG-PARK-ASSTSUPT,Assistant Superintendent,LGSS13,1,Parks & Gardens Unit,ENG-PARK-SUPT,Town
+ENG-PARK-FOREMAN,Parks Foreman,LGSS14,1,Parks & Gardens Unit,ENG-PARK-SUPT,Town
+ENG-PARK-SUP,Parks Supervisor,LGSS15,1,Parks & Gardens Unit,ENG-PARK-FOREMAN,Town
+ENG-PARK-ASSTFORE,Assistant Parks Foreman,LGSS17,1,Parks & Gardens Unit,ENG-PARK-FOREMAN,Town
+ENG-PARK-WORK,General Worker,G1,7,Parks & Gardens Unit,ENG-PARK-SUP,Town
+ENG-MECH-CHIEF,Chief Mechanical Engineer - Buildings Construction & Maintenance,LGSS06,1,Mechanical Services Unit,ENG-CONSTR-ASSTDIR,Town
+ENG-MECH07,Mechanical Engineer - Buildings Construction & Maintenance,LGSS07,1,Mechanical Services Unit,ENG-MECH-CHIEF,Town
+ENG-MECH-ASST,Assistant Mechanical Engineer,LGSS10,1,Mechanical Services Unit,ENG-MECH07,Town
+ENG-MECH-SUPT,Superintendent,LGSS12,1,Mechanical Services Unit,ENG-MECH07,Town
+ENG-MECH-ASSTSUPT,Assistant Superintendent,LGSS13,1,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-ASSIST,Engineering Assistant,LGSS14,3,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-AUTO,Auto Electrician,LGSS14,1,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-TECH,Mechanic,LGSS14,4,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-FOREMAN,Foreman,LGSS14,1,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-ASSTFORE,Assistant Foreman,LGSS17,1,Mechanical Services Unit,ENG-MECH-FOREMAN,Town
+ENG-MECH-PLANT,Plant Operator,LGSS14,16,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-HANDY,Mechanical Handyman,LGSS18,3,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-MECH-WELDER,Welder,LGSS14,1,Mechanical Services Unit,ENG-MECH-SUPT,Town
+ENG-FIRE-CHIEF,Chief Fire Officer,LGSS06,1,Fire & Rescue Services Unit,ENG-DIR,Town
+ENG-FIRE-DEPUTY,Deputy Chief Fire Officer,LGSS07,2,Fire & Rescue Services Unit,ENG-FIRE-CHIEF,Town
+ENG-FIRE-DIV,Divisional Fire Officer,LGSS09,2,Fire & Rescue Services Unit,ENG-FIRE-DEPUTY,Town
+ENG-FIRE-ASSTDIV,Assistant Divisional Fire Officer,LGSS10,2,Fire & Rescue Services Unit,ENG-FIRE-DIV,Town
+ENG-FIRE-STN,Station Fire Officer,LGSS11,4,Fire & Rescue Services Unit,ENG-FIRE-DIV,Town
+ENG-FIRE-SUB,Sub-Officer,LGSS12,6,Fire & Rescue Services Unit,ENG-FIRE-STN,Town
+ENG-FIRE-LEAD,Leading Firefighter,LGSS13,4,Fire & Rescue Services Unit,ENG-FIRE-SUB,Town
+ENG-FIRE,Fire Fighter,LGSS14,40,Fire & Rescue Services Unit,ENG-FIRE-LEAD,Town
+ENG-FIRE-DRV,Fire Fighter Driver,LGSS14,7,Fire & Rescue Services Unit,ENG-FIRE-LEAD,Town
+ENG-WATSAN-COORD,Rural Water and Sanitation Coordinator,LGSS06,1,Rural Water & Sanitation Unit,ENG-DIR,Town
+ENG-WATSAN-ASST,Assistant Water and Sanitation Engineer,LGSS07,1,Rural Water & Sanitation Unit,ENG-WATSAN-COORD,Town
+CITY-CLERK,Town Clerk,LGSS01,1,Council Administration,,City
+ENG-DIR,Director - Engineering,LGSS03,1,Engineering Department,CITY-CLERK,City
+ENG-ELEC-CHIEF,Chief Electrical Engineer,LGSS06,1,Electrical Engineering Unit,ENG-CONSTR-ASSTDIR,City
+ENG-ELEC-ENG07,Electrical Engineer,LGSS07,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,City
+ENG-ELEC-ASST,Assistant Electrical Engineer,LGSS10,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,City
+ENG-ELEC-SEN-SUPT,Senior Electrical Superintendent,LGSS10,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,City
+ENG-ELEC-SUPT,Superintendent,LGSS12,1,Electrical Engineering Unit,ENG-ELEC-CHIEF,City
+ENG-ELEC-ASSTSUPT,Assistant Superintendent,LGSS13,2,Electrical Engineering Unit,ENG-ELEC-SUPT,City
+ENG-ELEC-SENASSIST,Senior Engineering Assistant,LGSS13,1,Electrical Engineering Unit,ENG-ELEC-SUPT,City
+ENG-ELEC-WORKSUP,Works Supervisor,LGSS14,2,Electrical Engineering Unit,ENG-ELEC-SUPT,City
+ENG-ELEC-TECH,Electrician,LGSS14,5,Electrical Engineering Unit,ENG-ELEC-WORKSUP,City
+ENG-ELEC-FOREMAN,Foreman,LGSS15,1,Electrical Engineering Unit,ENG-ELEC-WORKSUP,City
+ENG-ELEC-ASSTFORE,Assistant Foreman,LGSS17,2,Electrical Engineering Unit,ENG-ELEC-FOREMAN,City
+ENG-QSURV-CHIEF,Chief Quantity Surveyor,LGSS06,1,Quantity Surveying Unit,ENG-CONSTR-ASSTDIR,City
+ENG-QSURV07,Quantity Surveyor,LGSS07,2,Quantity Surveying Unit,ENG-QSURV-CHIEF,City
+ENG-QSURV-ASST,Assistant Quantity Surveyor,LGSS10,4,Quantity Surveying Unit,ENG-QSURV07,City
+ENG-ARCH-CHIEF,Chief Architect,LGSS06,1,Architecture Unit,ENG-CONSTR-ASSTDIR,City
+ENG-ARCH07,Architect,LGSS07,5,Architecture Unit,ENG-ARCH-CHIEF,City
+ENG-ARCH-ASST,Assistant Architect,LGSS10,5,Architecture Unit,ENG-ARCH07,City
+ENG-ARCH-DRAFT,Draughtsman,LGSS15,2,Architecture Unit,ENG-ARCH07,City
+ENG-MAINT-SUPT,Maintenance Superintendent,LGSS10,1,Maintenance Unit,ENG-CONSTR-ASSTDIR,City
+ENG-MAINT-ASSTSUPT,Assistant Superintendent,LGSS13,1,Maintenance Unit,ENG-MAINT-SUPT,City
+ENG-MAINT-ASSTSUPT2,Assistant Superintendent,LGSS12,1,Maintenance Unit,ENG-MAINT-SUPT,City
+ENG-MAINT-FOREMAN,Foreman,LGSS14,2,Maintenance Unit,ENG-MAINT-SUPT,City
+ENG-MAINT-PLUM,Plumber,LGSS15,3,Maintenance Unit,ENG-MAINT-FOREMAN,City
+ENG-MAINT-BRICK,Bricklayer,LGSS15,3,Maintenance Unit,ENG-MAINT-FOREMAN,City
+ENG-MAINT-CARP,Carpenter,LGSS15,2,Maintenance Unit,ENG-MAINT-FOREMAN,City
+ENG-MAINT-PAINT,Painter,LGSS15,2,Maintenance Unit,ENG-MAINT-FOREMAN,City
+ENG-MAINT-GENWORK,General Worker,G3,6,Maintenance Unit,ENG-MAINT-FOREMAN,City
+ENG-PARK-MGR,Parks & Gardens Manager,LGSS07,1,Parks & Gardens Unit,ENG-DIR,City
+ENG-PARK-SUPT,Superintendent,LGSS12,1,Parks & Gardens Unit,ENG-PARK-MGR,City
+ENG-PARK-ASSTSUPT,Assistant Superintendent,LGSS13,2,Parks & Gardens Unit,ENG-PARK-SUPT,City
+ENG-PARK-FOREMAN,Parks Foreman,LGSS14,4,Parks & Gardens Unit,ENG-PARK-SUPT,City
+ENG-PARK-SUP,Parks Supervisor,LGSS15,4,Parks & Gardens Unit,ENG-PARK-FOREMAN,City
+ENG-PARK-ASSTFORE,Assistant Parks Foreman,LGSS17,4,Parks & Gardens Unit,ENG-PARK-FOREMAN,City
+ENG-PARK-WORK,General Worker,G1,7,Parks & Gardens Unit,ENG-PARK-SUP,City
+ENG-MECH-CHIEF,Chief Mechanical Engineer,LGSS06,1,Mechanical Services Unit,ENG-DIR,City
+ENG-MECH07,Mechanical Engineer,LGSS07,1,Mechanical Services Unit,ENG-MECH-CHIEF,City
+ENG-MECH-ASST,Assistant Mechanical Engineer,LGSS10,2,Mechanical Services Unit,ENG-MECH07,City
+ENG-MECH-SUPT,Superintendent,LGSS12,1,Mechanical Services Unit,ENG-MECH07,City
+ENG-MECH-ASSTSUPT,Assistant Superintendent,LGSS13,2,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-ASSIST,Engineering Assistant,LGSS14,1,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-AUTO,Auto Electrician,LGSS14,1,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-TECH,Mechanic,LGSS14,14,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-FOREMAN,Foreman,LGSS14,1,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-ASSTFORE,Assistant Foreman,LGSS17,1,Mechanical Services Unit,ENG-MECH-FOREMAN,City
+ENG-MECH-PLANT,Plant Operator,LGSS14,6,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-HANDY,Mechanical Handyman,LGSS18,3,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-MECH-WELDER,Welder,LGSS14,3,Mechanical Services Unit,ENG-MECH-SUPT,City
+ENG-FIRE-CHIEF,Chief Fire Officer,LGSS06,1,Fire & Rescue Services Unit,ENG-DIR,City
+ENG-FIRE-DEPUTY,Deputy Chief Fire Officer,LGSS07,2,Fire & Rescue Services Unit,ENG-FIRE-CHIEF,City
+ENG-FIRE-DIV,Divisional Fire Officer,LGSS09,2,Fire & Rescue Services Unit,ENG-FIRE-DEPUTY,City
+ENG-FIRE-ASSTDIV,Assistant Divisional Fire Officer,LGSS10,2,Fire & Rescue Services Unit,ENG-FIRE-DIV,City
+ENG-FIRE-STN,Station Fire Officer,LGSS11,4,Fire & Rescue Services Unit,ENG-FIRE-DIV,City
+ENG-FIRE-SUB,Sub-Officer,LGSS12,6,Fire & Rescue Services Unit,ENG-FIRE-STN,City
+ENG-FIRE-LEAD,Leading Firefighter,LGSS13,4,Fire & Rescue Services Unit,ENG-FIRE-SUB,City
+ENG-FIRE,Fire Fighter,LGSS14,52,Fire & Rescue Services Unit,ENG-FIRE-LEAD,City
+ENG-FIRE-DRV,Fire Fighter Driver,LGSS14,6,Fire & Rescue Services Unit,ENG-FIRE-LEAD,City
+ENG-WATSAN-COORD,Rural Water and Sanitation Coordinator,LGSS06,1,Rural Water & Sanitation Unit,ENG-DIR,City
+ENG-WATSAN-ENG,Rural Water and Sanitation Engineer,LGSS07,2,Rural Water & Sanitation Unit,ENG-WATSAN-COORD,City

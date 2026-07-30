@@ -1,0 +1,44 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+LEG-ADV-TOWN,Council Advocate,LGSS/05,1,Legal Unit,Council Secretary,Town
+LEG-SRASST-TOWN,Senior Legal Assistant,LGSS/07,2,Legal Unit,LEG-ADV-TOWN,Town
+LEG-REG-TOWN,Registry Clerk,LGSS/17,1,Legal Unit,LEG-SRASST-TOWN,Town
+Legal Leadership,LEG-DIR-MUN,Director Legal Services,4,Town Clerk,1,Municipal
+LEG-ADV-LIT-MUN,Council Advocate - Litigation,LGSS/05,1,Litigation and Deeds Section,LEG-DIR-MUN,Municipal
+Litigation Unit,LEG-OFF-LIT-MUN,Legal Officer - Litigation,6,LEG-ADV-LIT-MUN,1,Municipal
+Litigation Unit,LEG-SRASST-LIT-MUN,Senior Legal Assistant - Litigation,7,LEG-OFF-LIT-MUN,1,Municipal
+Litigation Unit,LEG-REG-LIT-MUN,Registry Clerk - Litigation,17,LEG-SRASST-LIT-MUN,1,Municipal
+Deeds Unit,LEG-REG-DEEDS-MUN,Registry Clerk - Deeds,17,LEG-ADV-LIT-MUN,5,Municipal
+Prosecution Unit,LEG-OFF-PROSE-MUN,Legal Officer - Prosecution,6,LEG-ADV-LIT-MUN,1,Municipal
+Prosecution Unit,LEG-SRASST-PROSE-MUN,Senior Legal Assistant - Prosecution,7,LEG-OFF-PROSE-MUN,1,Municipal
+Prosecution Unit,LEG-ASST-PROSE-MUN,Legal Assistant - Prosecution,10,LEG-SRASST-PROSE-MUN,1,Municipal
+Prosecution Unit,LEG-REG-PROSE-MUN,Registry Clerk - Prosecution,17,LEG-ASST-PROSE-MUN,1,Municipal
+LEG-ADV-EST-MUN,Council Advocate - Estates & Contracts,LGSS/05,1,Estates and Contracts & Licensing Section,LEG-DIR-MUN,Municipal
+Contracts Unit,LEG-OFF-CONT-MUN,Legal Officer - Contracts,6,LEG-ADV-EST-MUN,1,Municipal
+Contracts Unit,LEG-SRASST-CONT-MUN,Senior Legal Assistant - Contracts,7,LEG-OFF-CONT-MUN,1,Municipal
+Contracts Unit,LEG-ASST-CONT-MUN,Legal Assistant - Contracts,10,LEG-SRASST-CONT-MUN,1,Municipal
+Contracts Unit,LEG-REG-CONT-MUN,Registry Clerk - Contracts,17,LEG-ASST-CONT-MUN,1,Municipal
+Licensing Unit,LEG-OFF-LIC-MUN,Legal Officer - Licensing,6,LEG-ADV-EST-MUN,1,Municipal
+Licensing Unit,LEG-SRASST-LIC-MUN,Senior Legal Assistant - Licensing,7,LEG-OFF-LIC-MUN,1,Municipal
+Licensing Unit,LEG-ASST-LIC-MUN,Legal Assistant - Licensing,10,LEG-SRASST-LIC-MUN,1,Municipal
+Licensing Unit,LEG-LIC-OFF-MUN,Licensing Officer,6,LEG-ADV-EST-MUN,2,Municipal
+Licensing Unit,LEG-REG-LIC-MUN,Registry Clerk - Licensing,17,LEG-LIC-OFF-MUN,1,Municipal
+Estates Unit,LEG-OFF-EST-MUN,Legal Officer - Estates,6,LEG-ADV-EST-MUN,1,Municipal
+Estates Unit,LEG-SRASST-EST-MUN,Senior Legal Assistant - Estates,7,LEG-OFF-EST-MUN,1,Municipal
+Estates Unit,LEG-ASST-EST-MUN,Legal Assistant - Estates,10,LEG-SRASST-EST-MUN,1,Municipal
+Estates Unit,LEG-REG-EST-MUN,Registry Clerk - Estates,17,LEG-ASST-EST-MUN,1,Municipal
+Legal Leadership,LEG-DIR-CITY,Director Legal Services,3,Town Clerk,1,City
+LEG-ADV-LIT-CITY,Council Advocate - Litigation & Deeds,LGSS/05,1,Litigation and Deeds Section,LEG-DIR-CITY,City
+Litigation Unit,LEG-OFF-LIT-CITY,Legal Officer - Litigation,6,LEG-ADV-LIT-CITY,2,City
+Litigation Unit,LEG-SRASST-LIT-CITY,Senior Legal Assistant - Litigation,7,LEG-OFF-LIT-CITY,2,City
+Litigation Unit,LEG-ASST-LIT-CITY,Legal Assistant - Litigation,10,LEG-SRASST-LIT-CITY,4,City
+Deeds Unit,LEG-OFF-DEEDS-CITY,Legal Officer - Deeds,6,LEG-ADV-LIT-CITY,2,City
+Deeds Unit,LEG-SRASST-DEEDS-CITY,Senior Legal Assistant - Deeds,7,LEG-OFF-DEEDS-CITY,2,City
+Deeds Unit,LEG-ASST-DEEDS-CITY,Legal Assistant - Deeds,10,LEG-SRASST-DEEDS-CITY,4,City
+LEG-ADV-EST-CITY,Council Advocate - Estates & Contracts,LGSS/05,1,Estates and Contracts & Licensing Section,LEG-DIR-CITY,City
+Contracts & Licensing Unit,LEG-OFF-CONT-CITY,Legal Officer - Contracts & Licensing,6,LEG-ADV-EST-CITY,1,City
+Contracts & Licensing Unit,LEG-SRASST-CONT-CITY,Senior Legal Assistant - Contracts & Licensing,7,LEG-OFF-CONT-CITY,1,City
+Contracts & Licensing Unit,LEG-ASST-CONT-CITY,Legal Assistant - Contracts & Licensing,10,LEG-SRASST-CONT-CITY,3,City
+Contracts & Licensing Unit,LEG-LIC-CITY,Licensing Officer,10,LEG-OFF-CONT-CITY,2,City
+Estates Unit,LEG-OFF-EST-CITY,Legal Officer - Estates,6,LEG-ADV-EST-CITY,1,City
+Estates Unit,LEG-SRASST-EST-CITY,Senior Legal Assistant - Estates,7,LEG-OFF-EST-CITY,1,City
+Estates Unit,LEG-ASST-EST-CITY,Legal Assistant - Estates,10,LEG-SRASST-EST-CITY,1,City

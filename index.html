@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarshaERP - Intelligent Local Authority Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Primary Blues */
+            --blue-light: #42A8EA;
+            --blue-mid: #085CB7;
+            --blue-deep: #09285A;
+            --blue-dark: #001F50;
+
+            /* Light Neutrals */
+            --bg-white: #FFFFFF;
+            --bg-light-1: #F8FAFC;
+            --bg-light-2: #F1F5F9;
+            --border-gray: #E2E8F0;
+
+            /* Copper Accents */
+            --copper-light: #A97049;
+            --copper-mid: #936144;
+            --copper-dark: #81543A;
+
+            /* Standard UI */
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --white: #FFFFFF;
+        }
+
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg-white); margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; color: var(--text-dark); }
+        
+        .header { background: var(--bg-white); color: var(--text-dark); padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-gray); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; min-height: 120px; }
+        .user-profile { display: flex; align-items: center; gap: 15px; background: var(--bg-light-1); padding: 8px 20px; border-radius: 30px; border: 1px solid var(--border-gray); }
+        .user-info { text-align: right; }
+        .user-info p { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .user-info span { font-size: 11px; color: var(--copper-mid); text-transform: uppercase; font-weight: 800; }
+        .avatar { width: 38px; height: 35px; background: linear-gradient(135deg, var(--copper-light), var(--copper-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: 900; border: 2px solid var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        
+        .sidebar { width: 260px; background: var(--bg-light-1); border-right: 1px solid var(--border-gray); display: flex; flex-direction: column; padding: 25px 0; }
+        .nav-group { margin-bottom: 30px; }
+        .nav-group-title { padding: 0 25px 12px; font-size: 11px; font-weight: 800; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 2px; }
+        
+        .nav-item { padding: 14px 25px; cursor: pointer; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 15px; transition: all 0.3s; border-left: 5px solid transparent; }
+        .nav-item:hover { background: var(--bg-light-2); color: var(--blue-mid); border-left-color: var(--copper-light); }
+        .nav-item.active { background: var(--white); color: var(--blue-deep); border-left-color: var(--blue-mid); box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .nav-item i { width: 20px; font-size: 18px; color: var(--blue-mid); }
+
+        .content-area { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 30px; background: var(--bg-white); }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .role-section { display: none; }
+        .role-active { display: block; }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .card { background: var(--white); border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border-gray); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--blue-light), var(--copper-light)); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .card-title { font-size: 14px; font-weight: 800; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 1px; }
+        .card-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--bg-light-1); color: var(--blue-mid); border: 1px solid var(--border-gray); }
+        
+        .stat-value { font-size: 34px; font-weight: 800; color: var(--text-dark); margin: 15px 0 5px; }
+        .stat-trend { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 5px; color: var(--text-muted); }
+        .trend-up { color: #10B981; }
+        
+        .btn { padding: 12px 24px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; transition: all 0.3s; font-size: 12px; display: flex; align-items: center; gap: 8px; justify-content: center; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-primary { background: linear-gradient(135deg, var(--copper-mid), var(--copper-dark)); color: var(--white); box-shadow: 0 4px 15px rgba(169,112,73,0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(169,112,73,0.5); }
+        .btn-outline { background: transparent; border: 2px solid var(--border-gray); color: var(--blue-mid); }
+        .btn-outline:hover { border-color: var(--blue-mid); background: var(--bg-light-1); }
+
+        .doc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .doc-item { background: var(--white); border-radius: 15px; padding: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border-gray); transition: all 0.3s; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .doc-item:hover { transform: translateY(-5px); border-color: var(--blue-mid); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .doc-icon { width: 50px; height: 50px; border-radius: 12px; background: var(--bg-light-2); color: var(--blue-mid); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .doc-info h4 { margin: 0 0 5px; font-size: 15px; font-weight: 700; color: var(--text-dark); }
+        .doc-info p { margin: 0; font-size: 11px; color: var(--blue-mid); font-weight: 800; letter-spacing: 0.5px; }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--bg-white); padding: 35px; border-radius: 20px; width: 480px; box-shadow: 0 25px 50px rgba(0,0,0,0.1); border: 1px solid var(--border-gray); color: var(--text-dark); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .modal-header h3 { margin: 0; color: var(--blue-mid); font-weight: 800; font-size: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; background: var(--bg-white); border: 2px solid var(--border-gray); border-radius: 10px; font-size: 14px; color: var(--text-dark); font-family: inherit; }
+        .form-group input:focus { border-color: var(--blue-mid); outline: none; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { text-align: left; padding: 15px; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--bg-light-2); }
+        td { padding: 15px; border-bottom: 1px solid var(--bg-light-2); font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        
+        .badge { background: var(--bg-light-2); color: var(--blue-mid); border: 1px solid var(--border-gray); padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: 800; }
+        .widget-container { border-radius: 16px; overflow: hidden; background: var(--bg-light-1); border: 1px solid var(--border-gray); }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        #roleSelector { position: fixed; bottom: 25px; right: 25px; background: var(--white); padding: 12px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 2px solid var(--border-gray); z-index: 1000; }
+        #roleSelector select { background: transparent; color: var(--blue-mid); border: none; font-weight: 800; cursor: pointer; outline: none; }
+        
+        .footer { padding: 20px 30px; background: var(--bg-light-1); color: var(--text-muted); text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 1px; border-top: 1px solid var(--border-gray); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <img src="chilanga-crest.png" alt="Chilanga Town Council" style="height: 90px; object-fit: contain;"
+                 onerror="this.src='chilanga-crest.jpg'">
+        </div>
+        <div class="user-profile">
+            <div class="user-info">
+                <p id="userName">Loading...</p>
+                <span id="userPosition">Loading...</span>
+            </div>
+            <div class="avatar" id="userAvatar">??</div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <nav class="sidebar">
+            <div class="nav-group">
+                <div class="nav-group-title">Home</div>
+                <div class="nav-item active" onclick="showView('overview', this)"><i class="fas fa-th-large"></i> Dashboard</div>
+                <div class="nav-item" onclick="showView('jdView', this)"><i class="fas fa-id-badge"></i> My Job Description</div>
+                <div class="nav-item" onclick="showView('payslips', this)"><i class="fas fa-file-invoice-dollar"></i> My Payslips</div>
+                <div class="nav-item" onclick="showView('documents', this)"><i class="fas fa-folder-open"></i> Policy Documents</div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Self Service</div>
+                <div class="nav-item" onclick="openLeaveModal()"><i class="fas fa-calendar-plus"></i> Request Leave</div>
+                <div class="nav-item" onclick="openOTModal()"><i class="fas fa-clock"></i> Request Overtime</div>
+                <div class="nav-item" onclick="showView('orgChart', this)"><i class="fas fa-sitemap"></i> My Department</div>
+            </div>
+
+            <div class="nav-group role-section" id="hodSection">
+                <div class="nav-group-title">Management</div>
+                <div class="nav-item" onclick="showView('approvals', this)"><i class="fas fa-check-double"></i> Pending Approvals</div>
+            </div>
+
+            <div class="nav-group role-section" id="financeSection">
+                <div class="nav-group-title">Financial Control</div>
+                <div class="nav-item" onclick="showView('budget', this)"><i class="fas fa-wallet"></i> Budget & Bank</div>
+                <div class="nav-item" onclick="showView('ledger', this)"><i class="fas fa-book"></i> Detailed Ledger</div>
+            </div>
+        </nav>
+
+        <main class="content-area">
+            <div id="overview" class="view active">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Leave Balance</span>
+                            <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                        </div>
+                        <div class="stat-value" id="leaveBalance">0</div>
+                        <div class="stat-trend trend-up"><i class="fas fa-info-circle"></i> Accruing 3.0 days/month</div>
+                        <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="openLeaveModal()">New Request</button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Projected Overtime</span>
+                            <div class="card-icon"><i class="fas fa-hourglass-half"></i></div>
+                        </div>
+                        <div class="stat-value" id="projectedOT">ZMW 0.00</div>
+                        <div id="otHoursLabel" class="stat-trend"><i class="fas fa-clock"></i> 0.0 hours logged</div>
+                        <button class="btn btn-outline" style="margin-top: 20px; width: 100%;" onclick="openOTModal()">Log Hours</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Next Scheduled Pay</span>
+                            <div class="card-icon"><i class="fas fa-money-check-alt"></i></div>
+                        </div>
+                        <div class="stat-value">ZMW 14,250.00</div>
+                        <div class="stat-trend"><i class="fas fa-check-circle" style="color: #10B981;"></i> Status: Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jdView" class="view">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Official Job Description</span></div>
+                    <div style="display: flex; gap: 30px; align-items: center; padding: 20px;">
+                        <div style="font-size: 80px; color: var(--bg-light-2);"><i class="fas fa-file-signature"></i></div>
+                        <div>
+                            <h2 id="jdTitle" style="margin: 0 0 10px; color: var(--text-dark);">Position Title</h2>
+                            <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 25px; line-height: 1.6;">Formal document outlining duties, responsibilities, and reporting lines.</p>
+                            <button id="jdDownloadBtn" class="btn btn-primary"><i class="fas fa-download"></i> Download JD Document</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="documents" class="view">
+                <h3 style="margin: 0 0 25px; font-weight: 800; color: var(--blue-mid); letter-spacing: 1px;">STATUTORY POLICY DOCUMENTS</h3>
+                <div class="doc-list">
+                    <div class="doc-item" onclick="window.open('terms-and-conditions-local-government-service-commission.pdf')">
+                        <div class="doc-icon"><i class="fas fa-file-contract"></i></div>
+                        <div class="doc-info">
+                            <h4>Terms & Conditions</h4>
+                            <p>OFFICIAL 2026 EDITION</p>
+                        </div>
+                    </div>
+                    <div class="doc-item" onclick="window.open('Code of Ethics.pdf')">
+                        <div class="doc-icon"><i class="fas fa-balance-scale"></i></div>
+                        <div class="doc-info">
+                            <h4>Code of Ethics</h4>
+                            <p>PROFESSIONAL CONDUCT</p>
+                        </div>
+                    </div>
+                    <div class="doc-item" onclick="window.open('Disciplinary Code and Procedures for Handling Offences.pdf')">
+                        <div class="doc-icon"><i class="fas fa-gavel"></i></div>
+                        <div class="doc-info">
+                            <h4>Disciplinary Code</h4>
+                            <p>OFFENCES & PROCEDURES</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="orgChart" class="view">
+                <div class="widget-container" style="height: 70vh;">
+                    <iframe id="orgChartFrame" src="org-chart-widget.html" title="Organizational Chart"></iframe>
+                </div>
+            </div>
+
+            <div id="payslips" class="view">
+                <div class="widget-container" style="height: 70vh;">
+                    <iframe src="payslip-portal.html" title="Employee Payslip Portal"></iframe>
+                </div>
+            </div>
+
+            <div id="budget" class="view">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Total Revenue YTD</span></div>
+                        <div class="stat-value" style="color: var(--blue-mid);" id="revYTD">ZMW 0.00</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Total Expenditure YTD</span></div>
+                        <div class="stat-value" style="color: var(--copper-mid);" id="expYTD">ZMW 0.00</div>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 25px;">
+                    <div class="card-header"><span class="card-title">Bank Balances</span></div>
+                    <table id="bankTable"></table>
+                </div>
+            </div>
+
+            <div id="ledger" class="view">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">General Ledger</span></div>
+                    <table style="margin-top: 15px;">
+                        <thead>
+                            <tr><th>Date</th><th>Ref</th><th>Description</th><th>Category</th><th style="text-align: right;">Amount</th></tr>
+                        </thead>
+                        <tbody id="ledgerBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            &copy; 2026 MARSHAERP | SECURE FINANCIAL MANAGEMENT | v2.5.1
+        </footer>
+    </div>
+
+    <!-- Leave Request Modal -->
+    <div id="leaveModal" class="modal">
+        <div class="modal-content" style="width:520px;max-height:90vh;overflow-y:auto;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> REQUEST LEAVE</h3>
+                <span style="cursor:pointer;font-size:24px;color:var(--text-muted);" onclick="closeLeaveModal()">&times;</span>
+            </div>
+            <form id="leaveForm">
+                <div class="form-group">
+                    <label>Leave Type</label>
+                    <select id="leaveTypeSelect" required onchange="onLeaveTypeChange()"></select>
+                </div>
+                <div id="compassionateGroup" class="form-group" style="display:none;">
+                    <label>Compassionate Relation</label>
+                    <select id="compassionateRelation">
+                        <option value="">-- Select relation --</option>
+                        <option value="SPOUSE">Spouse (max 21 days)</option>
+                        <option value="CHILD">Child (max 14 days)</option>
+                        <option value="PARENT">Parent (max 14 days)</option>
+                    </select>
+                </div>
+                <div id="advanceNoticeWarning" style="display:none;background:#FFF7ED;border:1px solid #F97316;border-radius:10px;padding:12px;margin-bottom:15px;font-size:13px;color:#C2410C;font-weight:700;">
+                    <i class="fas fa-exclamation-triangle"></i> Annual/Vacation Leave requires <strong>at least 30 days advance notice</strong>. Earliest start: <span id="earliestStartDate"></span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="leaveStart" required onchange="calculateResumption()">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="leaveEnd" required onchange="calculateResumption()">
+                    </div>
+                </div>
+                <div id="dayCalc" style="background:var(--bg-light-1);padding:12px;border-radius:10px;margin-bottom:10px;font-size:14px;font-weight:800;text-align:center;color:var(--blue-mid);border:1px solid var(--border-gray);">
+                    Total Days: 0
+                </div>
+                <div id="resumeCalc" style="background:var(--bg-light-2);padding:12px;border-radius:10px;margin-bottom:15px;font-size:13px;font-weight:700;text-align:center;color:var(--copper-mid);border:1px solid var(--border-gray);">
+                    Resume Duties On: --
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <textarea id="leaveReason" rows="3" required placeholder="State reason for leave (min 5, max 500 characters)" style="resize:vertical;"></textarea>
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);background:var(--bg-light-1);padding:12px;border-radius:8px;margin-bottom:15px;border:1px solid var(--border-gray);">
+                    <i class="fas fa-user-check" style="color:var(--copper-mid);"></i> Primary Approver: <strong id="immediateSupervisor" style="color:var(--text-dark);">...</strong>
+                </div>
+                <div id="leaveFormError" style="display:none;color:#DC2626;font-size:13px;font-weight:700;margin-bottom:12px;padding:10px;background:#FEF2F2;border-radius:8px;border:1px solid #FCA5A5;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">SUBMIT FOR APPROVAL</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- OT Modal -->
+    <div id="otModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-clock"></i> REQUEST OVERTIME</h3>
+                <span style="cursor:pointer;font-size:24px;color:var(--text-muted);" onclick="closeOTModal()">&times;</span>
+            </div>
+            <div id="otDivisionIError" style="display:none;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:10px;padding:15px;margin-bottom:15px;font-size:14px;color:#DC2626;font-weight:700;text-align:center;">
+                <i class="fas fa-ban"></i> Division I employees are <strong>not entitled to overtime</strong>.<br>Overtime applies to Divisions II, III and IV only.
+            </div>
+            <form id="otForm">
+                <div class="form-group"><label>Date</label><input type="date" id="otDate" required></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                    <div class="form-group"><label>Start Time</label><input type="time" id="otStart" required></div>
+                    <div class="form-group"><label>End Time</label><input type="time" id="otEnd" required></div>
+                </div>
+                <div class="form-group">
+                    <label>Overtime Type</label>
+                    <select id="otType">
+                        <option value="normal">Weekday / Normal (1.112x)</option>
+                        <option value="sunday">Sunday (2.0x)</option>
+                        <option value="holiday">Public Holiday (2.0x)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Reason</label><textarea id="otReason" rows="3" required placeholder="Min 5, max 160 characters"></textarea></div>
+                <div id="otEstimate" style="display:none;background:var(--bg-light-1);padding:12px;border-radius:10px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--blue-mid);border:1px solid var(--border-gray);"></div>
+                <div id="otFormError" style="display:none;color:#DC2626;font-size:13px;font-weight:700;margin-bottom:12px;padding:10px;background:#FEF2F2;border-radius:8px;border:1px solid #FCA5A5;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">SUBMIT OVERTIME REQUEST</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="roleSelector">
+        <label style="font-size: 10px; font-weight: 900; color: var(--text-muted); display: block; margin-bottom: 5px;">SYSTEM VIEW:</label>
+        <select onchange="switchRole(this.value)">
+            <option value="EMPLOYEE">Employee (PRO)</option>
+            <option value="HOD">Head of Department (HR)</option>
+            <option value="FINANCE">Director - Finance</option>
+        </select>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        window.currentUser = { id: localStorage.getItem('erp_user_id') || 'ZM09-CHL-2024-000001', role: 'EMPLOYEE' };
+
+        async function fetchDashboardData(employeeId) {
+            try {
+                const response = await fetch(`${API_BASE}/user-stats/${employeeId}`);
+                const data = await response.json();
+                if (data.success) {
+                    const s = data.stats;
+                    document.getElementById('userName').textContent = s.name;
+                    document.getElementById('userPosition').textContent = s.position;
+                    document.getElementById('userAvatar').textContent = s.name.split(' ').map(n => n[0]).join('').substring(0,2);
+                    document.getElementById('leaveBalance').textContent = s.leaveBalance;
+                    document.getElementById('immediateSupervisor').textContent = s.supervisor;
+                    
+                    if (s.jd) {
+                        document.getElementById('jdTitle').textContent = s.jd.title;
+                        document.getElementById('jdDownloadBtn').onclick = () => window.open(s.jd.path);
+                    }
+                    window.currentUser.department = s.department;
+                    window.currentUser.division = s.division || '';
+                }
+            } catch (error) { console.error('Error:', error); }
+        }
+
+        async function fetchLeaveTypes() {
+            const select = document.getElementById('leaveTypeSelect');
+            try {
+                const response = await fetch(`${API_BASE}/leave-types`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                if (data.success && data.types && data.types.length > 0) {
+                    select.innerHTML = '<option value="">-- Select leave type --</option>' +
+                        data.types.map(t => `<option value="${t.code}">${t.name}</option>`).join('');
+                } else {
+                    select.innerHTML = '<option value="">No types available</option>';
+                }
+            } catch (e) {
+                console.error('Leave type fetch failed:', e);
+                select.innerHTML = '<option value="">Error loading types</option>';
+            }
+        }
+
+        function onLeaveTypeChange() {
+            const type = document.getElementById('leaveTypeSelect').value;
+            const compassGroup = document.getElementById('compassionateGroup');
+            const noticeWarning = document.getElementById('advanceNoticeWarning');
+            const compassRel = document.getElementById('compassionateRelation');
+            compassGroup.style.display = (type === 'COMPASSIONATE') ? 'block' : 'none';
+            compassRel.required = (type === 'COMPASSIONATE');
+            if (['ANNUAL', 'VACATION'].includes(type)) {
+                const earliest = new Date();
+                earliest.setDate(earliest.getDate() + 30);
+                document.getElementById('earliestStartDate').textContent =
+                    earliest.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+                noticeWarning.style.display = 'block';
+                document.getElementById('leaveStart').min = earliest.toISOString().split('T')[0];
+            } else {
+                noticeWarning.style.display = 'none';
+                document.getElementById('leaveStart').min = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        function calculateResumption() {
+            const startVal = document.getElementById('leaveStart').value;
+            const endVal = document.getElementById('leaveEnd').value;
+            if (startVal && endVal) {
+                const s = new Date(startVal);
+                const e = new Date(endVal);
+                if (e >= s) {
+                    const diff = Math.ceil((e - s) / (1000 * 60 * 60 * 24)) + 1;
+                    document.getElementById('dayCalc').textContent = `Total Days: ${diff}`;
+                    
+                    const res = new Date(e);
+                    res.setDate(res.getDate() + 1);
+                    document.getElementById('resumeCalc').textContent = `Resume Duties On: ${res.toDateString()}`;
+                } else {
+                    document.getElementById('dayCalc').textContent = `Total Days: 0`;
+                    document.getElementById('resumeCalc').textContent = `Resume Duties On: --`;
+                }
+            }
+        }
+
+        function openLeaveModal() { 
+            document.getElementById('leaveModal').style.display = 'flex'; 
+            fetchLeaveTypes(); 
+        }
+        function closeLeaveModal() { document.getElementById('leaveModal').style.display = 'none'; }
+
+        function closeOTModal() { document.getElementById('otModal').style.display = 'none'; }
+
+        document.getElementById('leaveForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const errEl = document.getElementById('leaveFormError');
+            errEl.style.display = 'none';
+            const reason = document.getElementById('leaveReason').value.trim();
+            if (reason.length < 5) { errEl.textContent = 'Reason must be at least 5 characters.'; errEl.style.display = 'block'; return; }
+            if (reason.length > 500) { errEl.textContent = 'Reason cannot exceed 500 characters.'; errEl.style.display = 'block'; return; }
+            const payload = {
+                employeeId: window.currentUser.id,
+                leaveType: document.getElementById('leaveTypeSelect').value,
+                startDate: document.getElementById('leaveStart').value,
+                endDate: document.getElementById('leaveEnd').value,
+                reason: reason,
+                compassionateRelation: document.getElementById('compassionateRelation').value || undefined
+            };
+            try {
+                const response = await fetch(`${API_BASE}/leave-request`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Leave request submitted!
+Reference: LV-' + data.referenceId + '
+Days requested: ' + data.daysRequested + ' working days');
+                    closeLeaveModal(); document.getElementById('leaveForm').reset();
+                    document.getElementById('compassionateGroup').style.display = 'none';
+                    document.getElementById('advanceNoticeWarning').style.display = 'none';
+                } else {
+                    errEl.textContent = data.error || 'Submission failed.'; errEl.style.display = 'block';
+                }
+            } catch (err) {
+                errEl.textContent = 'Network error. Is the API server running?'; errEl.style.display = 'block';
+            }
+        };
+
+        function openOTModal() {
+            const divisionIBanner = document.getElementById('otDivisionIError');
+            const otFormEl = document.getElementById('otForm');
+            const division = window.currentUser.division || '';
+            if (division === 'I') {
+                divisionIBanner.style.display = 'block';
+                otFormEl.style.display = 'none';
+            } else {
+                divisionIBanner.style.display = 'none';
+                otFormEl.style.display = 'block';
+            }
+            document.getElementById('otModal').style.display = 'flex';
+        }
+
+        document.getElementById('otForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const errEl = document.getElementById('otFormError');
+            errEl.style.display = 'none';
+            const reason = document.getElementById('otReason').value.trim();
+            if (reason.length < 5) { errEl.textContent = 'Reason must be at least 5 characters.'; errEl.style.display = 'block'; return; }
+            if (reason.length > 160) { errEl.textContent = 'Reason cannot exceed 160 characters.'; errEl.style.display = 'block'; return; }
+            const startVal = document.getElementById('otStart').value;
+            const endVal = document.getElementById('otEnd').value;
+            if (startVal >= endVal) { errEl.textContent = 'End time must be after start time.'; errEl.style.display = 'block'; return; }
+            const payload = {
+                employeeId: window.currentUser.id,
+                overtimeDate: document.getElementById('otDate').value,
+                startTime: startVal, endTime: endVal,
+                overtimeType: document.getElementById('otType').value,
+                reason: reason
+            };
+            try {
+                const response = await fetch(`${API_BASE}/overtime-request`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Overtime request submitted!
+Reference: ' + data.referenceId + '
+Hours: ' + data.hoursWorked + ' hrs
+Est. Amount: ' + data.estimatedAmount);
+                    closeOTModal(); document.getElementById('otForm').reset();
+                    document.getElementById('otEstimate').style.display = 'none';
+                } else {
+                    errEl.textContent = data.error || 'Submission failed.'; errEl.style.display = 'block';
+                }
+            } catch (err) {
+                errEl.textContent = 'Network error. Is the API server running?'; errEl.style.display = 'block';
+            }
+        };
+
+        document.getElementById('otStart').addEventListener('change', showOTEstimate);
+        document.getElementById('otEnd').addEventListener('change', showOTEstimate);
+        document.getElementById('otType').addEventListener('change', showOTEstimate);
+        function showOTEstimate() {
+            const s = document.getElementById('otStart').value;
+            const e = document.getElementById('otEnd').value;
+            const type = document.getElementById('otType').value;
+            if (!s || !e || s >= e) { document.getElementById('otEstimate').style.display = 'none'; return; }
+            const [sh, sm] = s.split(':').map(Number);
+            const [eh, em] = e.split(':').map(Number);
+            const hours = ((eh * 60 + em) - (sh * 60 + sm)) / 60;
+            const multipliers = { normal: 1.112, sunday: 2.0, holiday: 2.0 };
+            const m = multipliers[type] || 1.112;
+            const el = document.getElementById('otEstimate');
+            el.innerHTML = '<i class="fas fa-calculator"></i> Duration: <strong>' + hours.toFixed(2) + ' hrs</strong> &nbsp;|&nbsp; Multiplier: <strong>' + m + 'x</strong>';
+            el.style.display = 'block';
+        }
+
+        function showView(viewId, element) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            if (element) element.classList.add('active');
+
+            if (viewId === 'orgChart') {
+                const dept = window.currentUser?.department || 'Engineering';
+                document.getElementById('orgChartFrame').src = `org-chart-widget.html?department=${encodeURIComponent(dept)}`;
+            }
+            if (viewId === 'ledger') fetchLedger();
+            if (viewId === 'budget') fetchFinance();
+        }
+
+        async function fetchFinance() {
+            try {
+                const response = await fetch(`${API_BASE}/finance-summary`);
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('revYTD').textContent = `ZMW ${data.revenueYTD.toLocaleString()}`;
+                    document.getElementById('expYTD').textContent = `ZMW ${data.expenditureYTD.toLocaleString()}`;
+                    const bank = document.getElementById('bankTable');
+                    bank.innerHTML = data.bankBalances.map(b => `
+                        <tr>
+                            <td style="padding: 10px 0;"><strong>${b.account}</strong><br><small style="color: var(--text-muted)">${b.bank}</small></td>
+                            <td style="text-align: right; font-weight: 800; color: var(--blue-mid);">ZMW ${b.balance.toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function fetchLedger() {
+            try {
+                const response = await fetch(`${API_BASE}/ledger`);
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('ledgerBody').innerHTML = data.entries.map(e => `
+                        <tr>
+                            <td>${e.date}</td><td style="font-family: monospace; color: var(--blue-mid);">${e.id}</td><td>${e.description}</td>
+                            <td><span class="badge">${e.category}</span></td>
+                            <td style="text-align: right; color: ${e.type === 'CR' ? '#10B981' : 'inherit'}">
+                                ${e.type === 'DR' ? '-' : ''}${e.amount.toLocaleString(undefined, {minimumFractionDigits:2})}
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function switchRole(role) {
+            const hodSec = document.getElementById('hodSection');
+            const finSec = document.getElementById('financeSection');
+            hodSec.style.display = (role !== 'EMPLOYEE') ? 'block' : 'none';
+            finSec.style.display = (role === 'FINANCE') ? 'block' : 'none';
+            
+            if (role === 'EMPLOYEE') window.currentUser.id = 'ZM09-CHL-2024-000001';
+            else if (role === 'HOD') window.currentUser.id = 'ZM09-CHL-2024-000002';
+            else window.currentUser.id = 'ZM09-CHL-2024-000003';
+            
+            fetchDashboardData(window.currentUser.id);
+            showView('overview', document.querySelector('.nav-item'));
+        }
+
+        fetchDashboardData(window.currentUser.id);
+    </script>
+</body>
+</html>

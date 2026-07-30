@@ -1,0 +1,64 @@
+                            Table "public.employees"
+             Column             |  Type   | Collation | Nullable |   Default    
+--------------------------------+---------+-----------+----------+--------------
+ province                       | text    |           |          | 
+ district                       | text    |           |          | 
+ name                           | text    |           |          | 
+ nrc_number                     | text    |           |          | 
+ sex                            | text    |           |          | 
+ date_of_birth                  | text    |           |          | 
+ position                       | text    |           |          | 
+ salary_scale                   | text    |           |          | 
+ local_authority_service_number | text    |           |          | 
+ date_of_first_appointment      | text    |           |          | 
+ date_confirmed                 | text    |           |          | 
+ date_substantive_appointment   | text    |           |          | 
+ date_reported                  | text    |           |          | 
+ academic_qualifications        | text    |           |          | 
+ professional_qualifications    | text    |           |          | 
+ acting_position                | text    |           |          | 
+ acting_date                    | text    |           |          | 
+ department                     | text    |           |          | 
+ phone_number                   | text    |           |          | 
+ carried_forward_leave          | bigint  |           |          | 
+ days_availed                   | bigint  |           |          | 
+ leave_taken                    | bigint  |           |          | 
+ leave_commuted                 | bigint  |           |          | 
+ leave_transferred_out          | bigint  |           |          | 
+ leave_balance                  | bigint  |           |          | 
+ employee_id                    | text    |           | not null | 
+ gender                         | text    |           |          | 
+ is_active                      | boolean |           |          | true
+ hire_date                      | date    |           |          | 
+ email                          | text    |           |          | 
+ phone                          | text    |           |          | 
+ supervisor_id                  | bigint  |           |          | 
+ notification_preference        | text    |           |          | 'Both'::text
+ salary_scale_code              | text    |           |          | 
+ establishment_position_code    | text    |           |          | 
+ authorized_establishment       | bigint  |           |          | 
+ establishment_department       | text    |           |          | 
+ council_type_id                | bigint  |           |          | 
+ establishment_match_method     | text    |           |          | 
+ union_code                     | text    |           |          | 
+ is_zapd_registered             | bigint  |           |          | '0'::bigint
+ handles_solid_waste            | bigint  |           |          | '0'::bigint
+ is_council_police              | bigint  |           |          | '0'::bigint
+ authority_code                 | text    |           |          | 
+Indexes:
+    "employees_pkey" PRIMARY KEY, btree (employee_id)
+Check constraints:
+    "chk_vacant_ids" CHECK (employee_id ~~ '%-VACANT'::text AND is_active = false OR employee_id !~~ '%-VACANT'::text)
+Referenced by:
+    TABLE "length_of_stay" CONSTRAINT "length_of_stay_employee_id_fkey" FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+    TABLE "vacancy_status" CONSTRAINT "vacancy_status_employee_id_fkey" FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+
+                Table "public.authorities"
+      Column      | Type | Collation | Nullable | Default 
+------------------+------+-----------+----------+---------
+ authority_prefix | text |           | not null | 
+ authority_name   | text |           |          | 
+ authority_type   | text |           |          | 
+Indexes:
+    "idx_32841_sqlite_autoindex_authorities_1" PRIMARY KEY, btree (authority_prefix)
+

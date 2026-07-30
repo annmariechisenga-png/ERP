@@ -1,0 +1,104 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+DIRECTOR___COMMUNITY_SERVICES,DIRECTOR - COMMUNITY SERVICES,,1,Community Services,,Town
+ASSISTANT_DIRECTOR___SOCIAL_SE,ASSISTANT DIRECTOR - SOCIAL SERVICES,L,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+COMMUNITY_DEVELOPMENT_OFFICER,Community Development Officer,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+ASSISTANT_COMMUNITY_DEVELOPMEN,Assistant Community Development Officer,,2,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,Town
+COMMUNITY_DEVELOPMENT_ASSISTAN,Community Development Assistant,,4,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,Town
+LIBRARY_OFFICER,Library Officer,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+CONSERVATOR,Conservator,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+ASSISTANT_LIBRARY_OFFICER,Assistant Library Officer,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+ASSISTANT_DIRECTOR___BUS_STATI,"ASSISTANT DIRECTOR - BUS STATIONS, MARKETS & HOUSING",,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+HOUSING_OFFICER,Housing Officer,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+ASSISTANT_HOUSING_OFFICER,Assistant Housing Officer,,2,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+BUS_STATIONS_MANAGER,Bus Stations Manager,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+ASSISTANT_BUS_STATIONS_MANAGER,Assistant Bus Stations Manager,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+BUS_STATION_MASTER,Bus Station Master,,2,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+MARKETS_MANAGER,Markets Manager,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+ASSISTANT_MARKETS_MANAGER,Assistant Markets Manager,,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+MARKETS_MASTER,Markets Master,,2,Community Services,DIRECTOR___COMMUNITY_SERVICES,Town
+DIRECTOR___COMMUNITY_SERVICES,DIRECTOR - COMMUNITY SERVICES,LGSS/04,1,Community Services,,Municipal
+ASSISTANT_DIRECTOR___SOCIAL_SE,ASSISTANT DIRECTOR - SOCIAL SERVICES,L,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+CHIEF_COMMUNITY_DEVELOPMENT_OF,Chief Community Development Officer,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+SENIOR_COMMUNITY_DEVELOPMENT_O,Senior Community Development Officer,LGSS/07,2,Community Services,CHIEF_COMMUNITY_DEVELOPMENT_OF,Municipal
+COMMUNITY_DEVELOPMENT_OFFICER,Community Development Officer,LGSS/08,6,Community Services,CHIEF_COMMUNITY_DEVELOPMENT_OF,Municipal
+SENIOR_ASSISTANT_DEVELOPMENT_O,Senior Assistant Development Officer,LGSS/11,4,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,Municipal
+ASSISTANT_COMMUNITY_DEVELOPMEN,Assistant Community Development Officer,LGSS/14,4,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,Municipal
+COMMUNITY_DEVELOPMENT_ASSISTAN,Community Development Assistant,LGSS/17,10,Community Services,ASSISTANT_COMMUNITY_DEVELOPMEN,Municipal
+_ADDITIONAL_REPORTING_LINES_,[Additional reporting lines],,1,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,Municipal
+_ADDITIONAL_COMMUNITY_DEVELOPM,[Additional Community Development Officers],,1,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,Municipal
+_ADDITIONAL_SENIOR_COMMUNITY_D,[Additional Senior Community Development Officers],,1,Community Services,CHIEF_COMMUNITY_DEVELOPMENT_OF,Municipal
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,CHIEF_COMMUNITY_DEVELOPMENT_OF,Municipal
+LIBRARIAN,Librarian,LGSS/07,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+SENIOR_ASSISTANT_LIBRARIAN,Senior Assistant Librarian,LGSS/10,2,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+ASSISTANT_LIBRARIAN,Assistant Librarian,LGSS/12,8,Community Services,SENIOR_ASSISTANT_LIBRARIAN,Municipal
+SENIOR_LIBRARY_ASSISTANT,Senior Library Assistant,LGSS/14,1,Community Services,SENIOR_ASSISTANT_LIBRARIAN,Municipal
+LIBRARY_ASSISTANT,Library Assistant,LGSS/17,2,Community Services,SENIOR_LIBRARY_ASSISTANT,Municipal
+_ADDITIONAL_ASSISTANT_LIBRARIA,[Additional Assistant Librarians],,1,Community Services,SENIOR_ASSISTANT_LIBRARIAN,Municipal
+_ADDITIONAL_SENIOR_ASSISTANT_L,[Additional Senior Assistant Librarians],,1,Community Services,SENIOR_ASSISTANT_LIBRARIAN,Municipal
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+ASSISTANT_DIRECTOR___BUS_STATI,"ASSISTANT DIRECTOR - BUS STATIONS, MARKETS & HOUSING",LGSS/05,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+CHIEF_HOUSING_OFFICER,Chief Housing Officer,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+CHIEF_SETTLEMENTS_OFFICER,Chief Settlements Officer,LGSS/07,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+SENIOR_SETTLEMENTS_OFFICER,Senior Settlements Officer,LGSS/08,3,Community Services,CHIEF_SETTLEMENTS_OFFICER,Municipal
+HOUSING_OFFICER,Housing Officer,LGSS/10,5,Community Services,CHIEF_SETTLEMENTS_OFFICER,Municipal
+ASSISTANT_HOUSING_OFFICER,Assistant Housing Officer,LGSS/14,3,Community Services,HOUSING_OFFICER,Municipal
+_ADDITIONAL_SENIOR_SETTLEMENTS,[Additional Senior Settlements Officers],,1,Community Services,CHIEF_SETTLEMENTS_OFFICER,Municipal
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,CHIEF_SETTLEMENTS_OFFICER,Municipal
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+BUS_STATIONS_MANAGER,Bus Stations Manager,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+ASSISTANT_BUS_STATIONS_MANAGER,Assistant Bus Stations Manager,LGSS/08,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+STATION_MASTER,Station Master,LGSS/16,2,Community Services,ASSISTANT_BUS_STATIONS_MANAGER,Municipal
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+MARKETS_MANAGER,Markets Manager,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+ASSISTANT_MARKETS_MANAGER,Assistant Markets Manager,LGSS/08,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+MARKETS_MASTER,Markets Master,LGSS/16,11,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,Municipal
+DIRECTOR___COMMUNITY_SERVICES,DIRECTOR - COMMUNITY SERVICES,LGSS/03,1,Community Services,,City
+ASSISTANT_DIRECTOR___SOCIAL_SE,ASSISTANT DIRECTOR - SOCIAL SERVICES,L,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+CHIEF_OFFICER___COMMUNITY_DEVE,Chief Officer - Community Development,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+SENIOR_COMMUNITY_DEVELOPMENT_O,Senior Community Development Officer,LGSS/07,5,Community Services,CHIEF_OFFICER___COMMUNITY_DEVE,City
+COMMUNITY_DEVELOPMENT_OFFICER,Community Development Officer,LGSS/08,14,Community Services,CHIEF_OFFICER___COMMUNITY_DEVE,City
+SENIOR_ASSISTANT_DEVELOPMENT_O,Senior Assistant Development Officer,LGSS/11,8,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,City
+ASSISTANT_COMMUNITY_DEVELOPMEN,Assistant Community Development Officer,LGSS/14,25,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,City
+COMMUNITY_DEVELOPMENT_ASSISTAN,Community Development Assistant,LGSS/17,10,Community Services,ASSISTANT_COMMUNITY_DEVELOPMEN,City
+_ADDITIONAL_ASSISTANT_DEVELOPM,[Additional Assistant Development Officers],,1,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,City
+_ADDITIONAL_COMMUNITY_DEVELOPM,[Additional Community Development Officers],,1,Community Services,COMMUNITY_DEVELOPMENT_OFFICER,City
+_ADDITIONAL_SENIOR_COMMUNITY_D,[Additional Senior Community Development Officers],,1,Community Services,CHIEF_OFFICER___COMMUNITY_DEVE,City
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,CHIEF_OFFICER___COMMUNITY_DEVE,City
+CHIEF_LIBRARY_AND_ARCHIVES_OFF,Chief Library and Archives Officer,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+LIBRARIAN,Librarian,LGSS/07,4,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+SENIOR_ASSISTANT_LIBRARIAN,Senior Assistant Librarian,LGSS/10,4,Community Services,LIBRARIAN,City
+ASSISTANT_LIBRARIAN,Assistant Librarian,LGSS/12,4,Community Services,LIBRARIAN,City
+SENIOR_LIBRARY_ASSISTANT,Senior Library Assistant,LGSS/14,8,Community Services,ASSISTANT_LIBRARIAN,City
+LIBRARY_ASSISTANT,Library Assistant,LGSS/17,7,Community Services,ASSISTANT_LIBRARIAN,City
+_ADDITIONAL_ASSISTANT_LIBRARIA,[Additional Assistant Librarians],,1,Community Services,ASSISTANT_LIBRARIAN,City
+_ADDITIONAL_SENIOR_ASSISTANT_L,[Additional Senior Assistant Librarians],,1,Community Services,LIBRARIAN,City
+_ADDITIONAL_LIBRARIANS_,[Additional Librarians],,1,Community Services,LIBRARIAN,City
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+ASSISTANT_DIRECTOR___BUS_STATI,"ASSISTANT DIRECTOR - BUS STATIONS, MARKETS & HOUSING",LGSS/05,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+CHIEF_HOUSING_OFFICER,Chief Housing Officer,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+CHIEF_SETTLEMENTS_OFFICER,Chief Settlements Officer,LGSS/07,1,Community Services,CHIEF_HOUSING_OFFICER,City
+SENIOR_SETTLEMENTS_OFFICER,Senior Settlements Officer,LGSS/08,3,Community Services,CHIEF_HOUSING_OFFICER,City
+SETTLEMENT_OFFICER,Settlement Officer,LGSS/10,7,Community Services,SENIOR_SETTLEMENTS_OFFICER,City
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,CHIEF_HOUSING_OFFICER,City
+SENIOR_HOUSING_OFFICER,Senior Housing Officer,LGSS/08,5,Community Services,CHIEF_HOUSING_OFFICER,City
+HOUSING_OFFICER,Housing Officer,LGSS/10,8,Community Services,CHIEF_HOUSING_OFFICER,City
+BUS_STATION_MANAGER,Bus Station Manager,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+ASSISTANT_BUS_STATION_MANAGER,Assistant Bus Station Manager,LGSS/08,1,Community Services,BUS_STATION_MANAGER,City
+BUS_STATION_MASTER,Bus Station Master,LGSS/16,5,Community Services,BUS_STATION_MANAGER,City
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,BUS_STATION_MANAGER,City
+MARKETS_MANAGER,Markets Manager,LGSS/06,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+ASSISTANT_MARKETS_MANAGER,Assistant Markets Manager,LGSS/08,4,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+MARKET_MASTER,Market Master,LGSS/16,30,Community Services,ASSISTANT_MARKETS_MANAGER,City
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,DIRECTOR___COMMUNITY_SERVICES,City
+SENIOR_SKILLS_TRAINING_OFFICER,Senior Skills Training Officer,LGSS/07,1,Community Services,,City
+SKILLS_TRAINING_OFFICER,Skills Training Officer,LGSS/08,1,Community Services,,City
+AUTOMOTIVE_ENGINEERING_INSTRUC,Automotive Engineering Instructor,LGSS/14,2,Community Services,,City
+CARPENTRY___JOINERY_INSTRUCTOR,Carpentry & Joinery Instructor,LGSS/14,2,Community Services,,City
+FASHION_DESIGN___TEXTILE_TECHN,Fashion Design & Textile Technology Instructor,LGSS/14,2,Community Services,,City
+GENERAL_AGRICULTURE_INSTRUCTOR,General Agriculture Instructor,LGSS/14,2,Community Services,,City
+ELECTRICAL_TECHNOLOGY_INSTRUCT,Electrical Technology Instructor,LGSS/14,2,Community Services,,City
+GENERAL_HOSPITALITY_INSTRUCTOR,General Hospitality Instructor,LGSS/14,2,Community Services,,City
+AUTO_BODY_REPAIR__PANEL_BEATIN,"Auto body repair, panel beating & spray painting Instructor",LGSS/14,2,Community Services,,City
+METAL_FABRICATION___WELDING_IN,Metal Fabrication & Welding Instructor,LGSS/14,2,Community Services,,City
+_ADDITIONAL_STRUCTURE_,[Additional structure],,1,Community Services,,City

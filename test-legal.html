@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Legal Department Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .council { margin-bottom: 30px; border: 1px solid #ccc; padding: 15px; }
+        .council h2 { margin-top: 0; }
+        .position { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Legal Department - All Councils</h1>
+    <div id="output">Loading...</div>
+
+    <script>
+        fetch('org-data/org_chart.json?t=' + Date.now())
+            .then(r => r.json())
+            .then(data => {
+                const legal = data.Legal;
+                let html = '';
+                
+                for (const [council, councilData] of Object.entries(legal)) {
+                    html += `<div class="council">
+                        <h2>🏛️ ${council} Council</h2>
+                        <p>Positions: ${councilData.total_positions} | Headcount: ${councilData.total_headcount}</p>
+                        <div class="position">`;
+                    
+                    // Display root positions
+                    for (const root of councilData.root_positions || []) {
+                        html += `<div><strong>${root.title}</strong> (${root.position_id}) - ${root.salary_scale}</div>`;
+                        if (root.direct_reports) {
+                            html += `<div style="margin-left: 30px;">`;
+                            for (const child of root.direct_reports) {
+                                html += `<div>├── ${child.title} (${child.position_id})${child.establishment > 1 ? ` x${child.establishment}` : ''}</div>`;
+                                if (child.direct_reports) {
+                                    for (const grand of child.direct_reports) {
+                                        html += `<div style="margin-left: 30px;">&nbsp;&nbsp;&nbsp;└── ${grand.title} (${grand.position_id})${grand.establishment > 1 ? ` x${grand.establishment}` : ''}</div>`;
+                                    }
+                                }
+                            }
+                            html += `</div>`;
+                        }
+                    }
+                    html += `</div></div>`;
+                }
+                
+                document.getElementById('output').innerHTML = html;
+            })
+            .catch(err => {
+                document.getElementById('output').innerHTML = '<p style="color:red">Error loading data: ' + err.message + '</p>';
+            });
+    </script>
+</body>
+</html>

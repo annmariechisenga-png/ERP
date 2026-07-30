@@ -1,0 +1,60 @@
+┌─────────────────────────────────────────────────────────────────┐
+│                    KAFUE TOWN COUNCIL                           │
+│              LOCAL GOVERNMENT SERVICE COMMISSION                 │
+│                       PAYSLIP - JUNE 2025                        │
+│                 PAY PERIOD: 01/06/2025 - 30/06/2025              │
+├─────────────────────────────────────────────────────────────────┤
+│ PAYSLIP NO: KTC/2025/06/001234    VERIFICATION: KTC-8F3A-9B2C   │
+├─────────────────────────────────────────────────────────────────┤
+│ EMPLOYEE INFORMATION                  │ EMPLOYER INFORMATION    │
+├───────────────────────────────────────┼─────────────────────────┤
+│ Name: CHISENGA CHISENGA                │ KAFUE TOWN COUNCIL      │
+│ Emp No: KTC221                         │ TPIN: 100*****812       │
+│ NRC: 804***/11/***1                    │ NAPSA: 401*****89       │
+│ NHIS: 21********12                      │                         │
+│ TPIN: 100*****380                       │                         │
+│ NAPSA: 106***094                        │                         │
+│ Department: ADMINISTRATION              │                         │
+│ Grade: LGSS 05 | Div 1                  │                         │
+├───────────────────────────────────────┴─────────────────────────┤
+│ EARNINGS                                                         │
+├─────────────┬──────────────────┬────────────┬───────────────────┤
+│ Code        │ Description      │ Units      │ Amount (ZMW)      │
+├─────────────┼──────────────────┼────────────┼───────────────────┤
+│ BAS         │ Basic Pay        │ 1 month    │ 11,770.16         │
+│ HOU         │ Housing Allowance│ 1 month    │ 2,354.03          │
+│ TRN         │ Transport Allow  │ 1 month    │ 2,000.93          │
+│ EDU         │ Education Allow  │ 1 month    │ 2,354.03          │
+├─────────────┴──────────────────┴────────────┼───────────────────┤
+│ TOTAL EARNINGS                               │ 18,479.15         │
+├──────────────────────────────────────────────┴───────────────────┤
+│ DEDUCTIONS                                                       │
+├─────────────┬──────────────────┬────────────┬───────────────────┤
+│ Code        │ Description      │ Authority  │ Amount (ZMW)      │
+├─────────────┼──────────────────┼────────────┼───────────────────┤
+│ TAX         │ PAYE             │ ITA Cap 45 │ 3,225.02          │
+│ NAPSA       │ National Pension │ NAPSA Act  │ 588.51            │
+│ NHIS        │ Health Insurance │ NHIS Act   │ 155.00            │
+│ SAL ADV     │ Salary Advance   │ Loan SA45  │ 833.33            │
+│ LEVY        │ Personal Levy    │ LG Act     │ 200.00            │
+│ FUN         │ Funeral Policy   │ ZSIC/12345 │ 81.22             │
+├─────────────┴──────────────────┴────────────┼───────────────────┤
+│ TOTAL DEDUCTIONS                             │ 5,083.08          │
+├──────────────────────────────────────────────┴───────────────────┤
+│ NET PAY: ZMW 13,396.07                                           │
+├─────────────────────────────────────────────────────────────────┤
+│ PAYMENT DETAILS                         │ LEAVE SUMMARY         │
+├─────────────────────────────────────────┼───────────────────────┤
+│ Bank: Standard Chartered                 │ Annual Leave: 26.0    │
+│ Account: **********5200                  │ Sick Leave: 12.0      │
+│ Ref: EFT-20250625-001234                 │ Family Care: 3.0      │
+│ Value Date: 25/06/2025                    │ Max: 230 days        │
+├─────────────────────────────────────────┴───────────────────────┤
+│ VERIFICATION & AUTHENTICITY                                      │
+├─────────────────────────────────────────────────────────────────┤
+│ This payslip is system-generated and valid without signature.    │
+│ Digitally signed: Payroll System v2.1.0 at 2025-06-25T14:30:00+02│
+│ Verify at: https://verify.kafue.gov.zm/payslip?code=KTC-8F3A-9B2C│
+│                                                                   │
+│ For queries: payroll@kafue.gov.zm                                │
+└─────────────────────────────────────────────────────────────────┘

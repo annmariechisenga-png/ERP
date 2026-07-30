@@ -1,0 +1,26 @@
+allowance_code,allowance_name,calc_method,default_value,taxable,pensionable,active,source_doc,show_on_payslip
+HOUSING,"Housing Allowance",PERCENT_BASIC,0.2,0,0,1,"2025 Management / 2025 Collective Agreement Unionized",1
+TRANSPORT,"Transport Allowance",PERCENT_BASIC,0.17,1,0,1,"2025 Management / 2025 Collective Agreement Unionized",1
+FUEL,"Fuel Allowance",PERCENT_BASIC,0.32,1,0,1,"2025 Management",1
+EDUCATION,"Education Allowance",PERCENT_BASIC,0.2,1,0,1,"2025 Management / 2025 Collective Agreement Unionized",1
+RISK,"Risk Allowance",PERCENT_BASIC,0.05,1,0,1,"Collective Agreement 2026",1
+RURAL_HARDSHIP,"Rural Hardship Allowance",PERCENT_BASIC,0.2,1,0,1,"2025 Management / 2025 Collective Agreement Unionized",1
+REMOTE_HARDSHIP,"Remote Hardship Allowance",PERCENT_BASIC,0.25,1,0,1,"2025 Management / 2025 Collective Agreement Unionized",1
+STANDBY,"Standby Allowance",PERCENT_BASIC,0.06,1,0,1,"FIRESUZ Agreement 2024 Sec 2.2(iii)",1
+EXCESS_HOURS,"Allowance in Lieu of Excess Hours",FIXED_AMOUNT,400.0,1,0,1,"FireSUZ 2024",1
+MEAL,"Meal Allowance",FIXED_AMOUNT,150.0,0,0,1,"2025 Management",1
+SETTLING_IN,"Settling-in Allowance",PERCENT_ANNUAL_BASIC,0.25,0,0,1,"2025 Management / 2025 Collective Agreement Unionized",1
+SUBSISTENCE,"Subsistence Allowance",FIXED_AMOUNT,0.0,0,0,1,"Policy dependent by location",1
+OUT_OF_POCKET,"Out-of-Pocket Allowance",FIXED_AMOUNT,0.0,0,0,1,"Policy dependent by location",1
+REPATRIATION,"Repatriation Allowance",FIXED_AMOUNT,0.0,0,0,1,"Policy dependent by division",1
+HOU,"Housing Allowance",PERCENT_BASIC,0.2,0,0,1,"Collective Agreement 2026",1
+EDU,"Education Allowance",PERCENT_BASIC,0.2,1,0,1,"Collective Agreement 2026",1
+TRN,"Transport Allowance",PERCENT_BASIC,0.2,1,0,1,"Collective Agreement 2026",1
+FUL,"Fuel Allowance",PERCENT_BASIC,0.3,1,0,1,"Management Circular 2025 Sec 2.1(ii)",1
+ACTING,"Acting Allowance",VARIABLE,0.0,1,0,1,"Collective Agreement 2025 Acting post clause",1
+RURAL,"Rural Hardship Allowance",PERCENT_BASIC,0.2,1,0,1,"Collective Agreement 2025 Sec 4.2(i)",1
+REMOTE,"Remote Hardship Allowance",PERCENT_BASIC,0.25,1,0,1,"Collective Agreement 2025 Sec 4.2(ii)",1
+RATION,"Ration Allowance",PERCENT_BASIC_TIERED,0.0,1,0,1,"FIRESUZ Agreement 2024 Sec 2.2(v)",1
+BACKPAY_2026,"2026 Salary Arrears (Jan-Apr)",FIXED_AMOUNT,0.0,1,1,1,"Collective Agreement 2026",1
+BACKPAY,"2026 Salary Arrears",FIXED_AMOUNT,0.0,1,1,1,"Collective Agreement 2026",1
+UPKEEP,"Uniform Upkeep Allowance",FIXED_AMOUNT,240.0,0,0,1,"Collective Agreement 2026",1

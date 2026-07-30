@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Officer Salary Placement</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+  <style>
+    body { background: #f5f7fa; }
+    .salary-placement-card { max-width: 900px; margin: 2rem auto; }
+  </style>
+</head>
+<body>
+<div class="container salary-placement-card">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h3>Officer Salary Placement</h3>
+      <div class="alert alert-success">
+        <strong>Progression:</strong> New recruits start at <strong>Notch 1 (entry level)</strong>.
+        Each year with successful appraisal, officer moves UP one notch.
+      </div>
+
+      <div id="errorBanner" class="alert alert-danger d-none"></div>
+      <div id="successBanner" class="alert alert-success d-none"></div>
+
+      <div class="alert alert-warning d-flex align-items-center gap-2 mb-3" id="authNotice">
+        <span class="small">Secured endpoints require Bearer token:</span>
+        <input id="tokenInput" type="password" class="form-control form-control-sm"
+               placeholder="Paste JWT token">
+        <button type="button" class="btn btn-sm btn-warning" id="applyTokenBtn">Apply</button>
+      </div>
+
+      <form id="salaryForm">
+        <div class="row">
+          <div class="col-md-6">
+            <label>Salary Scale:</label>
+            <select id="scaleSelect" class="form-select" required>
+              <option value="">-- Select Scale --</option>
+              <option value="LGSS05">LGSS05 (Division I)</option>
+              <option value="LGSS08">LGSS08 (Division II)</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label>Current Notch:</label>
+            <select id="notchSelect" class="form-select" required disabled>
+              <option value="">-- First select scale --</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="salaryDisplay" class="mt-3 p-3 rounded d-none" style="background-color:#f8f9fa;">
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Monthly Salary:</strong>
+              <span class="badge bg-primary fs-6">ZMW <span id="salaryAmount"></span></span>
+            </div>
+            <div class="col-md-6">
+              <strong>Career Stage:</strong>
+              <span id="stageBadge" class="badge"></span>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label>Career Progression:</label>
+            <div class="progression-track">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Entry (Notch 1)</span>
+                <span>Senior (Notch 7)</span>
+              </div>
+              <div class="progress" style="height: 30px;">
+                <div id="notchProgress" class="progress-bar bg-success"
+                     role="progressbar" style="width: 0%;">
+                  Notch <span id="notchDisplay"></span> of 7
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="nextNotchInfo" class="mt-2 p-2 bg-light rounded"></div>
+        </div>
+
+        <div class="mt-3 d-none" id="appraisalSection">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="appraisalComplete">
+            <label class="form-check-label">
+              Officer has completed positive annual appraisal
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <hr class="my-4">
+
+      <h5>Annual Increment Actions</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="border rounded p-3 h-100">
+            <h6 class="mb-2">Single Officer Increment</h6>
+            <div class="mb-2">
+              <label class="form-label">Officer ID</label>
+              <input id="singleOfficerId" type="number" class="form-control" min="1" placeholder="e.g. 42">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Appraisal ID (optional UUID)</label>
+              <input id="singleAppraisalId" type="text" class="form-control" placeholder="optional">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Effective Date</label>
+              <input id="singleEffectiveDate" type="date" class="form-control">
+            </div>
+            <button type="button" class="btn btn-primary" id="runSingleIncrementBtn">
+              Process Annual Increment
+            </button>
+            <pre id="singleResult" class="mt-3 p-2 bg-light rounded small mb-0" style="min-height: 70px;"></pre>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="border rounded p-3 h-100">
+            <h6 class="mb-2">Batch Increment Processing</h6>
+            <div class="mb-2">
+              <label class="form-label">Authority ID (optional)</label>
+              <input id="batchAuthorityId" type="text" class="form-control" placeholder="process all when empty">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Year</label>
+              <input id="batchYear" type="number" class="form-control" min="2000" max="2100" value="2026">
+            </div>
+            <button type="button" class="btn btn-outline-primary" id="runBatchIncrementBtn">
+              Run Batch Increments
+            </button>
+            <div id="batchResult" class="mt-3 small"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const notchData = {};
+
+function getToken() {
+  return sessionStorage.getItem('erp_token') || localStorage.getItem('erp_token') || '';
+}
+
+function applyToken() {
+  const value = document.getElementById('tokenInput').value.trim();
+  if (value) {
+    sessionStorage.setItem('erp_token', value);
+    document.getElementById('authNotice').classList.add('d-none');
+    showSuccess('Bearer token applied for API calls.');
+  }
+}
+
+function authHeaders() {
+  const token = getToken();
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  return headers;
+}
+
+async function apiFetch(url, options = {}) {
+  const merged = {
+    ...options,
+    headers: {
+      ...authHeaders(),
+      ...(options.headers || {}),
+    },
+  };
+  const response = await fetch(url, merged);
+  if (!response.ok) {
+    let message = `HTTP ${response.status}`;
+    try {
+      const body = await response.json();
+      message = body.message || body.error || message;
+    } catch (_e) {}
+    throw new Error(message);
+  }
+  return response;
+}
+
+function showError(msg) {
+  const b = document.getElementById('errorBanner');
+  b.textContent = msg;
+  b.classList.remove('d-none');
+  document.getElementById('successBanner').classList.add('d-none');
+}
+
+function clearError() {
+  document.getElementById('errorBanner').classList.add('d-none');
+}
+
+function showSuccess(msg) {
+  const b = document.getElementById('successBanner');
+  b.textContent = msg;
+  b.classList.remove('d-none');
+}
+
+function formatZMW(value) {
+  return Number(value || 0).toLocaleString('en-ZM', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function renderBatchStatus(status) {
+  const normalized = String(status || '').toUpperCase();
+  if (normalized === 'INCREMENTED') {
+    return '<span class="badge bg-success">INCREMENTED</span>';
+  }
+  if (normalized === 'NO_INCREMENT') {
+    return '<span class="badge bg-warning text-dark">NO_INCREMENT</span>';
+  }
+  if (normalized === 'FAILED') {
+    return '<span class="badge bg-danger">FAILED</span>';
+  }
+  if (!normalized) {
+    return '';
+  }
+  return `<span class="badge bg-secondary">${normalized}</span>`;
+}
+
+document.getElementById('scaleSelect').addEventListener('change', function() {
+  const scale = this.value;
+  const notchSelect = document.getElementById('notchSelect');
+
+  clearError();
+  document.getElementById('salaryDisplay').classList.add('d-none');
+  document.getElementById('appraisalSection').classList.add('d-none');
+  notchSelect.innerHTML = '<option value="">-- First select scale --</option>';
+  notchSelect.disabled = true;
+  Object.keys(notchData).forEach((k) => delete notchData[k]);
+
+  if (scale) {
+    apiFetch(`/api/salary-scales/${encodeURIComponent(scale)}/notches`)
+      .then(response => response.json())
+      .then(data => {
+        notchSelect.innerHTML = '<option value="">-- Select Current Notch --</option>';
+
+        data.notches.sort((a, b) => a.notch_number - b.notch_number);
+
+        data.notches.forEach(notch => {
+          notchData[notch.notch_number] = notch;
+          const option = document.createElement('option');
+          option.value = notch.notch_number;
+
+          let label = `Notch ${notch.notch_number} - ZMW ${formatZMW(notch.monthly_amount)}`;
+          if (notch.notch_number === 1) {
+            label += ' (ENTRY LEVEL - New Recruit)';
+          } else if (notch.notch_number === 7) {
+            label += ' (MAXIMUM - Most Senior)';
+          }
+
+          option.textContent = label;
+          notchSelect.appendChild(option);
+        });
+        notchSelect.disabled = false;
+      })
+      .catch(err => showError(`Could not load notches: ${err.message}`));
+  }
+});
+
+document.getElementById('notchSelect').addEventListener('change', function() {
+  const selectedNotch = parseInt(this.value, 10);
+  const scale = document.getElementById('scaleSelect').value;
+  if (!selectedNotch || !scale) return;
+
+  const notch = notchData[selectedNotch];
+  if (!notch) {
+    showError('Selected notch details are unavailable. Re-select scale and notch.');
+    return;
+  }
+
+  document.getElementById('salaryAmount').textContent = formatZMW(notch.monthly_amount);
+  document.getElementById('notchDisplay').textContent = selectedNotch;
+
+  const progressPercent = ((selectedNotch - 1) / 6) * 100;
+  document.getElementById('notchProgress').style.width = progressPercent + '%';
+
+  const badge = document.getElementById('stageBadge');
+  if (selectedNotch === 1) {
+    badge.textContent = 'ENTRY LEVEL (New Recruit)';
+    badge.className = 'badge bg-info';
+  } else if (selectedNotch === 7) {
+    badge.textContent = 'MAXIMUM (Top of Scale)';
+    badge.className = 'badge bg-success';
+  } else if (selectedNotch <= 3) {
+    badge.textContent = 'JUNIOR';
+    badge.className = 'badge bg-primary';
+  } else if (selectedNotch <= 5) {
+    badge.textContent = 'MID-LEVEL';
+    badge.className = 'badge bg-warning text-dark';
+  } else {
+    badge.textContent = 'SENIOR';
+    badge.className = 'badge bg-secondary';
+  }
+
+  const nextNotchDiv = document.getElementById('nextNotchInfo');
+  if (selectedNotch < 7) {
+    const nextLocal = notchData[selectedNotch + 1];
+    if (nextLocal) {
+      const increase = nextLocal.monthly_amount - notch.monthly_amount;
+      nextNotchDiv.innerHTML = `
+        <strong>Next progression (Notch ${selectedNotch + 1}):</strong>
+        ZMW ${formatZMW(nextLocal.monthly_amount)}
+        <span class="text-success">(+ZMW ${formatZMW(increase)} per month)</span>
+        <br><small>Requires positive annual appraisal</small>
+      `;
+    } else {
+      apiFetch(`/api/salary-scales/${encodeURIComponent(scale)}/notch/${selectedNotch + 1}/amount`)
+        .then(response => response.json())
+        .then(nextNotch => {
+          const increase = Number(nextNotch.monthly_amount || 0) - Number(notch.monthly_amount || 0);
+          nextNotchDiv.innerHTML = `
+            <strong>Next progression (Notch ${selectedNotch + 1}):</strong>
+            ZMW ${formatZMW(nextNotch.monthly_amount)}
+            <span class="text-success">(+ZMW ${formatZMW(increase)} per month)</span>
+            <br><small>Requires positive annual appraisal</small>
+          `;
+        })
+        .catch(err => {
+          nextNotchDiv.innerHTML = `<small class="text-danger">Could not load next-notch amount: ${err.message}</small>`;
+        });
+    }
+
+    document.getElementById('appraisalSection').classList.remove('d-none');
+  } else {
+    nextNotchDiv.innerHTML = `
+      <strong>Maximum notch reached.</strong>
+      <br><small>Officer has reached top of salary scale.</small>
+    `;
+    document.getElementById('appraisalSection').classList.add('d-none');
+  }
+
+  document.getElementById('salaryDisplay').classList.remove('d-none');
+});
+
+document.getElementById('applyTokenBtn').addEventListener('click', applyToken);
+
+document.getElementById('runSingleIncrementBtn').addEventListener('click', async () => {
+  clearError();
+  const officerId = Number(document.getElementById('singleOfficerId').value || 0);
+  const appraisalId = document.getElementById('singleAppraisalId').value.trim();
+  const effectiveDate = document.getElementById('singleEffectiveDate').value;
+  const output = document.getElementById('singleResult');
+
+  if (!officerId) {
+    showError('Single increment requires Officer ID.');
+    return;
+  }
+
+  output.textContent = 'Processing...';
+
+  try {
+    const body = {
+      officer_id: officerId,
+      appraisal_id: appraisalId || null,
+      effective_date: effectiveDate || null,
+    };
+    const response = await apiFetch('/api/employment/process-annual-increment', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    const json = await response.json();
+    output.textContent = JSON.stringify(json, null, 2);
+    showSuccess('Single annual increment processed.');
+  } catch (err) {
+    output.textContent = '';
+    showError(`Single increment failed: ${err.message}`);
+  }
+});
+
+document.getElementById('runBatchIncrementBtn').addEventListener('click', async () => {
+  clearError();
+  const authorityId = document.getElementById('batchAuthorityId').value.trim();
+  const yearValue = document.getElementById('batchYear').value;
+  const year = yearValue ? Number(yearValue) : null;
+  const output = document.getElementById('batchResult');
+
+  output.innerHTML = '<span class="text-muted">Running batch process...</span>';
+
+  try {
+    const body = {
+      authority_id: authorityId || null,
+      year: year || null,
+    };
+    const response = await apiFetch('/api/employment/process-batch-increments', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    const rows = await response.json();
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+      output.innerHTML = '<span class="text-muted">No eligible officers returned.</span>';
+      showSuccess('Batch increment completed (no rows).');
+      return;
+    }
+
+    const tableRows = rows.map(r => `
+      <tr>
+        <td>${r.officer_name ?? ''}</td>
+        <td>${r.current_notch ?? ''}</td>
+        <td>${r.new_notch ?? ''}</td>
+        <td>${renderBatchStatus(r.status)}</td>
+        <td>${r.message ?? ''}</td>
+      </tr>
+    `).join('');
+
+    output.innerHTML = `
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mt-2 mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Officer</th>
+              <th>Current</th>
+              <th>New</th>
+              <th>Status</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+    `;
+    showSuccess(`Batch increment processed for ${rows.length} officer(s).`);
+  } catch (err) {
+    output.innerHTML = '';
+    showError(`Batch increment failed: ${err.message}`);
+  }
+});
+
+if (getToken()) {
+  document.getElementById('authNotice').classList.add('d-none');
+}
+</script>
+</body>
+</html>

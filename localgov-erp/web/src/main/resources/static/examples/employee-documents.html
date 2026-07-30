@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Documents — Local Government Service</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body { background: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+
+    .page-header {
+      background: linear-gradient(135deg, #1a5276 0%, #2e86c1 100%);
+      color: #fff;
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .page-header .badge-org {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      font-size: .75rem;
+      padding: .3em .7em;
+      border-radius: 50px;
+      letter-spacing: .04em;
+    }
+    .page-header h1 { font-size: 1.5rem; font-weight: 700; margin: .4rem 0 .2rem; }
+    .page-header p  { opacity: .8; font-size: .9rem; margin: 0; }
+
+    /* Login card */
+    #loginCard { max-width: 400px; margin: 3rem auto; }
+    #loginCard .card-header {
+      background: #1a5276;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Document cards */
+    .doc-card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      transition: transform .15s, box-shadow .15s;
+      cursor: pointer;
+    }
+    .doc-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+    .doc-icon {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+    }
+    .doc-icon.terms      { background: #d6eaf8; color: #1a5276; }
+    .doc-icon.disciplinary { background: #fde8e8; color: #c0392b; }
+    .doc-icon.grievance  { background: #fef9e7; color: #b7950b; }
+    .doc-icon.ethics     { background: #e8f8f5; color: #1e8449; }
+    .doc-category {
+      font-size: .7rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; opacity: .55; margin-bottom: .25rem;
+    }
+    .doc-unavailable { opacity: .45; cursor: not-allowed; }
+    .doc-unavailable:hover { transform: none; box-shadow: 0 2px 12px rgba(0,0,0,.07); }
+
+    /* Action buttons */
+    .btn-action { font-size: .8rem; padding: .3rem .8rem; }
+
+    /* PDF preview modal */
+    #pdfPreview { width: 100%; height: 82vh; border: none; }
+
+    /* User strip */
+    #userStrip { font-size: .85rem; }
+  </style>
+</head>
+<body>
+
+<!-- ── Login view ──────────────────────────────────────────────── -->
+<div id="loginView">
+  <div id="loginCard" class="card shadow">
+    <div class="card-header d-flex align-items-center gap-2">
+      <i class="bi bi-person-badge fs-5"></i> Employee Portal — Sign In
+    </div>
+    <div class="card-body p-4">
+      <div id="loginError" class="alert alert-danger d-none small"></div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Username</label>
+        <input id="username" type="text" class="form-control" placeholder="e.g. employee"
+               value="employee">
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Password</label>
+        <div class="input-group">
+          <input id="password" type="password" class="form-control" placeholder="Password"
+                 value="Employee@123">
+          <button class="btn btn-outline-secondary" type="button" id="togglePwd">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mb-3 small text-muted">
+        API base: <input id="apiBase" type="text" class="form-control form-control-sm mt-1"
+                         value="http://localhost:8080/api">
+      </div>
+      <div class="d-grid">
+        <button id="loginBtn" class="btn btn-primary">
+          <span id="loginSpinner" class="spinner-border spinner-border-sm d-none me-1"></span>
+          Sign In
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Authenticated view ──────────────────────────────────────── -->
+<div id="appView" class="d-none">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="container">
+      <span class="badge-org">Local Government Service Commission</span>
+      <h1><i class="bi bi-file-earmark-text me-2"></i>Employee Documents</h1>
+      <p>Official policies, procedures and codes available to all employees</p>
+    </div>
+  </div>
+
+  <div class="container pb-5">
+
+    <!-- User strip -->
+    <div id="userStrip" class="d-flex justify-content-between align-items-center mb-4">
+      <span class="text-muted">
+        Signed in as <strong id="loggedInUser"></strong>
+      </span>
+      <button class="btn btn-sm btn-outline-secondary" id="logoutBtn">
+        <i class="bi bi-box-arrow-right me-1"></i>Sign out
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loadingDocs" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">Loading documents…</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="docsError" class="alert alert-danger d-none"></div>
+
+    <!-- Document grid -->
+    <div id="docGrid" class="row g-4 d-none"></div>
+
+    <!-- Info footer -->
+    <div class="mt-5 text-center text-muted small">
+      <i class="bi bi-shield-check me-1"></i>
+      These documents are for official use by employees of the Local Government Service only.
+    </div>
+  </div>
+</div>
+
+<!-- ── PDF Preview modal ───────────────────────────────────────── -->
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h6 class="modal-title" id="pdfModalLabel">Document Preview</h6>
+        <div class="ms-auto d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary" id="modalDownloadBtn">
+            <i class="bi bi-download me-1"></i>Download
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" id="modalPrintBtn">
+            <i class="bi bi-printer me-1"></i>Print
+          </button>
+          <button type="button" class="btn-close ms-2" data-bs-dismiss="modal"></button>
+        </div>
+      </div>
+      <div class="modal-body p-0">
+        <iframe id="pdfPreview" title="Document"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script>
+// ─── State ────────────────────────────────────────────────────────────────
+let authToken = null;
+let BASE_URL  = 'http://localhost:8080/api';
+
+const iconMap = {
+  terms:        { icon: 'bi-file-text',         cls: 'terms'       },
+  disciplinary: { icon: 'bi-exclamation-octagon', cls: 'disciplinary'},
+  grievance:    { icon: 'bi-chat-dots',          cls: 'grievance'   },
+  ethics:       { icon: 'bi-award',              cls: 'ethics'      },
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────
+function apiUrl(path) {
+  return BASE_URL.replace(/\/+$/, '') + path;
+}
+
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(apiUrl(path), {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      ...(opts.headers || {}),
+    },
+  });
+  return res;
+}
+
+// ─── Login ────────────────────────────────────────────────────────────────
+document.getElementById('togglePwd').addEventListener('click', () => {
+  const p = document.getElementById('password');
+  p.type = p.type === 'password' ? 'text' : 'password';
+});
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  BASE_URL       = document.getElementById('apiBase').value.trim();
+  const errEl    = document.getElementById('loginError');
+  const spinner  = document.getElementById('loginSpinner');
+
+  errEl.classList.add('d-none');
+  spinner.classList.remove('d-none');
+
+  try {
+    const res = await apiFetch('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+    if (!res.ok) throw new Error(`Login failed (${res.status})`);
+    const data = await res.json();
+    authToken = data.token || data.accessToken;
+    if (!authToken) throw new Error('No token in response');
+    document.getElementById('loggedInUser').textContent = username;
+    showApp();
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove('d-none');
+  } finally {
+    spinner.classList.add('d-none');
+  }
+});
+
+document.getElementById('password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+
+// ─── Layout toggling ──────────────────────────────────────────────────────
+function showApp() {
+  document.getElementById('loginView').classList.add('d-none');
+  document.getElementById('appView').classList.remove('d-none');
+  loadDocuments();
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  authToken = null;
+  document.getElementById('docGrid').innerHTML = '';
+  document.getElementById('appView').classList.add('d-none');
+  document.getElementById('loginView').classList.remove('d-none');
+});
+
+// ─── Load documents ───────────────────────────────────────────────────────
+async function loadDocuments() {
+  const grid    = document.getElementById('docGrid');
+  const loading = document.getElementById('loadingDocs');
+  const errEl   = document.getElementById('docsError');
+
+  grid.classList.add('d-none');
+  loading.classList.remove('d-none');
+  errEl.classList.add('d-none');
+
+  try {
+    const res  = await apiFetch('/documents', {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) throw new Error(`Failed to load documents (${res.status})`);
+    const docs = await res.json();
+    renderDocuments(docs);
+  } catch (e) {
+    errEl.textContent = `Could not load documents: ${e.message}`;
+    errEl.classList.remove('d-none');
+  } finally {
+    loading.classList.add('d-none');
+  }
+}
+
+// ─── Render document cards ────────────────────────────────────────────────
+function renderDocuments(docs) {
+  const grid = document.getElementById('docGrid');
+  grid.innerHTML = '';
+
+  docs.forEach(doc => {
+    const meta     = iconMap[doc.key] || { icon: 'bi-file-earmark-pdf', cls: 'terms' };
+    const avail    = doc.available;
+    const cardCls  = avail ? 'doc-card' : 'doc-card doc-unavailable';
+
+    const col = document.createElement('div');
+    col.className = 'col-md-6 col-lg-4';
+    col.innerHTML = `
+      <div class="card ${cardCls} h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start gap-3 mb-3">
+            <div class="doc-icon ${meta.cls} flex-shrink-0">
+              <i class="bi ${meta.icon}"></i>
+            </div>
+            <div>
+              <div class="doc-category">${doc.category}</div>
+              <div class="fw-semibold lh-sm">${doc.title}</div>
+            </div>
+          </div>
+          <p class="text-muted small mb-4" style="min-height:2.8em">${doc.description}</p>
+          ${avail ? `
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-primary btn-sm btn-action"
+                    onclick="openPreview('${doc.key}','view','${escHtml(doc.title)}')">
+              <i class="bi bi-eye me-1"></i>View
+            </button>
+            <button class="btn btn-outline-secondary btn-sm btn-action"
+                    onclick="triggerDownload('${doc.key}')">
+              <i class="bi bi-download me-1"></i>Download
+            </button>
+            <button class="btn btn-outline-secondary btn-sm btn-action"
+                    onclick="openPreview('${doc.key}','print','${escHtml(doc.title)}')">
+              <i class="bi bi-printer me-1"></i>Print
+            </button>
+          </div>` : `
+          <span class="badge bg-secondary bg-opacity-25 text-secondary">
+            <i class="bi bi-clock me-1"></i>Not yet available
+          </span>`}
+        </div>
+      </div>`;
+    grid.appendChild(col);
+  });
+
+  grid.classList.remove('d-none');
+}
+
+function escHtml(str) {
+  return str.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+
+// ─── PDF Preview (view / print) ──────────────────────────────────────────
+const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
+let currentDocKey = null;
+
+function openPreview(key, action, title) {
+  currentDocKey = key;
+  document.getElementById('pdfModalLabel').textContent = title;
+  document.getElementById('pdfPreview').src =
+      apiUrl(`/documents/${key}?action=${action}`) +
+      `#toolbar=1&view=FitH&Authorization=Bearer ${authToken}`;
+
+  // Use blob URL so Bearer token is sent properly
+  fetchPdfBlob(key, action).then(url => {
+    document.getElementById('pdfPreview').src = url;
+  });
+
+  // Wire modal buttons
+  document.getElementById('modalDownloadBtn').onclick = () => triggerDownload(key);
+  document.getElementById('modalPrintBtn').onclick    = () => printDoc(key);
+
+  pdfModal.show();
+}
+
+async function fetchPdfBlob(key, action) {
+  const res = await fetch(apiUrl(`/documents/${key}?action=${action}`), {
+    headers: { Authorization: `Bearer ${authToken}` },
+  });
+  if (!res.ok) throw new Error('Could not load PDF');
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
+
+async function triggerDownload(key) {
+  const doc  = key;
+  const res  = await fetch(apiUrl(`/documents/${doc}?action=download`), {
+    headers: { Authorization: `Bearer ${authToken}` },
+  });
+  if (!res.ok) { alert('Download failed.'); return; }
+  const blob = await res.blob();
+  const cd   = res.headers.get('Content-Disposition') || '';
+  const m    = cd.match(/filename="?([^"]+)"?/);
+  const name = m ? m[1] : `${doc}.pdf`;
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+}
+
+async function printDoc(key) {
+  const blob   = await fetchPdfBlob(key, 'print');
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'position:fixed;opacity:0;width:1px;height:1px;';
+  document.body.appendChild(iframe);
+  iframe.src = blob;
+  iframe.onload = () => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    setTimeout(() => document.body.removeChild(iframe), 2000);
+  };
+}
+</script>
+</body>
+</html>

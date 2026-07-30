@@ -1,0 +1,11 @@
+-- Migrate SQLite databases
+LOAD DATABASE
+     FROM sqlite:///home/chisenga/projects/ERP/hr_platform.db
+     INTO postgresql://chisenga:MeatbalL20082012@localhost/erpdb
+     WITH include drop, create tables, create indexes, reset sequences;
+
+-- Add more .db files if you have them
+LOAD DATABASE
+     FROM sqlite:///home/chisenga/projects/ERP/another_module.db
+     INTO postgresql://chisenga:MeatbalL20082012@localhost/erpdb
+     WITH include drop, create tables, create indexes, reset sequences;

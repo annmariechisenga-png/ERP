@@ -1,0 +1,57 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+Health Leadership,HLTH-ADIR-TOWN,Assistant Director - Public Health,6,Council Secretary,1,Town
+Environmental Health Unit,HLTH-ENV-TECH-TOWN,Environmental Health Technologist,9,HLTH-ADIR-TOWN,2,Town
+Health Inspectorate Unit,HLTH-SNR-HIO-TOWN,Senior Health Inspection Officer,7,HLTH-ADIR-TOWN,1,Town
+Health Inspectorate Unit,HLTH-HI-TOWN,Health Inspector,8,HLTH-SNR-HIO-TOWN,2,Town
+Health Inspectorate Unit,HLTH-FUN-SUP-TOWN,Funeral Superintendent,8,HLTH-SNR-HIO-TOWN,1,Town
+Health Inspectorate Unit,HLTH-GENWORK-TOWN,General Worker,1,HLTH-FUN-SUP-TOWN,10,Town
+Health Inspectorate Unit,HLTH-HEALTH-EDU-TOWN,Health Education Officer,8,HLTH-SNR-HIO-TOWN,2,Town
+Cleansing and Pest Control Unit,HLTH-CLEAN-SUP-TOWN,Cleansing Superintendent,8,HLTH-ADIR-TOWN,1,Town
+Cleansing and Pest Control Unit,HLTH-ASST-CLEAN-TOWN,Assistant Cleansing Superintendent,10,HLTH-CLEAN-SUP-TOWN,2,Town
+Cleansing and Pest Control Unit,HLTH-DRIVER-WASTE-TOWN,Driver-Waste Management,1,HLTH-ASST-CLEAN-TOWN,3,Town
+Funeral Services Unit,HLTH-FUN-SUP-SVC-TOWN,Funeral Superintendent,8,HLTH-ADIR-TOWN,1,Town
+Funeral Services Unit,HLTH-ASST-FUN-TOWN,Assistant Funeral Superintendent,9,HLTH-FUN-SUP-SVC-TOWN,1,Town
+Funeral Services Unit,HLTH-SANITARY-TOWN,Sanitary Assistant,3,HLTH-ASST-FUN-TOWN,5,Town
+Funeral Services Unit,HLTH-GRAVE-TOWN,Grave Digger,3,HLTH-ASST-FUN-TOWN,5,Town
+Health Leadership,HLTH-ADIR-MUN,Assistant Director - Public Health,5,Town Clerk,1,Town
+Public Health Inspectorate Unit,HLTH-CHIEF-HIO-MUN,Chief Health Inspection Officer,6,HLTH-ADIR-MUN,1,Town
+Public Health Inspectorate Unit,HLTH-SNR-HIO-MUN,Senior Health Inspection Officer,7,HLTH-CHIEF-HIO-MUN,2,Town
+Public Health Inspectorate Unit,HLTH-HI-MUN,Health Inspector,8,HLTH-SNR-HIO-MUN,10,Town
+Public Health Inspectorate Unit,HLTH-FIELD-DRIVER-MUN,Field Driver,1,HLTH-HI-MUN,1,Town
+Health Promotions Unit,HLTH-SNR-HPO-MUN,Senior Health Education Officer,7,HLTH-ADIR-MUN,1,Town
+Health Promotions Unit,HLTH-HPO-MUN,Health Education Officer,8,HLTH-SNR-HPO-MUN,2,Town
+Health Promotions Unit,HLTH-ASST-HPO-MUN,Assistant Health Education Officer,9,HLTH-HPO-MUN,1,Town
+Health Promotions Unit,HLTH-HEALTH-EDU-ASST-MUN,Health Education Assistant,10,HLTH-ASST-HPO-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-CLEAN-MGR-MUN,Cleansing Manager,7,HLTH-ADIR-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-CLEAN-SUP-MUN,Cleansing Superintendent,8,HLTH-CLEAN-MGR-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-ASST-CLEAN-MUN,Assistant Cleansing Superintendent,9,HLTH-CLEAN-SUP-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-PEST-SUP-MUN,Pest Control Superintendent,8,HLTH-CLEAN-MGR-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-ASST-PEST-MUN,Assistant Pest Control Superintendent,9,HLTH-PEST-SUP-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-CLEAN-FORE-MUN,Cleansing Foreman,1,HLTH-CLEAN-MGR-MUN,1,Town
+Cleansing and Pest Control Unit,HLTH-WASTE-DRIVER-MUN,Waste Management Driver,1,HLTH-CLEAN-FORE-MUN,6,Town
+Funeral and Burial Services Unit,HLTH-FUN-SUP-MUN,Funeral Superintendent,8,HLTH-ADIR-MUN,1,Town
+Funeral and Burial Services Unit,HLTH-ASST-FUN-MUN,Assistant Funeral Superintendent,9,HLTH-FUN-SUP-MUN,1,Town
+Funeral and Burial Services Unit,HLTH-SANITARY-MUN,Sanitary Assistant,3,HLTH-ASST-FUN-MUN,10,Town
+Funeral and Burial Services Unit,HLTH-GRAVE-MUN,Grave Digger,3,HLTH-ASST-FUN-MUN,10,Town
+Health Information Systems Unit,HLTH-HIS-MUN,Health Information Systems Officer,6,HLTH-ADIR-MUN,1,Town
+Health Leadership,HLTH-ADIR-CITY,Assistant Director - Public Health,5,Town Clerk,1,City
+Environmental Health Unit,HLTH-SNR-EHO-CITY,Senior Environmental Health Officer,7,HLTH-ADIR-CITY,1,City
+Environmental Health Unit,HLTH-SNR-TECH-CITY,Senior Environmental Health Technologist,8,HLTH-SNR-EHO-CITY,5,City
+Environmental Health Unit,HLTH-TECH-CITY,Environmental Health Technologist,8,HLTH-SNR-TECH-CITY,8,City
+Public Health Inspectorate Unit,HLTH-CHIEF-HIO-CITY,Chief Health Inspection Officer,6,HLTH-ADIR-CITY,1,City
+Public Health Inspectorate Unit,HLTH-SNR-HIO-CITY,Senior Health Inspection Officer,7,HLTH-CHIEF-HIO-CITY,5,City
+Public Health Inspectorate Unit,HLTH-HI-CITY,Health Inspector,8,HLTH-SNR-HIO-CITY,35,City
+Public Health Inspectorate Unit,HLTH-FIELD-DRIVER-CITY,Field Driver,1,HLTH-HI-CITY,1,City
+Health Promotions Unit,HLTH-SNR-HPO-CITY,Senior Health Education Officer,7,HLTH-ADIR-CITY,5,City
+Health Promotions Unit,HLTH-HPO-CITY,Health Education Officer,8,HLTH-SNR-HPO-CITY,5,City
+Health Promotions Unit,HLTH-HEALTH-EDU-ASST-CITY,Health Education Assistant,10,HLTH-HPO-CITY,2,City
+Cleansing and Pest Control Unit,HLTH-CLEAN-MGR-CITY,Cleansing Manager,7,HLTH-ADIR-CITY,1,City
+Cleansing and Pest Control Unit,HLTH-CLEAN-SUP-CITY,Cleansing Superintendent,8,HLTH-CLEAN-MGR-CITY,1,City
+Cleansing and Pest Control Unit,HLTH-ASST-CLEAN-CITY,Assistant Cleansing Superintendent,9,HLTH-CLEAN-SUP-CITY,1,City
+Cleansing and Pest Control Unit,HLTH-PEST-SUP-CITY,Pest Control Superintendent,8,HLTH-CLEAN-MGR-CITY,1,City
+Cleansing and Pest Control Unit,HLTH-ASST-PEST-CITY,Assistant Pest Control Superintendent,9,HLTH-PEST-SUP-CITY,1,City
+Cleansing and Pest Control Unit,HLTH-WASTE-DRIVER-CITY,Waste Management Driver,1,HLTH-CLEAN-SUP-CITY,1,City
+Funeral and Burial Services Unit,HLTH-FUN-SUP-CITY,Funeral Superintendent,8,HLTH-ADIR-CITY,2,City
+Funeral and Burial Services Unit,HLTH-SANITARY-CITY,Sanitary Assistant,3,HLTH-FUN-SUP-CITY,10,City
+Funeral and Burial Services Unit,HLTH-GRAVE-CITY,Grave Digger,3,HLTH-FUN-SUP-CITY,10,City
+Health Information Systems Unit,HLTH-HIS-CITY,Health Information Officer,6,HLTH-ADIR-CITY,1,City

@@ -1,13 +1,14 @@
-import sqlite3
+import psycopg2
+from config import Config
 
-# Connect to database (creates file if it doesn't exist)
-conn = sqlite3.connect("hr_platform.db")
+# Connect to PostgreSQL database
+conn = psycopg2.connect(**Config.get_postgres_params())
 cursor = conn.cursor()
 
-# Create employees table
+# Create employees table (if it doesn't exist)
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS employees (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     salary_scale TEXT NOT NULL,
     leave_balance REAL DEFAULT 0,

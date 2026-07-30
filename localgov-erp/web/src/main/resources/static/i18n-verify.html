@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>i18n Verification</title>
+</head>
+<body>
+    <p>Setting auth token and redirecting to dashboard...</p>
+    <script>
+        localStorage.setItem('erp_token', 'verify-token');
+        localStorage.setItem('erp.jwt', 'verify-token');
+        localStorage.setItem('erp_user', JSON.stringify({ username: 'Demo User' }));
+        window.location.href = '/chilanga/dashboard.html';
+    </script>
+</body>
+</html>

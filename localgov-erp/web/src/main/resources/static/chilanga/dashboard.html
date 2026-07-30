@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chilanga Town Council – MarshaERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --green-dark:  #1b5e20;
+            --green-mid:   #2e7d32;
+            --green-light: #4caf50;
+            --gold:        #f9c825;
+            --gold-dark:   #c9a227;
+            --bg-white:    #ffffff;
+            --bg-light-1:  #f8faf8;
+            --bg-light-2:  #eef5ee;
+            --border:      #d4e6d4;
+            --text-dark:   #1a2e1a;
+            --text-muted:  #4a6741;
+            --copper:      #c9a227;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg-white); margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; color: var(--text-dark); overflow: hidden; }
+
+        /* ── Header ── */
+        .header { background: var(--green-dark); border-bottom: 4px solid var(--gold); padding: 0 24px; display: flex; justify-content: space-between; align-items: center; min-height: 72px; flex-shrink: 0; }
+        .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+        .brand-text strong { color: #fff; font-size: 1rem; font-weight: 800; }
+        .brand-text span { color: var(--gold); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+        .user-profile { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.10); padding: 7px 18px 7px 8px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.18); }
+        .user-info { text-align: right; }
+        .user-info p { margin: 0; font-size: 13px; font-weight: 700; color: #fff; }
+        .user-info span { font-size: 10px; color: var(--gold); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; }
+        .avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--green-dark); font-weight: 900; font-size: 0.85rem; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .logout-btn { background: rgba(249,200,37,0.15); border: 1px solid rgba(249,200,37,0.35); color: var(--gold); border-radius: 8px; padding: 6px 14px; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+        .logout-btn:hover { background: rgba(249,200,37,0.28); }
+
+        /* ── Main layout ── */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+        /* ── Sidebar ── */
+        .sidebar { width: 240px; background: var(--bg-light-1); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; overflow-y: auto; }
+        .nav-group { margin-bottom: 24px; }
+        .nav-group-title { padding: 0 20px 10px; font-size: 10px; font-weight: 900; color: var(--green-mid); text-transform: uppercase; letter-spacing: 2.5px; }
+        .nav-item { padding: 12px 20px; cursor: pointer; color: var(--text-muted); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 13px; transition: all 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: var(--bg-light-2); color: var(--green-dark); border-left-color: var(--gold); }
+        .nav-item.active { background: var(--bg-white); color: var(--green-dark); border-left-color: var(--green-mid); font-weight: 800; box-shadow: 2px 0 8px rgba(0,0,0,0.03); }
+        .nav-item i { width: 18px; font-size: 16px; color: var(--green-mid); }
+        .nav-item.active i { color: var(--green-dark); }
+
+        /* ── Content ── */
+        .content-area { flex: 1; padding: 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; background: var(--bg-white); }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .role-section { display: none; }
+
+        /* ── Cards ── */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+        .card { background: var(--bg-white); border-radius: 14px; padding: 22px; box-shadow: 0 3px 16px rgba(27,94,32,0.07); border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--green-mid), var(--gold)); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .card-title { font-size: 13px; font-weight: 800; color: var(--green-dark); text-transform: uppercase; letter-spacing: 1px; }
+        .card-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--bg-light-2); color: var(--green-mid); border: 1px solid var(--border); }
+        .stat-value { font-size: 32px; font-weight: 800; color: var(--text-dark); margin: 12px 0 4px; }
+        .stat-trend { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; color: var(--text-muted); }
+        .trend-up { color: #22c55e; }
+
+        /* ── Buttons ── */
+        .btn { padding: 11px 22px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; transition: all 0.2s; font-size: 12px; display: flex; align-items: center; gap: 8px; justify-content: center; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-primary { background: linear-gradient(135deg, var(--gold-dark), var(--copper)); color: var(--green-dark); box-shadow: 0 3px 12px rgba(201,162,39,0.3); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(201,162,39,0.45); }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--green-dark); }
+        .btn-outline:hover { border-color: var(--green-mid); background: var(--bg-light-2); }
+        .btn-green { background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: #fff; }
+        .btn-green:hover { transform: translateY(-1px); }
+
+        /* ── Documents ── */
+        .doc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+        .doc-item { background: var(--bg-white); border-radius: 13px; padding: 18px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--border); transition: all 0.2s; cursor: pointer; }
+        .doc-item:hover { transform: translateY(-3px); border-color: var(--green-mid); box-shadow: 0 8px 20px rgba(27,94,32,0.09); }
+        .doc-icon { width: 46px; height: 46px; border-radius: 10px; background: var(--bg-light-2); color: var(--green-mid); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .doc-info h4 { margin: 0 0 4px; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .doc-info p { margin: 0; font-size: 10px; color: var(--green-mid); font-weight: 800; letter-spacing: 0.5px; }
+
+        /* ── Tables ── */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { text-align: left; padding: 13px; font-size: 11px; font-weight: 800; color: var(--green-dark); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--bg-light-2); }
+        td { padding: 13px; border-bottom: 1px solid var(--bg-light-2); font-size: 14px; font-weight: 500; color: var(--text-dark); }
+        .badge { background: var(--bg-light-2); color: var(--green-dark); border: 1px solid var(--border); padding: 3px 8px; border-radius: 5px; font-size: 11px; font-weight: 800; }
+
+        /* ── Widget container ── */
+        .widget-container { border-radius: 14px; overflow: hidden; background: var(--bg-light-1); border: 1px solid var(--border); }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* ── Modal ── */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal.open { display: flex; }
+        .modal-content { background: var(--bg-white); padding: 32px; border-radius: 18px; width: 500px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.12); border: 1px solid var(--border); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+        .modal-header h3 { margin: 0; color: var(--green-dark); font-weight: 800; font-size: 18px; }
+        .modal-close { cursor: pointer; font-size: 22px; color: var(--text-muted); background: none; border: none; padding: 0; line-height: 1; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 7px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 13px; background: var(--bg-white); border: 2px solid var(--border); border-radius: 9px; font-size: 14px; color: var(--text-dark); font-family: inherit; outline: none; transition: border-color 0.15s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--green-mid); }
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        /* ── Role selector ── */
+        #roleSelector { position: fixed; bottom: 24px; right: 24px; background: var(--bg-white); padding: 10px 14px; border-radius: 10px; box-shadow: 0 8px 22px rgba(0,0,0,0.10); border: 2px solid var(--border); z-index: 1000; }
+        #roleSelector label { font-size: 10px; font-weight: 900; color: var(--text-muted); display: block; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; }
+        #roleSelector select { background: transparent; color: var(--green-dark); border: none; font-weight: 800; cursor: pointer; outline: none; font-size: 13px; }
+
+        /* ── Footer ── */
+        .footer { padding: 14px 24px; background: var(--bg-light-1); color: var(--text-muted); text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 1px; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+        /* ── Section heading ── */
+        .section-heading { font-size: 14px; font-weight: 900; color: var(--green-dark); letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 20px; }
+
+        /* ── Error / info banners ── */
+        .err-banner { display: none; color: #dc2626; font-size: 13px; font-weight: 700; margin-bottom: 12px; padding: 10px; background: #fef2f2; border-radius: 8px; border: 1px solid #fca5a5; }
+        .info-banner { background: var(--bg-light-2); padding: 12px; border-radius: 9px; margin-bottom: 14px; font-size: 13px; font-weight: 700; text-align: center; color: var(--green-dark); border: 1px solid var(--border); }
+        .warn-banner { display: none; background: #fff7ed; border: 1px solid #f97316; border-radius: 9px; padding: 12px; margin-bottom: 14px; font-size: 13px; color: #c2410c; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ── -->
+    <header class="header">
+        <a class="brand" href="/chilanga/dashboard.html">
+            <img src="/assets/branding/chilanga-crest.png" alt="Chilanga Town Council Crest" style="height:52px; width:auto; object-fit:contain;">
+            <div class="brand-text">
+                <strong>Chilanga Town Council</strong>
+                <span>Powered by MarshaERP</span>
+            </div>
+        </a>
+        <div class="header-actions">
+            <div class="user-profile">
+                <div class="user-info">
+                    <p id="userName">Loading...</p>
+                    <span id="userPosition">Loading...</span>
+                </div>
+                <div class="avatar" id="userAvatar">??</div>
+            </div>
+            <select id="languageSelect" class="logout-btn" style="background:rgba(255,255,255,0.15); color:var(--gold); border:1px solid rgba(249,200,37,0.35); border-radius:8px; padding:6px 10px; font-size:0.8rem; font-weight:700; cursor:pointer;">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+                <option value="he">עברית</option>
+            </select>
+            <select id="positionProfileSelect" class="logout-btn" style="background:rgba(255,255,255,0.15); color:var(--gold); border:1px solid rgba(249,200,37,0.35); border-radius:8px; padding:6px 10px; font-size:0.8rem; font-weight:700; cursor:pointer; min-width:140px; max-width:200px;"></select>
+            <select id="authorityTypeSelect" class="logout-btn" style="background:rgba(255,255,255,0.15); color:var(--gold); border:1px solid rgba(249,200,37,0.35); border-radius:8px; padding:6px 10px; font-size:0.8rem; font-weight:700; cursor:pointer;"></select>
+            <button type="button" class="logout-btn" data-action="refresh-cache" style="background:rgba(255,255,255,0.15); color:var(--gold); border:1px solid rgba(249,200,37,0.35); border-radius:8px; cursor:pointer;" title="Refresh data"><i class="fas fa-sync-alt"></i></button>
+            <a href="/chilanga/login.html" class="logout-btn" id="logoutBtn" data-i18n="signOut">Sign Out</a>
+        </div>
+    </header>
+
+    <div id="connectivityBanner" class="warn-banner" style="display:none; margin:10px 20px 0;"></div>
+
+    <div class="main-layout">
+        <!-- ── Sidebar ── -->
+        <nav class="sidebar" role="tablist" aria-label="Dashboard navigation">
+            <div class="nav-group">
+                <div class="nav-group-title" data-i18n="home">Home</div>
+                <div class="nav-item active" role="tab" data-tab="overview" aria-selected="true" tabindex="0"><i class="fas fa-th-large"></i> <span data-i18n="dashboard">Dashboard</span></div>
+                <div class="nav-item" role="tab" data-tab="jdView" aria-selected="false" tabindex="-1"><i class="fas fa-id-badge"></i> <span data-i18n="myJobDescription">My Job Description</span></div>
+                <div class="nav-item" role="tab" data-tab="payslips" aria-selected="false" tabindex="-1"><i class="fas fa-file-invoice-dollar"></i> <span data-i18n="myPayslips">My Payslips</span></div>
+                <div class="nav-item" role="tab" data-tab="documents" aria-selected="false" tabindex="-1"><i class="fas fa-folder-open"></i> <span data-i18n="policyDocuments">Policy Documents</span></div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-title" data-i18n="selfService">Self Service</div>
+                <div class="nav-item" role="button" tabindex="0" onclick="openLeaveModal()"><i class="fas fa-calendar-plus"></i> <span data-i18n="requestLeave">Request Leave</span></div>
+                <div class="nav-item" role="button" tabindex="0" onclick="openOTModal()"><i class="fas fa-clock"></i> <span data-i18n="requestOvertime">Request Overtime</span></div>
+                <div class="nav-item" role="tab" data-tab="orgChart" aria-selected="false" tabindex="-1"><i class="fas fa-sitemap"></i> <span data-i18n="myDepartment">My Department</span></div>
+                <div class="nav-item" role="tab" data-tab="holidays" aria-selected="false" tabindex="-1"><i class="fas fa-calendar-day"></i> <span data-i18n="navHolidays">Holiday Calendar</span></div>
+            </div>
+            <div class="nav-group role-section" id="hodSection">
+                <div class="nav-group-title" data-i18n="management">Management</div>
+                <div class="nav-item" role="tab" data-tab="approvals" aria-selected="false" tabindex="-1"><i class="fas fa-check-double"></i> <span data-i18n="pendingApprovals">Pending Approvals</span></div>
+            </div>
+            <div class="nav-group role-section" id="financeSection">
+                <div class="nav-group-title" data-i18n="financialControl">Financial Control</div>
+                <div class="nav-item" role="tab" data-tab="budget" aria-selected="false" tabindex="-1"><i class="fas fa-wallet"></i> <span data-i18n="budgetAndBank">Budget &amp; Bank</span></div>
+                <div class="nav-item" role="tab" data-tab="ledger" aria-selected="false" tabindex="-1"><i class="fas fa-book"></i> <span data-i18n="detailedLedger">Detailed Ledger</span></div>
+            </div>
+        </nav>
+
+        <!-- ── Content ── -->
+        <main class="content-area">
+
+            <!-- Dashboard overview -->
+            <div id="overview" class="view active" role="tabpanel" data-panel="overview" aria-hidden="false">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="card-header">
+                        <span class="card-title" id="profileTitle">Dashboard Profile</span>
+                        <div class="card-icon"><i class="fas fa-user-cog"></i></div>
+                    </div>
+                    <div id="profileSummary" style="font-size:14px; color:var(--text-muted); margin-bottom:12px;">Select a position and authority type to load a tailored dashboard profile.</div>
+                    <div id="profileFocusAreas" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Leave Balance</span>
+                            <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                        </div>
+                        <div class="stat-value" id="leaveBalance">0</div>
+                        <div class="stat-trend trend-up"><i class="fas fa-info-circle"></i> Accruing 3.0 days/month</div>
+                        <button class="btn btn-primary" style="margin-top:18px;width:100%;" onclick="openLeaveModal()">
+                            <i class="fas fa-plus"></i> New Request
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Projected Overtime</span>
+                            <div class="card-icon"><i class="fas fa-hourglass-half"></i></div>
+                        </div>
+                        <div class="stat-value" id="projectedOT">ZMW 0.00</div>
+                        <div id="otHoursLabel" class="stat-trend"><i class="fas fa-clock"></i> 0.0 hours logged</div>
+                        <button class="btn btn-outline" style="margin-top:18px;width:100%;" onclick="openOTModal()">
+                            <i class="fas fa-plus"></i> Log Hours
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Next Scheduled Pay</span>
+                            <div class="card-icon"><i class="fas fa-money-check-alt"></i></div>
+                        </div>
+                        <div class="stat-value" id="nextPay">ZMW 0.00</div>
+                        <div class="stat-trend"><i class="fas fa-check-circle" style="color:#22c55e"></i> Status: Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Description -->
+            <div id="jdView" class="view" role="tabpanel" data-panel="jdView" aria-hidden="true">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Official Job Description</span></div>
+                    <div style="display:flex;gap:24px;align-items:center;padding:16px 0;">
+                        <div style="font-size:64px;color:var(--bg-light-2);"><i class="fas fa-file-signature"></i></div>
+                        <div>
+                            <h2 id="jdTitle" style="margin:0 0 8px;color:var(--text-dark);">Position Title</h2>
+                            <p style="color:var(--text-muted);font-weight:600;margin-bottom:20px;line-height:1.6;">Formal document outlining duties, responsibilities, and reporting lines.</p>
+                            <button id="jdDownloadBtn" class="btn btn-green"><i class="fas fa-download"></i> Download JD Document</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Policy Documents -->
+            <div id="documents" class="view" role="tabpanel" data-panel="documents" aria-hidden="true">
+                <p class="section-heading">Statutory Policy Documents</p>
+                <div class="doc-list">
+                    <div class="doc-item" onclick="window.open('/documents/terms-and-conditions.pdf')">
+                        <div class="doc-icon"><i class="fas fa-file-contract"></i></div>
+                        <div class="doc-info"><h4>Terms &amp; Conditions</h4><p>Official 2026 Edition</p></div>
+                    </div>
+                    <div class="doc-item" onclick="window.open('/documents/code-of-ethics.pdf')">
+                        <div class="doc-icon"><i class="fas fa-balance-scale"></i></div>
+                        <div class="doc-info"><h4>Code of Ethics</h4><p>Professional Conduct</p></div>
+                    </div>
+                    <div class="doc-item" onclick="window.open('/documents/disciplinary-code.pdf')">
+                        <div class="doc-icon"><i class="fas fa-gavel"></i></div>
+                        <div class="doc-info"><h4>Disciplinary Code</h4><p>Offences &amp; Procedures</p></div>
+                    </div>
+                    <div class="doc-item" onclick="window.open('/documents/grievance-procedure.pdf')">
+                        <div class="doc-icon"><i class="fas fa-comments"></i></div>
+                        <div class="doc-info"><h4>Grievance Procedure</h4><p>Staff Handbook</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Org Chart -->
+            <div id="orgChart" class="view" role="tabpanel" data-panel="orgChart" aria-hidden="true">
+                <div class="widget-container" style="height:68vh;">
+                    <iframe id="orgChartFrame" src="/org-chart-dashboard.html" title="Organizational Chart"></iframe>
+                </div>
+            </div>
+
+            <!-- Payslips -->
+            <div id="payslips" class="view" role="tabpanel" data-panel="payslips" aria-hidden="true">
+                <p class="section-heading">My Payslips</p>
+                <div class="card">
+                    <table>
+                        <thead><tr><th>Period</th><th>Gross (ZMW)</th><th>Deductions</th><th>Net Pay</th><th>Status</th></tr></thead>
+                        <tbody id="payslipsBody"><tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:24px;">No payslips available yet.</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Budget -->
+            <div id="budget" class="view" role="tabpanel" data-panel="budget" aria-hidden="true">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Total Revenue YTD</span></div>
+                        <div class="stat-value" style="color:var(--green-dark)" id="revYTD">ZMW 0.00</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Total Expenditure YTD</span></div>
+                        <div class="stat-value" style="color:var(--copper)" id="expYTD">ZMW 0.00</div>
+                    </div>
+                </div>
+                <div class="card" style="margin-top:22px;">
+                    <div class="card-header"><span class="card-title">Bank Balances</span></div>
+                    <table id="bankTable"><tbody></tbody></table>
+                </div>
+            </div>
+
+            <!-- Ledger -->
+            <div id="ledger" class="view" role="tabpanel" data-panel="ledger" aria-hidden="true">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">General Ledger</span></div>
+                    <table style="margin-top:14px;">
+                        <thead><tr><th>Date</th><th>Ref</th><th>Description</th><th>Category</th><th style="text-align:right">Amount</th></tr></thead>
+                        <tbody id="ledgerBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Approvals (HOD) -->
+                        <!-- Holidays view -->
+            <div id="holidays" class="view" role="tabpanel" data-panel="holidays" aria-hidden="true">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title" data-i18n="leaveHolidayHeading">Regional Holiday Calendar</span>
+                        <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                    <div id="holidayMeta" class="table-note" style="margin-bottom:12px;"></div>
+                    <div class="dashboard-grid" id="holidaySummary" style="margin-bottom:20px;"></div>
+                    <div id="holidayCalendar"></div>
+                </div>
+                <div class="card" style="margin-top:20px;">
+                    <div class="card-header">
+                        <span class="card-title">Upcoming Holidays</span>
+                        <div class="card-icon"><i class="fas fa-forward"></i></div>
+                    </div>
+                    <div id="upcomingHolidays"></div>
+                </div>
+            </div>
+
+            <div id="approvals" class="view" role="tabpanel" data-panel="approvals" aria-hidden="true">
+                <p class="section-heading">Pending Approvals</p>
+                <div class="card">
+                    <table><thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Days</th><th>Action</th></tr></thead>
+                    <tbody id="approvalsBody"><tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:24px;">No pending approvals.</td></tr></tbody></table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        &copy; 2026 MARSHAERP &nbsp;|&nbsp; SECURE FINANCIAL MANAGEMENT &nbsp;|&nbsp; v2.5.1 &nbsp;&mdash;&nbsp; Chilanga Town Council
+    </footer>
+
+    <!-- ── Leave Modal ── -->
+    <div id="leaveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> Request Leave</h3>
+                <button class="modal-close" onclick="closeLeaveModal()">&times;</button>
+            </div>
+            <form id="leaveForm">
+                <div class="form-group">
+                    <label>Leave Type</label>
+                    <select id="leaveTypeSelect" required onchange="onLeaveTypeChange()"></select>
+                </div>
+                <div id="compassionateGroup" class="form-group" style="display:none;">
+                    <label>Compassionate Relation</label>
+                    <select id="compassionateRelation">
+                        <option value="">-- Select relation --</option>
+                        <option value="SPOUSE">Spouse (max 21 days)</option>
+                        <option value="CHILD">Child (max 14 days)</option>
+                        <option value="PARENT">Parent (max 14 days)</option>
+                    </select>
+                </div>
+                <div id="advanceNoticeWarning" class="warn-banner">
+                    <i class="fas fa-exclamation-triangle"></i> Vacation Leave requires <strong>at least 30 days advance notice</strong>. Earliest start: <span id="earliestStartDate"></span>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="leaveStart" required onchange="calculateResumption()">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="leaveEnd" required onchange="calculateResumption()">
+                    </div>
+                </div>
+                <div id="dayCalc" class="info-banner">Total Days: 0</div>
+                <div id="resumeCalc" style="background:var(--bg-light-2);padding:11px;border-radius:9px;margin-bottom:14px;font-size:13px;font-weight:700;text-align:center;color:var(--copper);border:1px solid var(--border);">Resume Duties On: --</div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <textarea id="leaveReason" rows="3" required placeholder="State reason for leave (min 5, max 500 characters)"></textarea>
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);background:var(--bg-light-2);padding:11px;border-radius:8px;margin-bottom:14px;border:1px solid var(--border);">
+                    <i class="fas fa-user-check" style="color:var(--green-mid)"></i> Primary Approver: <strong id="immediateSupervisor" style="color:var(--text-dark)">...</strong>
+                </div>
+                <div id="leaveFormError" class="err-banner"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Submit for Approval</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── OT Modal ── -->
+    <div id="otModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-clock"></i> Request Overtime</h3>
+                <button class="modal-close" onclick="closeOTModal()">&times;</button>
+            </div>
+            <div id="otDivisionIError" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:9px;padding:14px;margin-bottom:14px;font-size:14px;color:#dc2626;font-weight:700;text-align:center;">
+                <i class="fas fa-ban"></i> Division I employees are <strong>not entitled to overtime</strong>.<br>Overtime applies to Divisions II, III and IV only.
+            </div>
+            <form id="otForm">
+                <div class="form-group"><label>Date</label><input type="date" id="otDate" required></div>
+                <div class="form-grid-2">
+                    <div class="form-group"><label>Start Time</label><input type="time" id="otStart" required></div>
+                    <div class="form-group"><label>End Time</label><input type="time" id="otEnd" required></div>
+                </div>
+                <div class="form-group">
+                    <label>Overtime Type</label>
+                    <select id="otType">
+                        <option value="normal">Weekday / Normal (1.112x)</option>
+                        <option value="sunday">Sunday (2.0x)</option>
+                        <option value="holiday">Public Holiday (2.0x)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Reason</label><textarea id="otReason" rows="3" required placeholder="Min 5, max 160 characters"></textarea></div>
+                <div id="otEstimate" style="display:none;" class="info-banner"></div>
+                <div id="otFormError" class="err-banner"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Submit Overtime Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Role selector ── -->
+    <div id="roleSelector">
+        <label>System View:</label>
+        <select onchange="switchRole(this.value)">
+            <option value="EMPLOYEE">Employee (PRO)</option>
+            <option value="HOD">Head of Department</option>
+            <option value="FINANCE">Director – Finance</option>
+        </select>
+    </div>
+
+    <script src="../assets/dashboard-i18n.js"></script>
+    <script src="../assets/dashboard-accessibility.js"></script>
+    <script src="../assets/dashboard-profiles.js"></script>
+    <script src="../assets/dashboard-offline.js"></script>
+    <script src="../assets/dashboard-holidays.js"></script>
+    <script>
+    // ── Auth guard ──────────────────────────────────────────────────────
+    (function() {
+        var t = localStorage.getItem('erp_token') || localStorage.getItem('erp.jwt');
+        if (!t) { window.location.replace('/chilanga/login.html'); }
+        // sync keys
+        if (t) { localStorage.setItem('erp_token', t); localStorage.setItem('erp.jwt', t); }
+    })();
+
+    // ── API wiring (Spring Boot at port 8080) ───────────────────────────
+    const API_BASE = '';   // same origin
+    function authHeaders() {
+        var t = localStorage.getItem('erp_token') || '';
+        return { 'Content-Type': 'application/json', 'Authorization': t ? 'Bearer ' + t : '' };
+    }
+
+    window.currentUser = {
+        id: localStorage.getItem('erp_user_id') || '',
+        role: 'EMPLOYEE',
+        division: ''
+    };
+
+    // Pre-populate from stored user object
+    (function() {
+        try {
+            var u = JSON.parse(localStorage.getItem('erp_user') || '{}');
+            if (u.username) {
+                document.getElementById('userName').textContent = u.username;
+                document.getElementById('userAvatar').textContent = u.username.charAt(0).toUpperCase();
+            }
+        } catch(e) {}
+    })();
+
+    // ── Fetch user stats via Spring Boot ───────────────────────────────
+    async function fetchDashboardData() {
+        try {
+            var res = await fetch('/auth/me', { headers: authHeaders() });
+            if (!res.ok) { if (res.status === 401) { doLogout(); return; } throw new Error('HTTP ' + res.status); }
+            var data = await res.json();
+            var name = data.employeeName || data.username || 'User';
+            var position = data.positionTitle || data.dashboardPositionId || '';
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userPosition').textContent = position;
+            document.getElementById('userAvatar').textContent = name.split(' ').map(function(n){return n[0];}).join('').substring(0,2).toUpperCase();
+            document.getElementById('jdTitle').textContent = position || 'Your Position';
+            if (data.baseSalary) {
+                document.getElementById('nextPay').textContent = 'ZMW ' + parseFloat(data.baseSalary).toLocaleString('en-ZM', {minimumFractionDigits:2});
+            }
+            if (data.leaveBalance !== undefined) {
+                document.getElementById('leaveBalance').textContent = data.leaveBalance;
+            }
+            window.currentUser.id = data.employeeCode || data.username || '';
+            window.currentUser.division = data.division || '';
+        } catch(e) { console.error('fetchDashboardData:', e); }
+    }
+
+    // ── Leave types ────────────────────────────────────────────────────
+    async function fetchLeaveTypes() {
+        var select = document.getElementById('leaveTypeSelect');
+        try {
+            var res = await fetch('/leaves/leave-types', { headers: authHeaders() });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            var data = await res.json();
+            var types = data.types || data.content || data || [];
+            if (Array.isArray(types) && types.length) {
+                select.innerHTML = '<option value="">-- Select leave type --</option>' +
+                    types.map(function(t){ return '<option value="' + (t.code||t.leaveTypeCode||t.id) + '">' + (t.name||t.leaveTypeName) + '</option>'; }).join('');
+            } else {
+                select.innerHTML = '<option value="">No types configured</option>';
+            }
+        } catch(e) {
+            select.innerHTML = '<option value="">Unable to load leave types. Please try again.</option>';
+        }
+    }
+
+    // ── Leave modal logic ──────────────────────────────────────────────
+    function onLeaveTypeChange() {
+        var type = document.getElementById('leaveTypeSelect').value;
+        var cg = document.getElementById('compassionateGroup');
+        var nw = document.getElementById('advanceNoticeWarning');
+        var cr = document.getElementById('compassionateRelation');
+        cg.style.display = (type === 'COMPASSIONATE') ? 'block' : 'none';
+        cr.required = (type === 'COMPASSIONATE');
+        if (type === 'VACATION') {
+            var earliest = new Date(); earliest.setDate(earliest.getDate() + 30);
+            document.getElementById('earliestStartDate').textContent = earliest.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+            nw.style.display = 'block';
+            document.getElementById('leaveStart').min = earliest.toISOString().split('T')[0];
+        } else {
+            nw.style.display = 'none';
+            document.getElementById('leaveStart').min = new Date().toISOString().split('T')[0];
+        }
+    }
+
+    function calculateResumption() {
+        var sv = document.getElementById('leaveStart').value;
+        var ev = document.getElementById('leaveEnd').value;
+        if (sv && ev) {
+            var s = new Date(sv), e = new Date(ev);
+            if (e >= s) {
+                var diff = Math.ceil((e - s)/(1000*60*60*24)) + 1;
+                document.getElementById('dayCalc').textContent = 'Total Days: ' + diff;
+                var res = new Date(e); res.setDate(res.getDate()+1);
+                document.getElementById('resumeCalc').textContent = 'Resume Duties On: ' + res.toDateString();
+            } else {
+                document.getElementById('dayCalc').textContent = 'Total Days: 0';
+                document.getElementById('resumeCalc').textContent = 'Resume Duties On: --';
+            }
+        }
+    }
+
+    function openLeaveModal() { document.getElementById('leaveModal').classList.add('open'); fetchLeaveTypes(); }
+    function closeLeaveModal() { document.getElementById('leaveModal').classList.remove('open'); }
+    function openOTModal() {
+        var div = document.getElementById('otDivisionIError');
+        var form = document.getElementById('otForm');
+        if (window.currentUser.division === 'I') { div.style.display='block'; form.style.display='none'; }
+        else { div.style.display='none'; form.style.display='block'; }
+        document.getElementById('otModal').classList.add('open');
+    }
+    function closeOTModal() { document.getElementById('otModal').classList.remove('open'); }
+
+    document.getElementById('leaveForm').onsubmit = async function(e) {
+        e.preventDefault();
+        var errEl = document.getElementById('leaveFormError');
+        errEl.style.display = 'none';
+        var reason = document.getElementById('leaveReason').value.trim();
+        if (reason.length < 5) { errEl.textContent='Reason must be at least 5 characters.'; errEl.style.display='block'; return; }
+        if (reason.length > 500) { errEl.textContent='Reason cannot exceed 500 characters.'; errEl.style.display='block'; return; }
+        var payload = {
+            employeeId: window.currentUser.id,
+            leaveType: document.getElementById('leaveTypeSelect').value,
+            startDate: document.getElementById('leaveStart').value,
+            endDate: document.getElementById('leaveEnd').value,
+            reason: reason,
+            compassionateRelation: document.getElementById('compassionateRelation').value || undefined
+        };
+        try {
+            var res = await fetch('/leave-requests', { method:'POST', headers: authHeaders(), body: JSON.stringify(payload) });
+            var data = await res.json();
+            if (res.ok || data.success) {
+                alert('Leave request submitted!\nReference: LV-' + (data.referenceId||data.id||'N/A') + '\nDays: ' + (data.daysRequested||payload.startDate+' to '+payload.endDate));
+                closeLeaveModal(); document.getElementById('leaveForm').reset();
+                document.getElementById('compassionateGroup').style.display='none';
+                document.getElementById('advanceNoticeWarning').style.display='none';
+            } else {
+                errEl.textContent = data.message || data.error || 'Submission failed.'; errEl.style.display='block';
+            }
+        } catch(err) { errEl.textContent='Network error. Please try again.'; errEl.style.display='block'; }
+    };
+
+    // ── OT form ────────────────────────────────────────────────────────
+    ['otStart','otEnd','otType'].forEach(function(id){ document.getElementById(id).addEventListener('change', showOTEstimate); });
+    function showOTEstimate() {
+        var s = document.getElementById('otStart').value;
+        var e = document.getElementById('otEnd').value;
+        var type = document.getElementById('otType').value;
+        var el = document.getElementById('otEstimate');
+        if (!s || !e || s >= e) { el.style.display='none'; return; }
+        var sh=s.split(':').map(Number), eh=e.split(':').map(Number);
+        var hours = ((eh[0]*60+eh[1]) - (sh[0]*60+sh[1]))/60;
+        var m = {normal:1.112,sunday:2.0,holiday:2.0}[type]||1.112;
+        el.innerHTML = '<i class="fas fa-calculator"></i> Duration: <strong>' + hours.toFixed(2) + ' hrs</strong> &nbsp;|&nbsp; Multiplier: <strong>' + m + 'x</strong>';
+        el.style.display='block';
+    }
+
+    document.getElementById('otForm').onsubmit = async function(e) {
+        e.preventDefault();
+        var errEl = document.getElementById('otFormError'); errEl.style.display='none';
+        var reason = document.getElementById('otReason').value.trim();
+        if (reason.length < 5) { errEl.textContent='Reason must be at least 5 characters.'; errEl.style.display='block'; return; }
+        if (reason.length > 160) { errEl.textContent='Reason cannot exceed 160 characters.'; errEl.style.display='block'; return; }
+        var sv = document.getElementById('otStart').value, ev = document.getElementById('otEnd').value;
+        if (sv >= ev) { errEl.textContent='End time must be after start time.'; errEl.style.display='block'; return; }
+        var payload = {
+            employeeId: window.currentUser.id,
+            overtimeDate: document.getElementById('otDate').value,
+            startTime: sv, endTime: ev,
+            overtimeType: document.getElementById('otType').value,
+            reason: reason
+        };
+        try {
+            var res = await fetch('/overtime-requests', { method:'POST', headers: authHeaders(), body: JSON.stringify(payload) });
+            var data = await res.json();
+            if (res.ok || data.success) {
+                alert('Overtime request submitted!\nReference: ' + (data.referenceId||data.id||'N/A'));
+                closeOTModal(); document.getElementById('otForm').reset();
+                document.getElementById('otEstimate').style.display='none';
+            } else { errEl.textContent = data.message||data.error||'Submission failed.'; errEl.style.display='block'; }
+        } catch(err) { errEl.textContent='Network error. Please try again.'; errEl.style.display='block'; }
+    };
+
+    // ── Nav ────────────────────────────────────────────────────────────
+    function showView(viewId, element) {
+        document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+        document.querySelectorAll('.nav-item').forEach(function(i){ i.classList.remove('active'); });
+        document.getElementById(viewId).classList.add('active');
+        if (element) element.classList.add('active');
+        if (viewId === 'orgChart') {
+            var dept = window.currentUser.department || 'General';
+            document.getElementById('orgChartFrame').src = '/org-chart-dashboard.html?department=' + encodeURIComponent(dept);
+        }
+        if (viewId === 'ledger') fetchLedger();
+        if (viewId === 'budget') fetchFinance();
+    }
+
+    // ── Finance (HOD/Finance role) ─────────────────────────────────────
+    async function fetchFinance() {
+        try {
+            var res = await fetch('/finance/summary', { headers: authHeaders() });
+            var data = await res.json();
+            if (data.revenueYTD !== undefined) {
+                document.getElementById('revYTD').textContent = 'ZMW ' + data.revenueYTD.toLocaleString();
+                document.getElementById('expYTD').textContent = 'ZMW ' + data.expenditureYTD.toLocaleString();
+            }
+        } catch(e) { console.error(e); }
+    }
+
+    async function fetchLedger() {
+        try {
+            var res = await fetch('/finance/ledger', { headers: authHeaders() });
+            var data = await res.json();
+            var entries = data.entries || data.content || [];
+            document.getElementById('ledgerBody').innerHTML = entries.map(function(e){
+                return '<tr><td>'+e.date+'</td><td style="font-family:monospace;color:var(--green-dark)">'+e.id+'</td><td>'+e.description+'</td><td><span class="badge">'+e.category+'</span></td><td style="text-align:right;color:'+(e.type==='CR'?'#22c55e':'inherit')+'">'+(e.type==='DR'?'-':'')+parseFloat(e.amount).toLocaleString(undefined,{minimumFractionDigits:2})+'</td></tr>';
+            }).join('');
+        } catch(e) { console.error(e); }
+    }
+
+    // ── Role switching ─────────────────────────────────────────────────
+    function switchRole(role) {
+        document.getElementById('hodSection').style.display = (role !== 'EMPLOYEE') ? 'block' : 'none';
+        document.getElementById('financeSection').style.display = (role === 'FINANCE') ? 'block' : 'none';
+        window.currentUser.role = role;
+        showView('overview', document.querySelector('.nav-item'));
+    }
+
+    // ── Logout ─────────────────────────────────────────────────────────
+    function doLogout() {
+        localStorage.removeItem('erp_token'); localStorage.removeItem('erp.jwt'); localStorage.removeItem('erp_user');
+        window.location.replace('/chilanga/login.html');
+    }
+    document.getElementById('logoutBtn').addEventListener('click', function(e){ e.preventDefault(); doLogout(); });
+
+    // ── Init ───────────────────────────────────────────────────────────
+    fetchDashboardData();
+    </script>
+
+
+    <script>
+    // ── i18n wiring ─────────────────────────────────────────────────────
+    (function() {
+        function applyDashboardI18n() {
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                el.textContent = DashboardI18n.t(el.dataset.i18n);
+            });
+        }
+
+        DashboardI18n.init({
+            languageSelect: '#languageSelect',
+            onLanguageChange: function() {
+                applyDashboardI18n();
+            },
+            onApplied: function() {
+                applyDashboardI18n();
+            }
+        });
+    })();
+    </script>
+
+    <script>
+    // ── accessibility wiring ────────────────────────────────────────────
+    (function() {
+        DashboardAccessibility.bindTabs({
+            buttonSelector: '.nav-item[role="tab"]',
+            panelSelector: '.view[role="tabpanel"]',
+            onActivate: function(viewId, button) {
+                if (typeof showView === 'function') {
+                    showView(viewId, button);
+                }
+            }
+        });
+
+        // Allow modal buttons to be triggered with Enter/Space
+        document.querySelectorAll('.nav-item[role="button"]').forEach(function(btn) {
+            btn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+            });
+        });
+    })();
+    </script>
+
+    <script>
+    // ── profile wiring ───────────────────────────────────────────────────
+    (function() {
+        DashboardProfiles.init({ apiBase: API_BASE });
+    })();
+    </script>
+
+    <script>
+    // ── offline / cache wiring ───────────────────────────────────────────
+    (function() {
+        DashboardOffline.init({
+            refreshSelectors: ["[data-action='refresh-cache']"]
+        });
+    })();
+    </script>
+
+    <script>
+    // ── holidays wiring ──────────────────────────────────────────────────
+    (function() {
+        DashboardHolidays.init({
+            region: localStorage.getItem("erp.holidayRegion") || "zambia",
+            locale: localStorage.getItem("erp.locale") || "en-ZM",
+            language: (typeof DashboardI18n !== "undefined" && DashboardI18n.getLanguage) ? DashboardI18n.getLanguage() : "en"
+        });
+    })();
+    </script>
+</body>
+</html>

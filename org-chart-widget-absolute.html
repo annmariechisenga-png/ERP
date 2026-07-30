@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Org Chart Widget - Absolute Path</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f5f7fa; padding: 20px; }
+        .container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 16px 24px; }
+        .header h1 { font-size: 20px; margin-bottom: 4px; }
+        .toolbar { background: #f8f9fa; padding: 12px 24px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .search-box { display: flex; gap: 8px; flex: 1; }
+        .search-box input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; flex: 1; max-width: 300px; }
+        .search-box button, .toolbar button { padding: 8px 16px; background: white; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 13px; }
+        .org-tree { padding: 24px; overflow-x: auto; min-height: 500px; max-height: 70vh; overflow-y: auto; }
+        .error { text-align: center; padding: 40px; color: #d93025; }
+        .stats { font-size: 13px; color: #5f6368; margin-left: auto; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header"><h1>🏛️ Local Authority Organizational Chart</h1></div>
+    <div class="toolbar">
+        <div class="search-box"><input type="text" id="employee-search" placeholder="Position ID..."><button id="search-btn">View</button><button id="reset-btn">Full View</button></div>
+        <div class="stats" id="stats"></div>
+    </div>
+    <div id="org-tree" class="org-tree"><div class="error">Loading...</div></div>
+</div>
+<script>
+    const JSON_PATH = '/Users/Work/Desktop/ERP/org-data/org_chart.json';
+    let orgData = null;
+    
+    async function loadData() {
+        try {
+            const response = await fetch('org-data/org_chart.json');
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            orgData = await response.json();
+            document.getElementById('org-tree').innerHTML = '<pre style="white-space:pre-wrap">✅ Loaded ' + Object.keys(orgData).length + ' departments</pre><pre>' + JSON.stringify(orgData, null, 2).substring(0, 500) + '...</pre>';
+        } catch(e) {
+            document.getElementById('org-tree').innerHTML = '<div class="error">❌ Error: ' + e.message + '<br><br>File should be at: ' + JSON_PATH + '<br><br>Try opening this file from a web server instead of file:// protocol.</div>';
+        }
+    }
+    loadData();
+</script>
+</body>
+</html>

@@ -1,2 +1,0 @@
-INSERT INTO job_description_documents VALUES(2,'FIN-LEAD-DIR-TOW-01','JOB DESCRIPTION - DIRECTOR - FINANCE.docx','/uploads/town_finance/director_finance.docx','.docx','2026-02-27 22:38:44','Director - Finance','LGSS/05','FIN',TRUE,'EXEC-SEC-TOW-01',TRUE,1,TRUE);
-INSERT INTO job_description_documents VALUES(4,'FIN-ACC-CHIEF-TOW-01','JOB DESCRIPTION - CHIEF ACCOUNTANT.docx','/Users/Work/Desktop/JD/Town/Finance/JOB DESCRIPTION - CHIEF ACCOUNTANT.docx','.docx','2026-02-27 22:38:44','Chief Accountant','LGSS/06','FIN',TRUE,'FIN-LEAD-DIR-TOW-01',TRUE,1,TRUE);

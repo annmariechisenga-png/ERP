@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Work Location Assignment</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <style>
+    body { background: #f6f7fb; }
+    .wrapper { max-width: 1080px; margin: 24px auto; }
+    .panel { border: 1px solid #dfe3ea; border-radius: 10px; background: #fff; }
+    .panel-head { border-bottom: 1px solid #dfe3ea; padding: 14px 18px; font-weight: 700; }
+    .panel-body { padding: 18px; }
+    .mono-btn { min-width: 84px; }
+    .section-title { font-size: .9rem; letter-spacing: .04em; font-weight: 700; color: #5b6472; }
+    .clickable-row-actions .btn { margin-right: .45rem; margin-bottom: .35rem; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="panel">
+    <div class="panel-head d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div>
+        EMPLOYEE WORK LOCATION ASSIGNMENT - <span id="employeeHeadline">John Banda (Driver, Division IV)</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <input id="tokenInput" class="form-control form-control-sm" style="width: 280px;" placeholder="Bearer token">
+        <select id="provinceCode" class="form-select form-select-sm" style="width: 210px;">
+          <option value="">Select Province</option>
+        </select>
+        <select id="districtCode" class="form-select form-select-sm" style="width: 260px;" disabled>
+          <option value="">Select District</option>
+        </select>
+        <button id="applyContextBtn" class="btn btn-sm btn-outline-primary">APPLY</button>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div id="errorBanner" class="alert alert-danger d-none py-2 mb-3"></div>
+
+      <div class="mb-4">
+        <div class="section-title mb-2">CURRENT ASSIGNMENTS</div>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+              <th>Location</th>
+              <th>Type</th>
+              <th>Primary</th>
+              <th>Effective From</th>
+              <th>Effective To</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="assignmentRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <button id="assignNewBtn" class="btn btn-primary mono-btn">ASSIGN NEW LOCATION</button>
+      </div>
+
+      <div>
+        <div class="section-title mb-2">ASSIGN NEW LOCATION</div>
+        <div class="border rounded p-3">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Location</label>
+              <select id="locationId" class="form-select">
+                <option value="">-- Select --</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Assignment</label>
+              <select id="assignmentType" class="form-select">
+                <option value="permanent">Permanent</option>
+                <option value="temporary">Temporary</option>
+                <option value="rotational">Rotational</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Effective From</label>
+              <input id="effectiveFrom" type="date" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Effective To</label>
+              <input id="effectiveTo" type="date" class="form-control">
+              <div class="form-text">Leave blank for permanent.</div>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isPrimary">
+                <label class="form-check-label" for="isPrimary">This is the primary work location</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button id="saveBtn" class="btn btn-success mono-btn">SAVE ASSIGNMENT</button>
+        <button id="cancelEditBtn" class="btn btn-outline-secondary d-none">Cancel Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const authStorageKey = 'erp_token';
+const scopeProvinceStorageKey = 'ela_scope_province';
+const scopeDistrictStorageKey = 'ela_scope_district';
+const state = {
+  employeeId: 1,
+  employeeName: 'John Banda',
+  role: 'Driver',
+  division: 'Division IV',
+  editingAssignmentId: null,
+  assignmentRows: [],
+  locations: [],
+  provinces: [],
+  districts: []
+};
+
+const assignmentRowsEl = document.getElementById('assignmentRows');
+const errorBanner = document.getElementById('errorBanner');
+
+function loadEmployeeContextFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  state.employeeId = Number(params.get('employeeId') || 1);
+  state.employeeName = params.get('employeeName') || 'John Banda';
+  state.role = params.get('role') || 'Driver';
+  state.division = params.get('division') || 'Division IV';
+  document.getElementById('employeeHeadline').textContent = `${state.employeeName} (${state.role}, ${state.division})`;
+}
+
+function getToken() {
+  const typed = document.getElementById('tokenInput').value.trim();
+  if (typed) return typed;
+  return sessionStorage.getItem(authStorageKey) || localStorage.getItem(authStorageKey) || '';
+}
+
+function apiHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
+function currentAuthorityCode() {
+  return document.getElementById('districtCode').value || '';
+}
+
+function saveScopeSelection() {
+  const provinceValue = document.getElementById('provinceCode')?.value || '';
+  const districtValue = document.getElementById('districtCode')?.value || '';
+  localStorage.setItem(scopeProvinceStorageKey, provinceValue);
+  localStorage.setItem(scopeDistrictStorageKey, districtValue);
+}
+
+function readStoredScopeSelection() {
+  return {
+    province: localStorage.getItem(scopeProvinceStorageKey) || '',
+    district: localStorage.getItem(scopeDistrictStorageKey) || '',
+  };
+}
+
+function showError(message) {
+  errorBanner.textContent = message;
+  errorBanner.classList.remove('d-none');
+}
+
+function clearError() {
+  errorBanner.classList.add('d-none');
+}
+
+function formatDate(value) {
+  if (!value) return '-';
+  const d = new Date(`${value}T00:00:00`);
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function resetForm() {
+  state.editingAssignmentId = null;
+  document.getElementById('locationId').value = '';
+  document.getElementById('assignmentType').value = 'permanent';
+  document.getElementById('effectiveFrom').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('effectiveTo').value = '';
+  document.getElementById('isPrimary').checked = false;
+  document.getElementById('cancelEditBtn').classList.add('d-none');
+}
+
+function resetDataForNoDistrict() {
+  state.locations = [];
+  state.assignmentRows = [];
+  populateLocations();
+  renderAssignments();
+}
+
+function populateProvinceSelect() {
+  const select = document.getElementById('provinceCode');
+  const current = select.value;
+  select.innerHTML = '<option value="">Select Province</option>';
+  for (const province of state.provinces) {
+    const option = document.createElement('option');
+    option.value = province.provinceCode;
+    option.textContent = province.provinceName;
+    select.appendChild(option);
+  }
+  if (current && Array.from(select.options).some(x => x.value === current)) {
+    select.value = current;
+  }
+}
+
+function populateDistrictSelect() {
+  const select = document.getElementById('districtCode');
+  const current = select.value;
+  select.innerHTML = '<option value="">Select District</option>';
+
+  for (const district of state.districts) {
+    const option = document.createElement('option');
+    option.value = district.authorityCode;
+    option.textContent = `${district.districtName} (${district.authorityCode})`;
+    option.dataset.authorityId = district.authorityId;
+    option.dataset.authorityRef = district.authorityRef;
+    select.appendChild(option);
+  }
+
+  select.disabled = state.districts.length === 0;
+  if (current && Array.from(select.options).some(x => x.value === current)) {
+    select.value = current;
+  }
+}
+
+async function loadProvinces() {
+  const response = await fetch('/api/authority-reference/provinces', { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Failed to load provinces (HTTP ${response.status})`);
+  }
+  state.provinces = await response.json();
+  populateProvinceSelect();
+}
+
+async function loadDistricts() {
+  const provinceCode = document.getElementById('provinceCode').value;
+  if (!provinceCode) {
+    state.districts = [];
+    populateDistrictSelect();
+    resetDataForNoDistrict();
+    return;
+  }
+
+  const response = await fetch(`/api/authority-reference/districts?provinceCode=${encodeURIComponent(provinceCode)}`, { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Failed to load districts (HTTP ${response.status})`);
+  }
+  state.districts = await response.json();
+  populateDistrictSelect();
+}
+
+function fillFormFromAssignment(row) {
+  state.editingAssignmentId = row.id;
+  document.getElementById('locationId').value = String(row.locationId);
+  document.getElementById('assignmentType').value = row.assignmentType || 'permanent';
+  document.getElementById('effectiveFrom').value = row.effectiveFrom || '';
+  document.getElementById('effectiveTo').value = row.effectiveTo || '';
+  document.getElementById('isPrimary').checked = row.primary === true;
+  document.getElementById('cancelEditBtn').classList.remove('d-none');
+}
+
+function renderAssignments() {
+  assignmentRowsEl.innerHTML = '';
+
+  if (!state.assignmentRows.length) {
+    assignmentRowsEl.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No assignments found.</td></tr>';
+    return;
+  }
+
+  for (const row of state.assignmentRows) {
+    const location = state.locations.find(x => Number(x.id) === Number(row.locationId));
+    const locationType = location?.locationType
+      ? String(location.locationType).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+      : '-';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.locationName || row.locationCode || row.locationId}</td>
+      <td>${locationType}</td>
+      <td>${row.primary ? '✓' : ''}</td>
+      <td>${formatDate(row.effectiveFrom)}</td>
+      <td>${formatDate(row.effectiveTo)}</td>
+      <td class="clickable-row-actions">
+        <button class="btn btn-outline-primary btn-sm" data-action="edit" data-id="${row.id}">EDIT</button>
+        <button class="btn btn-outline-danger btn-sm" data-action="remove" data-id="${row.id}">REMOVE</button>
+      </td>
+    `;
+    assignmentRowsEl.appendChild(tr);
+  }
+}
+
+function populateLocations() {
+  const select = document.getElementById('locationId');
+  const current = select.value;
+  select.innerHTML = '<option value="">-- Select --</option>';
+  for (const location of state.locations) {
+    const option = document.createElement('option');
+    option.value = String(location.id);
+    option.textContent = `${location.locationName} (${location.locationCode})`;
+    select.appendChild(option);
+  }
+  if (current && Array.from(select.options).some(x => x.value === current)) {
+    select.value = current;
+  }
+}
+
+async function loadLocations() {
+  const selectedDistrictCode = currentAuthorityCode();
+  if (!selectedDistrictCode) {
+    state.locations = [];
+    populateLocations();
+    return;
+  }
+
+  const authorityCode = encodeURIComponent(selectedDistrictCode);
+  const response = await fetch(`/api/work-locations?activeOnly=true&authorityCode=${authorityCode}`, { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Failed to load locations (HTTP ${response.status})`);
+  }
+  state.locations = await response.json();
+  populateLocations();
+}
+
+async function loadAssignments() {
+  const selectedDistrictCode = currentAuthorityCode();
+  if (!selectedDistrictCode) {
+    state.assignmentRows = [];
+    renderAssignments();
+    return;
+  }
+
+  const authorityCode = encodeURIComponent(selectedDistrictCode);
+  const response = await fetch(`/api/employee-work-locations?employeeId=${state.employeeId}&activeOnly=false&authorityCode=${authorityCode}`, { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Failed to load assignments (HTTP ${response.status})`);
+  }
+  state.assignmentRows = await response.json();
+  renderAssignments();
+}
+
+async function saveAssignment() {
+  clearError();
+
+  const locationId = Number(document.getElementById('locationId').value || 0);
+  const effectiveFrom = document.getElementById('effectiveFrom').value;
+  if (!locationId || !effectiveFrom) {
+    showError('Location and Effective From are required.');
+    return;
+  }
+
+  const location = state.locations.find(x => Number(x.id) === locationId);
+  const selectedDistrictCode = currentAuthorityCode();
+  const payload = {
+    employeeId: state.employeeId,
+    locationId,
+    authorityCode: (location?.authorityCode || selectedDistrictCode || 'ALL').toUpperCase(),
+    assignmentType: document.getElementById('assignmentType').value,
+    effectiveFrom,
+    effectiveTo: document.getElementById('effectiveTo').value || null,
+    primary: document.getElementById('isPrimary').checked,
+    createdBy: state.employeeId
+  };
+
+  const isEdit = state.editingAssignmentId != null;
+  const endpoint = isEdit ? `/api/employee-work-locations/${state.editingAssignmentId}` : '/api/employee-work-locations';
+  const method = isEdit ? 'PUT' : 'POST';
+
+  const response = await fetch(endpoint, {
+    method,
+    headers: apiHeaders(),
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    let message = `Save failed (HTTP ${response.status})`;
+    try {
+      const body = await response.json();
+      message = body.message || message;
+    } catch (_e) {}
+    throw new Error(message);
+  }
+
+  resetForm();
+  await loadAssignments();
+}
+
+async function removeAssignment(id) {
+  if (!window.confirm(`Remove assignment #${id}?`)) return;
+
+  const response = await fetch(`/api/employee-work-locations/${id}`, {
+    method: 'DELETE',
+    headers: apiHeaders()
+  });
+
+  if (!response.ok) {
+    let message = `Remove failed (HTTP ${response.status})`;
+    try {
+      const body = await response.json();
+      message = body.message || message;
+    } catch (_e) {}
+    throw new Error(message);
+  }
+
+  if (state.editingAssignmentId === id) {
+    resetForm();
+  }
+  await loadAssignments();
+}
+
+async function loadAll() {
+  if (!currentAuthorityCode()) {
+    resetDataForNoDistrict();
+    return;
+  }
+  clearError();
+  try {
+    await loadLocations();
+    await loadAssignments();
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+document.getElementById('assignNewBtn').addEventListener('click', () => {
+  resetForm();
+  document.getElementById('locationId').focus();
+});
+
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  try {
+    await saveAssignment();
+  } catch (error) {
+    showError(error.message || 'Failed to save assignment.');
+  }
+});
+
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+document.getElementById('applyContextBtn').addEventListener('click', () => {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (token) {
+    sessionStorage.setItem(authStorageKey, token);
+    localStorage.setItem(authStorageKey, token);
+  }
+  initializeReferenceContext();
+});
+
+document.getElementById('provinceCode').addEventListener('change', async () => {
+  try {
+    clearError();
+    document.getElementById('districtCode').value = '';
+    saveScopeSelection();
+    await loadDistricts();
+    resetDataForNoDistrict();
+  } catch (error) {
+    showError(error.message || 'Failed to load districts.');
+  }
+});
+
+document.getElementById('districtCode').addEventListener('change', () => {
+  saveScopeSelection();
+  loadAll();
+});
+
+assignmentRowsEl.addEventListener('click', async (event) => {
+  const btn = event.target.closest('button[data-action]');
+  if (!btn) return;
+
+  const assignmentId = Number(btn.dataset.id);
+  const row = state.assignmentRows.find(x => Number(x.id) === assignmentId);
+  if (!row) return;
+
+  if (btn.dataset.action === 'edit') {
+    fillFormFromAssignment(row);
+    return;
+  }
+
+  if (btn.dataset.action === 'remove') {
+    try {
+      await removeAssignment(assignmentId);
+    } catch (error) {
+      showError(error.message || 'Failed to remove assignment.');
+    }
+  }
+});
+
+loadEmployeeContextFromQuery();
+resetForm();
+
+async function initializeReferenceContext() {
+  clearError();
+  try {
+    const provinceSelect = document.getElementById('provinceCode');
+    const districtSelect = document.getElementById('districtCode');
+    const storedScope = readStoredScopeSelection();
+    const previousProvince = document.getElementById('provinceCode').value;
+    const previousDistrict = document.getElementById('districtCode').value;
+    const preferredProvince = previousProvince || storedScope.province;
+    const preferredDistrict = previousDistrict || storedScope.district;
+
+    await loadProvinces();
+
+    if (preferredProvince && state.provinces.some(x => x.provinceCode === preferredProvince)) {
+      provinceSelect.value = preferredProvince;
+    } else if (state.provinces.length) {
+      provinceSelect.value = state.provinces[0].provinceCode;
+    }
+
+    await loadDistricts();
+
+    if (preferredDistrict && state.districts.some(x => x.authorityCode === preferredDistrict)) {
+      districtSelect.value = preferredDistrict;
+    } else if (state.districts.length) {
+      districtSelect.value = state.districts[0].authorityCode;
+    }
+
+    saveScopeSelection();
+
+    await loadAll();
+  } catch (error) {
+    showError(error.message || 'Failed to initialize province and district context.');
+  }
+}
+
+initializeReferenceContext();
+</script>
+</body>
+</html>

@@ -3,18 +3,23 @@ spring:
     name: localgov-erp
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/localgov_erp
-    username: erp_admin
-    password: $MeatbalL20082012$
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/marshaerp}
+    username: ${DB_USERNAME:chisenga}
+    password: ${DB_PASSWORD:erp2026}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
       connection-timeout: 30000
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
   
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -28,18 +33,74 @@ spring:
 
 server:
   port: 8080
+  forward-headers-strategy: framework
   servlet:
-    context-path: /api
+    context-path: /
+    session:
+      timeout: ${APP_SESSION_TIMEOUT:15m}
+      cookie:
+        http-only: true
+        secure: ${APP_COOKIE_SECURE:false}
+        same-site: lax
+  ssl:
+    enabled: ${SERVER_SSL_ENABLED:false}
+    key-store: ${SERVER_SSL_KEY_STORE:}
+    key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD:}
+    key-store-type: ${SERVER_SSL_KEY_STORE_TYPE:PKCS12}
+    key-alias: ${SERVER_SSL_KEY_ALIAS:localgov-erp}
 
 logging:
   level:
-    com.localgov: DEBUG
+    com.localgov: ${APP_LOG_LEVEL:INFO}
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN
+  pattern:
+    level: "%5p [${spring.application.name:localgov-erp},traceId=%X{traceId:-},spanId=%X{spanId:-}]"
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus,loggers,threaddump
   endpoint:
     health:
       show-details: always
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4318/v1/traces}
+  observations:
+    key-values:
+      application: ${spring.application.name}
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+    export:
+      prometheus:
+        enabled: true
+
+jwt:
+  secret: ${JWT_SECRET:Q2hhbmdlVGhpc1RvQVN0cm9uZ0FuZExvbmdlckRldk9ubHlTZWNyZXRLZXlGb3JMb2NhbEdvdkVSUA==}
+  expiration-millis: ${JWT_EXPIRATION_MILLIS:900000}
+
+app:
+  leave:
+    use-calculation-api: ${USE_LEAVE_CALCULATION_API:true}
+    rollout:
+      restrict-to-roles: false
+      allowed-roles: []
+  security:
+    require-ssl: ${APP_SECURITY_REQUIRE_SSL:false}
+    audit:
+      enabled: ${APP_SECURITY_AUDIT_ENABLED:true}
+    mfa:
+      issuer: ${APP_MFA_ISSUER:LocalGov ERP}
+    privacy:
+      retention-days: ${APP_PRIVACY_RETENTION_DAYS:365}
+      notice-version: ${APP_PRIVACY_NOTICE_VERSION:2026.04}
+      dpo-contact: ${APP_DPO_CONTACT:dpo@localgov.test}

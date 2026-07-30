@@ -1,7 +1,0 @@
-INSERT INTO toc_positions VALUES(1,'Town Clerk','LGSS/02',TRUE,NULL,TRUE,2,TRUE,'TOC-CLK-MUN-01');
-INSERT INTO toc_positions VALUES(2,'Personal Assistant','LGSS/10',TRUE,'TOC-CLK-MUN-01',TRUE,2,FALSE,'TOC-PA-MUN-01');
-INSERT INTO toc_positions VALUES(3,'Driver','G1',TRUE,'TOC-CLK-MUN-01',TRUE,2,FALSE,'TOC-DRIVER-MUN-01');
-INSERT INTO toc_positions VALUES(4,'Office Orderly','G3',TRUE,'TOC-CLK-MUN-01',TRUE,2,FALSE,'TOC-ORD-MUN-01');
-INSERT INTO toc_positions VALUES(5,'Public Relations Manager','LGSS/06',TRUE,'TOC-CLK-MUN-01',2,2,TRUE,'TOC-PRMGR-MUN-01');
-INSERT INTO toc_positions VALUES(6,'Senior Public Relations Officer','LGSS/07',TRUE,'TOC-PRMGR-MUN-01',2,2,FALSE,'TOC-SRPRO-MUN-01');
-INSERT INTO toc_positions VALUES(7,'Public Relations Officer','LGSS/08',TRUE,'TOC-SRPRO-MUN-01',2,2,FALSE,'TOC-PRO-MUN-01');

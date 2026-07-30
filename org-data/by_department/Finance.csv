@@ -1,0 +1,51 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+Leadership,FIN-DIR-TOWN,Director of Finance,5,Council Secretary,1,Town
+FIN-CHACC-TOWN,Chief Accountant,LGSS06,1,Finance Section,FIN-DIR-TOWN,Town
+FIN-ACC-TOWN,Accountant,LGSS08,1,Finance Section,FIN-CHACC-TOWN,Town
+FIN-ASSTACC-TOWN,Assistant Accountant,LGSS13,2,Finance Section,FIN-ACC-TOWN,Town
+FIN-STORE-TOWN,Stores Officer,LGSS17,1,Finance Section,FIN-CHACC-TOWN,Town
+FIN-CHLIC-TOWN,Chief Licensing Officer,LGSS07,1,Finance Section,FIN-DIR-TOWN,Town
+FIN-LIC-TOWN,Licensing Officer,LGSS08,2,Finance Section,FIN-CHLIC-TOWN,Town
+FIN-CASH-TOWN,Cashier,LGSS13,2,Finance Section,FIN-LIC-TOWN,Town
+FIN-REV-TOWN,Revenue Collector,LGSS18,3,Finance Section,FIN-CASH-TOWN,Town
+Finance - Health Services,FIN-HLTH-ASSTACC-TOWN,Assistant Accountant - Health,13,FIN-ACC-TOWN,1,Town
+Finance - Health Services,FIN-HLTH-ACCS-TOWN,Accounts Assistant - Health,13,FIN-HLTH-ASSTACC-TOWN,2,Town
+Finance - Health Services,FIN-HLTH-STORE-TOWN,Stores Officer - Health,8,FIN-DIR-TOWN,1,Town
+Finance - Health Services,FIN-HLTH-ASSTSTORE-TOWN,Assistant Stores Officer - Health,10,FIN-HLTH-STORE-TOWN,1,Town
+FIN-COMM-MGR-TOWN,Commercial Manager,LGSS06,1,Commercial & Business Development Section,FIN-DIR-TOWN,Town
+FIN-COMM-ASSTMGR-TOWN,Assistant Commercial Manager,LGSS07,1,Commercial & Business Development Section,FIN-COMM-MGR-TOWN,Town
+FIN-COMM-HOUSE-TOWN,House Keeper,G3,1,Commercial & Business Development Section,FIN-COMM-ASSTMGR-TOWN,Town
+FIN-COMM-RECEPT-TOWN,Receptionist,G1,4,Commercial & Business Development Section,FIN-COMM-HOUSE-TOWN,Town
+FIN-COMM-BARMAN-TOWN,Barman,G2,3,Commercial & Business Development Section,FIN-COMM-HOUSE-TOWN,Town
+FIN-COMM-WAITER-TOWN,Waiter,G2,2,Commercial & Business Development Section,FIN-COMM-HOUSE-TOWN,Town
+FIN-COMM-COOK-TOWN,Cook,G1,2,Commercial & Business Development Section,FIN-COMM-HOUSE-TOWN,Town
+FIN-COMM-CHEF-TOWN,Chef,G1,2,Commercial & Business Development Section,FIN-COMM-HOUSE-TOWN,Town
+FIN-COMM-LAUNDRY-TOWN,Laundryman,G3,3,Commercial & Business Development Section,FIN-COMM-HOUSE-TOWN,Town
+FIN-STORE-OFF-TOWN,Store Officer,LGSS08,1,Stores Section,FIN-DIR-TOWN,Town
+FIN-STORE-ASST-TOWN,Assistant Stores Officer,LGSS10,1,Stores Section,FIN-STORE-OFF-TOWN,Town
+Leadership,FIN-DIR-MUN,Director of Finance,4,Town Clerk,1,Municipal
+FIN-CHACC-MUN,Chief Accountant,LGSS/06,1,Finance Section,FIN-DIR-MUN,Municipal
+FIN-SNRACC-MUN,Senior Accountant,LGSS/07,5,Finance Section,FIN-CHACC-MUN,Municipal
+FIN-ACC-MUN,Accountant,LGSS/10,5,Finance Section,FIN-SNRACC-MUN,Municipal
+FIN-ASSTACC-MUN,Assistant Accountant,LGSS/11,4,Finance Section,FIN-ACC-MUN,Municipal
+FIN-ACCS-MUN,Accounts Assistant,LGSS/13,10,Finance Section,FIN-ASSTACC-MUN,Municipal
+FIN-REV-MUN,Revenue Collector,LGSS/18,35,Finance Section,FIN-ACCS-MUN,Municipal
+FIN-STORE-CTRL-MUN,Stores Controller,LGSS/07,1,Stores Section,FIN-DIR-MUN,Municipal
+FIN-STORE-OFF-MUN,Stores Officer,LGSS/08,2,Stores Section,FIN-STORE-CTRL-MUN,Municipal
+FIN-STORE-ASST-MUN,Assistant Stores Officer,LGSS/10,2,Stores Section,FIN-STORE-OFF-MUN,Municipal
+Leadership,FIN-DIR-CITY,Director of Finance,3,Town Clerk,1,City
+FIN-ADIR-REV-CITY,Assistant Director - Revenue,LGSS/05,1,Revenue Section,FIN-DIR-CITY,City
+FIN-CHACC-REV-CITY,Chief Accountant - Revenue,LGSS/06,1,Revenue Section,FIN-ADIR-REV-CITY,City
+FIN-SNRACC-REV-CITY,Senior Accountant - Revenue,LGSS/07,2,Revenue Section,FIN-CHACC-REV-CITY,City
+FIN-ACC-REV-CITY,Accountant - Revenue,LGSS/10,4,Revenue Section,FIN-SNRACC-REV-CITY,City
+FIN-ASSTACC-REV-CITY,Assistant Accountant - Revenue,LGSS/11,4,Revenue Section,FIN-ACC-REV-CITY,City
+FIN-ACCS-REV-CITY,Accounts Assistant - Revenue,LGSS/13,4,Revenue Section,FIN-ASSTACC-REV-CITY,City
+FIN-REV-CITY,Revenue Collector,LGSS/18,100,Revenue Section,FIN-ACCS-REV-CITY,City
+FIN-ADIR-EXP-CITY,Assistant Director - Expenditure,LGSS/05,1,Expenditure Section,FIN-DIR-CITY,City
+FIN-CHACC-EXP-CITY,Chief Accountant - Expenditure,LGSS/06,3,Expenditure Section,FIN-ADIR-EXP-CITY,City
+FIN-SNRACC-EXP-CITY,Senior Accountant - Expenditure,LGSS/07,3,Expenditure Section,FIN-CHACC-EXP-CITY,City
+FIN-ACC-EXP-CITY,Accountant - Expenditure,LGSS/10,6,Expenditure Section,FIN-SNRACC-EXP-CITY,City
+FIN-ASSTACC-EXP-CITY,Assistant Accountant - Expenditure,LGSS/11,8,Expenditure Section,FIN-ACC-EXP-CITY,City
+FIN-ACCS-EXP-CITY,Accounts Assistant - Expenditure,LGSS/13,12,Expenditure Section,FIN-ASSTACC-EXP-CITY,City
+FIN-STORE-CTRL-CITY,Stores Controller,LGSS/07,1,Stores Section,FIN-DIR-CITY,City
+FIN-STORE-OFF-CITY,Stores Officer,LGSS/08,5,Stores Section,FIN-STORE-CTRL-CITY,City

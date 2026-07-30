@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work Location Management - IT Administrator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    body { background: #f5f7fb; }
+    .shell { max-width: 1320px; margin: 1.5rem auto; }
+    .header-card { border: 1px solid #dce3eb; border-radius: 10px; background: #ffffff; }
+    .header-title { font-size: 1.15rem; font-weight: 700; letter-spacing: .02em; }
+    .toolbar .btn { min-width: 140px; }
+    .table-wrap { border: 1px solid #dce3eb; border-radius: 8px; overflow: hidden; }
+    .table thead th { white-space: nowrap; font-size: .85rem; text-transform: uppercase; }
+    .table td { vertical-align: top; font-size: .92rem; }
+    .badge-status { min-width: 70px; }
+    .action-stack .btn { min-width: 78px; }
+    .muted-small { font-size: .82rem; color: #6c757d; }
+    .form-section { border: 1px solid #dce3eb; border-radius: 8px; padding: .9rem; background: #fff; margin-bottom: .8rem; }
+    .form-section-title { font-size: .82rem; font-weight: 700; letter-spacing: .04em; color: #495057; margin-bottom: .6rem; }
+    #addLocationMap { height: 280px; border-radius: 8px; border: 1px solid #dce3eb; }
+    .geo-read { font-size: .88rem; }
+    .modal-xl-form { max-width: 1040px; }
+  </style>
+</head>
+<body>
+<div class="container-fluid shell">
+  <div class="header-card p-3 p-md-4 mb-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+      <div>
+        <div class="header-title">WORK LOCATION MANAGEMENT - IT ADMINISTRATOR</div>
+        <div class="text-muted" id="statsLine">Total Locations: 0 | Active: 0 | Inactive: 0</div>
+      </div>
+      <div class="w-100" style="max-width: 400px;">
+        <label class="form-label mb-1 fw-semibold">Province</label>
+        <select id="provinceScope" class="form-select form-select-sm mb-2">
+          <option value="">Select Province</option>
+        </select>
+        <label class="form-label mb-1 fw-semibold">District</label>
+        <select id="districtScope" class="form-select form-select-sm" disabled>
+          <option value="">Select District</option>
+        </select>
+        <div class="muted-small mt-1">Select province first, then district.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-card p-3 p-md-4">
+    <div class="d-flex flex-wrap gap-2 toolbar mb-3">
+      <button class="btn btn-primary btn-sm" id="addBtn"><i class="bi bi-plus-circle me-1"></i>ADD NEW LOCATION</button>
+      <button class="btn btn-outline-primary btn-sm" id="importBtn"><i class="bi bi-geo-alt me-1"></i>IMPORT FROM MAP</button>
+      <button class="btn btn-outline-secondary btn-sm" id="exportBtn"><i class="bi bi-download me-1"></i>EXPORT</button>
+      <button class="btn btn-outline-secondary btn-sm" id="filterBtn"><i class="bi bi-funnel me-1"></i>FILTER</button>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <input id="tokenInput" type="password" class="form-control form-control-sm" style="width: 320px;" placeholder="Paste Bearer token (optional if already in storage)">
+        <button class="btn btn-warning btn-sm" id="applyTokenBtn">Apply Token</button>
+      </div>
+    </div>
+
+    <div id="filterPanel" class="row g-2 mb-3 d-none">
+      <div class="col-12 col-md-3">
+        <input id="searchText" type="text" class="form-control form-control-sm" placeholder="Search code/name">
+      </div>
+      <div class="col-6 col-md-2">
+        <select id="typeFilter" class="form-select form-select-sm">
+          <option value="">All Types</option>
+          <option value="headquarters">Headquarters</option>
+          <option value="depot">Depot</option>
+          <option value="cemetery">Cemetery</option>
+          <option value="market">Market</option>
+          <option value="refuse_bay">Refuse Bay</option>
+          <option value="satellite_office">Satellite Office</option>
+          <option value="workshop">Workshop</option>
+          <option value="street_zone">Street Zone</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-2">
+        <select id="statusFilter" class="form-select form-select-sm">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2">
+        <button id="resetFiltersBtn" class="btn btn-outline-secondary btn-sm w-100">Reset Filters</button>
+      </div>
+    </div>
+
+    <div id="errorBanner" class="alert alert-danger d-none"></div>
+
+    <div class="table-wrap">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>LOCATION CODE</th>
+            <th>LOCATION NAME</th>
+            <th>TYPE</th>
+            <th>DIVISIONS</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="rowsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <div id="pageLabel" class="text-muted small">Page 1 of 1</div>
+      <div class="d-flex gap-2">
+        <button id="prevBtn" class="btn btn-outline-secondary btn-sm">Previous</button>
+        <button id="nextBtn" class="btn btn-outline-secondary btn-sm">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid shell mt-3">
+  <div class="header-card p-3 p-md-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">EMPLOYEE WORK LOCATION ASSIGNMENTS</h6>
+      <button id="refreshAssignmentsBtn" class="btn btn-outline-secondary btn-sm">Refresh Assignments</button>
+    </div>
+
+    <div class="row g-2 mb-3">
+      <div class="col-md-2">
+        <label class="form-label form-label-sm">Employee ID *</label>
+        <input id="aEmployeeId" type="number" min="1" class="form-control form-control-sm" placeholder="e.g. 1">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label form-label-sm">Location *</label>
+        <select id="aLocationId" class="form-select form-select-sm"></select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label form-label-sm">Assignment Type</label>
+        <select id="aAssignmentType" class="form-select form-select-sm">
+          <option value="permanent">permanent</option>
+          <option value="temporary">temporary</option>
+          <option value="rotational">rotational</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label form-label-sm">Effective From *</label>
+        <input id="aEffectiveFrom" type="date" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label form-label-sm">Effective To</label>
+        <input id="aEffectiveTo" type="date" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-1 d-flex align-items-end">
+        <div class="form-check">
+          <input id="aPrimary" type="checkbox" class="form-check-input">
+          <label class="form-check-label small" for="aPrimary">Primary</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label form-label-sm">Created By</label>
+        <input id="aCreatedBy" type="number" min="1" class="form-control form-control-sm" placeholder="Employee ID">
+      </div>
+      <div class="col-md-10 d-flex align-items-end gap-2">
+        <button id="saveAssignmentBtn" class="btn btn-primary btn-sm">Save Assignment</button>
+        <button id="resetAssignmentBtn" class="btn btn-outline-secondary btn-sm">Reset</button>
+        <span id="assignmentEditLabel" class="text-muted small"></span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table table-sm table-hover align-middle mb-0">
+        <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>EMPLOYEE</th>
+          <th>LOCATION</th>
+          <th>TYPE</th>
+          <th>PRIMARY</th>
+          <th>EFFECTIVE</th>
+          <th>ACTION</th>
+        </tr>
+        </thead>
+        <tbody id="assignmentRowsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="locationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl-form modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="locationModalTitle">ADD NEW WORK LOCATION</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-section">
+          <div class="form-section-title">BASIC INFORMATION</div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Location Code *</label>
+              <input id="fCode" class="form-control" placeholder="CEM03">
+              <div class="form-text">Unique identifier, e.g., CEM03</div>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">Location Name *</label>
+              <input id="fName" class="form-control" placeholder="Old Leopards Hill Cemetery">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Location Type *</label>
+              <select id="fType" class="form-select">
+                <option value="headquarters">Headquarters</option>
+                <option value="depot">Depot</option>
+                <option value="cemetery">Cemetery</option>
+                <option value="market">Market</option>
+                <option value="refuse_bay">Refuse Bay</option>
+                <option value="satellite_office">Satellite Office</option>
+                <option value="workshop">Workshop</option>
+                <option value="street_zone">Street Zone</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Department</label>
+              <select id="fDepartment" class="form-select">
+                <option value="">-- Select Department --</option>
+                <option value="Works Department">Works Department</option>
+                <option value="Public Health Department">Public Health Department</option>
+                <option value="Administration Department">Administration Department</option>
+                <option value="Finance Department">Finance Department</option>
+                <option value="Housing and Social Services Department">Housing and Social Services Department</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">GEOLOCATION (Click on map to set coordinates)</div>
+          <div id="addLocationMap"></div>
+          <div class="row g-3 mt-1">
+            <div class="col-md-3 geo-read">Latitude: <strong id="latRead">-15.387526</strong></div>
+            <div class="col-md-3 geo-read">Longitude: <strong id="lngRead">28.322857</strong></div>
+            <div class="col-md-6">
+              <label class="form-label">Address</label>
+              <input id="fAddress" class="form-control" placeholder="Leopards Hill Road, Lusaka">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Latitude</label>
+              <input id="fLat" type="number" step="0.000001" class="form-control" value="-15.387526">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Longitude</label>
+              <input id="fLng" type="number" step="0.000001" class="form-control" value="28.322857">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Geofence Radius (meters)</label>
+              <input id="fGeofence" type="number" class="form-control" min="10" value="100">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">OPERATING HOURS</div>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Opens at</label>
+              <input id="fOpensAt" type="time" class="form-control" value="08:00">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Closes at</label>
+              <input id="fClosesAt" type="time" class="form-control" value="17:00">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div class="form-text">Leave blank to use default working hours.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">ASSIGNMENT ELIGIBILITY</div>
+          <div class="mb-2 fw-semibold small">Applicable Divisions:</div>
+          <div class="d-flex flex-wrap gap-3 mb-3">
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="divisionCheck" id="divI" value="I"><label class="form-check-label" for="divI">Division I</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="divisionCheck" id="divII" value="II"><label class="form-check-label" for="divII">Division II</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="divisionCheck" id="divIII" value="III"><label class="form-check-label" for="divIII">Division III</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="divisionCheck" id="divIV" value="IV"><label class="form-check-label" for="divIV">Division IV</label></div>
+          </div>
+
+          <div class="mb-2 fw-semibold small">Applicable Role Categories (optional, leave blank for all):</div>
+          <div class="d-flex flex-wrap gap-3">
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleOffice" value="office"><label class="form-check-label" for="roleOffice">Office</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleOperator" value="operator"><label class="form-check-label" for="roleOperator">Operator</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleArtisan" value="artisan"><label class="form-check-label" for="roleArtisan">Artisan</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleDriver" value="driver"><label class="form-check-label" for="roleDriver">Driver</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleCleaner" value="cleaner"><label class="form-check-label" for="roleCleaner">Cleaner</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleGravedigger" value="gravedigger"><label class="form-check-label" for="roleGravedigger">Grave Digger</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleSweeper" value="sweeper"><label class="form-check-label" for="roleSweeper">Sweeper</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="roleCheck" id="roleGarbage" value="garbage_collector"><label class="form-check-label" for="roleGarbage">Garbage Collector</label></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">STATUS</div>
+          <div class="d-flex flex-wrap gap-4">
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="fStatusActive" checked><label class="form-check-label" for="fStatusActive">Active</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="fPrimary"><label class="form-check-label" for="fPrimary">Primary Location</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-info" id="testGeofenceBtn">TEST GEOFENCE</button>
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="saveLocationBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Import from Map</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="small text-muted mb-2">Paste JSON array with fields: <code>locationCode</code>, <code>locationName</code>, <code>locationType</code>, <code>latitude</code>, <code>longitude</code>.</p>
+        <textarea id="importJson" class="form-control" rows="10" placeholder='[{"locationCode":"CEM02","locationName":"Leopards Hill Cemetery","locationType":"cemetery","latitude":-15.88,"longitude":27.79}]'></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="runImportBtn">Import</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+const PAGE_SIZE = 10;
+const state = {
+  allRows: [],
+  filteredRows: [],
+  page: 1,
+  editingId: null,
+  assignmentRows: [],
+  editingAssignmentId: null,
+  locationMap: null,
+  mapMarker: null,
+  mapCircle: null,
+  provinces: [],
+  districts: [],
+};
+
+const authStorageKey = 'erp_token';
+const scopeProvinceStorageKey = 'wlm_scope_province';
+const scopeDistrictStorageKey = 'wlm_scope_district';
+const rowsBody = document.getElementById('rowsBody');
+const assignmentRowsBody = document.getElementById('assignmentRowsBody');
+const pageLabel = document.getElementById('pageLabel');
+const statsLine = document.getElementById('statsLine');
+const errorBanner = document.getElementById('errorBanner');
+const locationModal = new bootstrap.Modal(document.getElementById('locationModal'));
+const importModal = new bootstrap.Modal(document.getElementById('importModal'));
+
+function getToken() {
+  const typed = document.getElementById('tokenInput').value.trim();
+  if (typed) return typed;
+  return sessionStorage.getItem(authStorageKey) || localStorage.getItem(authStorageKey) || '';
+}
+
+function apiHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
+function currentAuthorityScope() {
+  return document.getElementById('districtScope')?.value || '';
+}
+
+function saveScopeSelection() {
+  const provinceValue = document.getElementById('provinceScope')?.value || '';
+  const districtValue = document.getElementById('districtScope')?.value || '';
+  localStorage.setItem(scopeProvinceStorageKey, provinceValue);
+  localStorage.setItem(scopeDistrictStorageKey, districtValue);
+}
+
+function readStoredScopeSelection() {
+  return {
+    province: localStorage.getItem(scopeProvinceStorageKey) || '',
+    district: localStorage.getItem(scopeDistrictStorageKey) || '',
+  };
+}
+
+function typeLabel(value) {
+  return String(value || '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function defaultDivisionsByType(type) {
+  const map = {
+    headquarters: 'I,II,III,IV',
+    satellite_office: 'I,II,III,IV',
+    depot: 'II,III,IV',
+    cemetery: 'IV',
+    market: 'IV',
+    refuse_bay: 'IV',
+    workshop: 'III,IV',
+    street_zone: 'IV',
+    other: 'I,II,III,IV'
+  };
+  return map[type] || 'I,II,III,IV';
+}
+
+function getCheckedValues(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
+}
+
+function setCheckedValues(name, values) {
+  const set = new Set(values);
+  document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+    input.checked = set.has(input.value);
+  });
+}
+
+function currentDivisionsString() {
+  const divisions = getCheckedValues('divisionCheck');
+  return divisions.length ? divisions.join(',') : defaultDivisionsByType(document.getElementById('fType').value);
+}
+
+function applyDivisionString(value) {
+  const values = String(value || '').split(',').map(v => v.trim()).filter(Boolean);
+  setCheckedValues('divisionCheck', values);
+}
+
+function updateLatLngRead() {
+  const lat = Number(document.getElementById('fLat').value || 0);
+  const lng = Number(document.getElementById('fLng').value || 0);
+  document.getElementById('latRead').textContent = lat.toFixed(6);
+  document.getElementById('lngRead').textContent = lng.toFixed(6);
+}
+
+function setMapPoint(lat, lng) {
+  if (!state.locationMap) return;
+  if (!state.mapMarker) {
+    state.mapMarker = L.marker([lat, lng]).addTo(state.locationMap);
+  } else {
+    state.mapMarker.setLatLng([lat, lng]);
+  }
+
+  const radius = Number(document.getElementById('fGeofence').value || 100);
+  if (!state.mapCircle) {
+    state.mapCircle = L.circle([lat, lng], { radius }).addTo(state.locationMap);
+  } else {
+    state.mapCircle.setLatLng([lat, lng]);
+    state.mapCircle.setRadius(radius);
+  }
+}
+
+function initLocationMap() {
+  const lat = Number(document.getElementById('fLat').value || -15.387526);
+  const lng = Number(document.getElementById('fLng').value || 28.322857);
+
+  if (!state.locationMap) {
+    state.locationMap = L.map('addLocationMap').setView([lat, lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(state.locationMap);
+
+    state.locationMap.on('click', (event) => {
+      const clickedLat = event.latlng.lat;
+      const clickedLng = event.latlng.lng;
+      document.getElementById('fLat').value = clickedLat.toFixed(6);
+      document.getElementById('fLng').value = clickedLng.toFixed(6);
+      updateLatLngRead();
+      setMapPoint(clickedLat, clickedLng);
+    });
+  }
+
+  state.locationMap.setView([lat, lng], 13);
+  setMapPoint(lat, lng);
+  setTimeout(() => state.locationMap.invalidateSize(), 150);
+}
+
+function clearScopeData() {
+  state.allRows = [];
+  state.filteredRows = [];
+  state.assignmentRows = [];
+  populateAssignmentLocations();
+  renderTable();
+  renderAssignments();
+}
+
+function populateProvinceScope() {
+  const select = document.getElementById('provinceScope');
+  const current = select.value;
+  select.innerHTML = '<option value="">Select Province</option>';
+  for (const province of state.provinces) {
+    const option = document.createElement('option');
+    option.value = province.provinceCode;
+    option.textContent = province.provinceName;
+    select.appendChild(option);
+  }
+  if (current && Array.from(select.options).some(x => x.value === current)) {
+    select.value = current;
+  }
+}
+
+function populateDistrictScope() {
+  const select = document.getElementById('districtScope');
+  const current = select.value;
+  select.innerHTML = '<option value="">Select District</option>';
+  for (const district of state.districts) {
+    const option = document.createElement('option');
+    option.value = district.authorityCode;
+    option.textContent = `${district.districtName} (${district.authorityCode})`;
+    select.appendChild(option);
+  }
+  select.disabled = state.districts.length === 0;
+  if (current && Array.from(select.options).some(x => x.value === current)) {
+    select.value = current;
+  }
+}
+
+async function loadProvinces() {
+  const response = await fetch('/api/authority-reference/provinces', { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Failed to load provinces (HTTP ${response.status})`);
+  }
+  state.provinces = await response.json();
+  populateProvinceScope();
+}
+
+async function loadDistricts() {
+  const provinceCode = document.getElementById('provinceScope').value;
+  if (!provinceCode) {
+    state.districts = [];
+    populateDistrictScope();
+    clearScopeData();
+    return;
+  }
+  const response = await fetch(`/api/authority-reference/districts?provinceCode=${encodeURIComponent(provinceCode)}`, { headers: apiHeaders() });
+  if (!response.ok) {
+    throw new Error(`Failed to load districts (HTTP ${response.status})`);
+  }
+  state.districts = await response.json();
+  populateDistrictScope();
+}
+
+function showError(message) {
+  errorBanner.textContent = message;
+  errorBanner.classList.remove('d-none');
+}
+
+function clearError() {
+  errorBanner.classList.add('d-none');
+}
+
+function updateStats() {
+  const total = state.filteredRows.length;
+  const active = state.filteredRows.filter(r => r.active).length;
+  const inactive = total - active;
+  statsLine.textContent = `Total Locations: ${total} | Active: ${active} | Inactive: ${inactive}`;
+}
+
+function applyFilters() {
+  const searchText = document.getElementById('searchText').value.trim().toLowerCase();
+  const typeFilter = document.getElementById('typeFilter').value;
+  const statusFilter = document.getElementById('statusFilter').value;
+
+  state.filteredRows = state.allRows.filter(row => {
+    const searchHit = !searchText || row.locationCode.toLowerCase().includes(searchText) || row.locationName.toLowerCase().includes(searchText);
+    const typeHit = !typeFilter || row.locationType === typeFilter;
+    const statusHit = !statusFilter || (statusFilter === 'active' ? row.active : !row.active);
+    return searchHit && typeHit && statusHit;
+  });
+
+  state.page = 1;
+  renderTable();
+}
+
+function pagedRows() {
+  const start = (state.page - 1) * PAGE_SIZE;
+  return state.filteredRows.slice(start, start + PAGE_SIZE);
+}
+
+function renderTable() {
+  clearError();
+  const totalPages = Math.max(1, Math.ceil(state.filteredRows.length / PAGE_SIZE));
+  if (state.page > totalPages) state.page = totalPages;
+
+  const rows = pagedRows();
+  rowsBody.innerHTML = rows.length ? '' : '<tr><td colspan="6" class="text-center text-muted py-4">No locations found.</td></tr>';
+
+  for (const row of rows) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="fw-semibold">${row.locationCode}</td>
+      <td>${row.locationName}</td>
+      <td>${typeLabel(row.locationType)}</td>
+      <td>${row.divisions || defaultDivisionsByType(row.locationType)}</td>
+      <td><span class="badge ${row.active ? 'text-bg-success' : 'text-bg-secondary'} badge-status">${row.active ? 'Active' : 'Inactive'}</span></td>
+      <td>
+        <div class="d-flex flex-column gap-1 action-stack">
+          <button class="btn btn-outline-primary btn-sm" data-action="edit" data-id="${row.id}">EDIT</button>
+          <button class="btn btn-outline-secondary btn-sm" data-action="map" data-id="${row.id}">MAP</button>
+          <button class="btn btn-outline-danger btn-sm" data-action="delete" data-id="${row.id}">${row.active ? 'DEACTIVATE' : 'DELETE'}</button>
+        </div>
+      </td>
+    `;
+    rowsBody.appendChild(tr);
+  }
+
+  pageLabel.textContent = `Page ${state.page} of ${totalPages}`;
+  document.getElementById('prevBtn').disabled = state.page <= 1;
+  document.getElementById('nextBtn').disabled = state.page >= totalPages;
+  updateStats();
+}
+
+function upsertRow(row) {
+  const existingIndex = state.allRows.findIndex(x => x.id === row.id);
+  if (existingIndex >= 0) state.allRows[existingIndex] = row;
+  else state.allRows.unshift(row);
+}
+
+function openEditor(row = null) {
+  state.editingId = row?.id || null;
+  document.getElementById('locationModalTitle').textContent = row ? 'EDIT WORK LOCATION' : 'ADD NEW WORK LOCATION';
+  document.getElementById('fCode').value = row?.locationCode || '';
+  document.getElementById('fName').value = row?.locationName || '';
+  document.getElementById('fType').value = row?.locationType || 'cemetery';
+  document.getElementById('fDepartment').value = row?.department || 'Works Department';
+  document.getElementById('fLat').value = row?.latitude ?? -15.387526;
+  document.getElementById('fLng').value = row?.longitude ?? 28.322857;
+  document.getElementById('fGeofence').value = row?.geofenceRadiusMeters ?? 100;
+  document.getElementById('fAddress').value = row?.address || '';
+  document.getElementById('fOpensAt').value = row?.opensAt || '08:00';
+  document.getElementById('fClosesAt').value = row?.closesAt || '17:00';
+  document.getElementById('fStatusActive').checked = row?.active !== false;
+  document.getElementById('fPrimary').checked = row?.primary === true;
+  const divisions = Array.isArray(row?.applicableDivisions) && row.applicableDivisions.length
+    ? row.applicableDivisions.join(',')
+    : (row?.divisions || defaultDivisionsByType(row?.locationType || 'cemetery'));
+  applyDivisionString(divisions);
+  setCheckedValues('roleCheck', Array.isArray(row?.applicableRoleCategories) ? row.applicableRoleCategories : []);
+  updateLatLngRead();
+  locationModal.show();
+  setTimeout(initLocationMap, 120);
+}
+
+async function saveEditor() {
+  const locationCode = document.getElementById('fCode').value.trim().toUpperCase();
+  const locationName = document.getElementById('fName').value.trim();
+  if (!locationCode || !locationName) {
+    showError('Location code and name are required.');
+    return;
+  }
+
+  const payload = {
+    locationCode,
+    locationName,
+    locationType: document.getElementById('fType').value,
+    authorityCode: rowAuthorityCode(),
+    departmentName: document.getElementById('fDepartment').value || null,
+    latitude: Number(document.getElementById('fLat').value || 0),
+    longitude: Number(document.getElementById('fLng').value || 0),
+    geofenceRadiusMeters: Number(document.getElementById('fGeofence').value || 100),
+    address: document.getElementById('fAddress').value.trim() || null,
+    opensAt: document.getElementById('fOpensAt').value || null,
+    closesAt: document.getElementById('fClosesAt').value || null,
+    active: document.getElementById('fStatusActive').checked,
+    primary: document.getElementById('fPrimary').checked,
+    applicableDivisions: getCheckedValues('divisionCheck'),
+    applicableRoleCategories: getCheckedValues('roleCheck')
+  };
+
+  if (!payload.authorityCode) {
+    showError('Select province and district before saving a location.');
+    return;
+  }
+
+  try {
+    const method = state.editingId ? 'PUT' : 'POST';
+    const endpoint = state.editingId ? `/api/work-locations/${state.editingId}` : '/api/work-locations';
+    const response = await fetch(endpoint, {
+      method,
+      headers: apiHeaders(),
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      let message = `Save failed (HTTP ${response.status})`;
+      try {
+        const body = await response.json();
+        message = body.message || message;
+      } catch (_e) {}
+      throw new Error(message);
+    }
+
+    const saved = await response.json();
+    upsertRow(saved);
+    locationModal.hide();
+    applyFilters();
+  } catch (error) {
+    showError(error.message || 'Failed to save work location.');
+  }
+}
+
+function rowAuthorityCode() {
+  const activeRow = state.editingId == null
+    ? null
+    : state.allRows.find(item => Number(item.id) === Number(state.editingId));
+  return (activeRow?.authorityCode || currentAuthorityScope() || '').toUpperCase();
+}
+
+function assignmentAuthorityCode() {
+  const locationId = Number(document.getElementById('aLocationId').value || 0);
+  const location = state.allRows.find(item => Number(item.id) === locationId);
+  return (location?.authorityCode || currentAuthorityScope() || '').toUpperCase();
+}
+
+function testGeofence() {
+  const lat = Number(document.getElementById('fLat').value || 0);
+  const lng = Number(document.getElementById('fLng').value || 0);
+  const radius = Number(document.getElementById('fGeofence').value || 100);
+
+  if (!lat || !lng) {
+    showError('Set valid latitude and longitude before geofence test.');
+    return;
+  }
+
+  updateLatLngRead();
+  setMapPoint(lat, lng);
+  alert(`Geofence ready: center (${lat.toFixed(6)}, ${lng.toFixed(6)}) with radius ${radius} meters.`);
+}
+
+function exportCsv() {
+  const headers = ['location_code','location_name','location_type','department','divisions','status','latitude','longitude'];
+  const lines = [headers.join(',')];
+  for (const row of state.filteredRows) {
+    const values = [
+      row.locationCode,
+      row.locationName,
+      row.locationType,
+      row.department || '',
+      row.divisions || defaultDivisionsByType(row.locationType),
+      row.active ? 'Active' : 'Inactive',
+      row.latitude,
+      row.longitude,
+    ].map(v => `"${String(v ?? '').replaceAll('"','""')}"`);
+    lines.push(values.join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'work-locations.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function importFromJson() {
+  try {
+    const parsed = JSON.parse(document.getElementById('importJson').value || '[]');
+    if (!Array.isArray(parsed)) throw new Error('JSON must be an array.');
+
+    for (const incoming of parsed) {
+      const id = Math.max(0, ...state.allRows.map(r => Number(r.id) || 0)) + 1;
+      upsertRow({
+        id,
+        locationCode: String(incoming.locationCode || '').toUpperCase(),
+        locationName: String(incoming.locationName || ''),
+        locationType: String(incoming.locationType || 'other').toLowerCase(),
+        departmentName: String(incoming.department || incoming.departmentName || ''),
+        latitude: Number(incoming.latitude || 0),
+        longitude: Number(incoming.longitude || 0),
+        geofenceRadiusMeters: Number(incoming.geofenceRadiusMeters || 100),
+        address: String(incoming.address || ''),
+        opensAt: incoming.opensAt || null,
+        closesAt: incoming.closesAt || null,
+        active: incoming.active !== false,
+        primary: incoming.primary === true,
+        divisions: incoming.divisions || defaultDivisionsByType(String(incoming.locationType || 'other').toLowerCase()),
+        applicableDivisions: Array.isArray(incoming.applicableDivisions) ? incoming.applicableDivisions : null,
+        applicableRoleCategories: Array.isArray(incoming.applicableRoleCategories) ? incoming.applicableRoleCategories : null,
+      });
+    }
+
+    importModal.hide();
+    document.getElementById('importJson').value = '';
+    applyFilters();
+  } catch (error) {
+    showError(`Import failed: ${error.message}`);
+  }
+}
+
+async function loadLocations() {
+  clearError();
+  try {
+    const authority = currentAuthorityScope();
+    if (!authority) {
+      clearScopeData();
+      return;
+    }
+    const response = await fetch(`/api/work-locations?activeOnly=false&authorityCode=${encodeURIComponent(authority)}`, { headers: apiHeaders() });
+    if (!response.ok) {
+      let msg = `Failed to load locations (HTTP ${response.status}).`;
+      try {
+        const body = await response.json();
+        msg = body.message || msg;
+      } catch (_e) {}
+      throw new Error(msg);
+    }
+    const payload = await response.json();
+    state.allRows = payload.map(item => ({
+      ...item,
+      authorityCode: (item.authorityCode || 'ALL').toUpperCase(),
+      departmentName: item.departmentName || '',
+      divisions: Array.isArray(item.applicableDivisions) && item.applicableDivisions.length
+        ? item.applicableDivisions.join(',')
+        : defaultDivisionsByType(item.locationType),
+      active: item.active !== false,
+    }));
+    populateAssignmentLocations();
+    applyFilters();
+  } catch (error) {
+    state.allRows = [];
+    state.filteredRows = [];
+    renderTable();
+    showError(error.message + ' Apply a valid token and retry.');
+  }
+}
+
+function populateAssignmentLocations() {
+  const select = document.getElementById('aLocationId');
+  if (!select) return;
+
+  const current = select.value;
+  select.innerHTML = '<option value="">-- Select Location --</option>';
+  for (const location of state.allRows) {
+    const option = document.createElement('option');
+    option.value = String(location.id);
+    option.textContent = `${location.locationCode} - ${location.locationName}`;
+    select.appendChild(option);
+  }
+  if (current && Array.from(select.options).some(x => x.value === current)) {
+    select.value = current;
+  }
+}
+
+function renderAssignments() {
+  if (!assignmentRowsBody) return;
+  assignmentRowsBody.innerHTML = '';
+
+  if (!state.assignmentRows.length) {
+    assignmentRowsBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">No assignments found.</td></tr>';
+    return;
+  }
+
+  for (const row of state.assignmentRows) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.id}</td>
+      <td>${row.employeeCode || row.employeeId} ${row.employeeName ? `- ${row.employeeName}` : ''}</td>
+      <td>${row.locationCode || row.locationId} ${row.locationName ? `- ${row.locationName}` : ''}</td>
+      <td>${row.assignmentType}</td>
+      <td>${row.primary ? 'Yes' : 'No'}</td>
+      <td>${row.effectiveFrom}${row.effectiveTo ? ` to ${row.effectiveTo}` : ''}</td>
+      <td>
+        <button class="btn btn-outline-primary btn-sm" data-assignment-action="edit" data-assignment-id="${row.id}">Edit</button>
+        <button class="btn btn-outline-danger btn-sm" data-assignment-action="delete" data-assignment-id="${row.id}">Delete</button>
+      </td>
+    `;
+    assignmentRowsBody.appendChild(tr);
+  }
+}
+
+async function loadAssignments() {
+  try {
+    const authority = currentAuthorityScope();
+    if (!authority) {
+      state.assignmentRows = [];
+      renderAssignments();
+      return;
+    }
+    const response = await fetch(`/api/employee-work-locations?activeOnly=false&authorityCode=${encodeURIComponent(authority)}`, { headers: apiHeaders() });
+    if (!response.ok) {
+      let message = `Failed to load assignments (HTTP ${response.status})`;
+      try {
+        const body = await response.json();
+        message = body.message || message;
+      } catch (_e) {}
+      throw new Error(message);
+    }
+    state.assignmentRows = await response.json();
+    renderAssignments();
+  } catch (error) {
+    state.assignmentRows = [];
+    renderAssignments();
+    showError(error.message);
+  }
+}
+
+function resetAssignmentForm() {
+  state.editingAssignmentId = null;
+  document.getElementById('aEmployeeId').value = '';
+  document.getElementById('aLocationId').value = '';
+  document.getElementById('aAssignmentType').value = 'permanent';
+  document.getElementById('aEffectiveFrom').value = '';
+  document.getElementById('aEffectiveTo').value = '';
+  document.getElementById('aPrimary').checked = false;
+  document.getElementById('aCreatedBy').value = '';
+  document.getElementById('assignmentEditLabel').textContent = '';
+}
+
+function fillAssignmentForm(row) {
+  state.editingAssignmentId = row.id;
+  document.getElementById('aEmployeeId').value = row.employeeId;
+  document.getElementById('aLocationId').value = row.locationId;
+  document.getElementById('aAssignmentType').value = row.assignmentType || 'permanent';
+  document.getElementById('aEffectiveFrom').value = row.effectiveFrom || '';
+  document.getElementById('aEffectiveTo').value = row.effectiveTo || '';
+  document.getElementById('aPrimary').checked = row.primary === true;
+  document.getElementById('aCreatedBy').value = row.createdBy || '';
+  document.getElementById('assignmentEditLabel').textContent = `Editing assignment #${row.id}`;
+}
+
+async function saveAssignment() {
+  const employeeId = Number(document.getElementById('aEmployeeId').value || 0);
+  const locationId = Number(document.getElementById('aLocationId').value || 0);
+  const effectiveFrom = document.getElementById('aEffectiveFrom').value;
+  if (!employeeId || !locationId || !effectiveFrom) {
+    showError('Employee ID, Location and Effective From are required for assignment.');
+    return;
+  }
+
+  const payload = {
+    employeeId,
+    locationId,
+    authorityCode: assignmentAuthorityCode(),
+    primary: document.getElementById('aPrimary').checked,
+    assignmentType: document.getElementById('aAssignmentType').value,
+    effectiveFrom,
+    effectiveTo: document.getElementById('aEffectiveTo').value || null,
+    createdBy: document.getElementById('aCreatedBy').value ? Number(document.getElementById('aCreatedBy').value) : null,
+  };
+
+  if (!payload.authorityCode) {
+    showError('Select province and district before saving an assignment.');
+    return;
+  }
+
+  const isEdit = state.editingAssignmentId != null;
+  const endpoint = isEdit ? `/api/employee-work-locations/${state.editingAssignmentId}` : '/api/employee-work-locations';
+  const method = isEdit ? 'PUT' : 'POST';
+
+  try {
+    const response = await fetch(endpoint, {
+      method,
+      headers: apiHeaders(),
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      let message = `Assignment save failed (HTTP ${response.status})`;
+      try {
+        const body = await response.json();
+        message = body.message || message;
+      } catch (_e) {}
+      throw new Error(message);
+    }
+
+    resetAssignmentForm();
+    await loadAssignments();
+  } catch (error) {
+    showError(error.message || 'Failed to save assignment.');
+  }
+}
+
+async function deleteAssignment(id) {
+  if (!window.confirm(`Delete assignment #${id}?`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/employee-work-locations/${id}`, {
+      method: 'DELETE',
+      headers: apiHeaders(),
+    });
+    if (!response.ok) {
+      let message = `Assignment delete failed (HTTP ${response.status})`;
+      try {
+        const body = await response.json();
+        message = body.message || message;
+      } catch (_e) {}
+      throw new Error(message);
+    }
+    if (state.editingAssignmentId === id) {
+      resetAssignmentForm();
+    }
+    await loadAssignments();
+  } catch (error) {
+    showError(error.message || 'Failed to delete assignment.');
+  }
+}
+
+document.getElementById('addBtn').addEventListener('click', () => openEditor());
+document.getElementById('saveLocationBtn').addEventListener('click', saveEditor);
+document.getElementById('testGeofenceBtn').addEventListener('click', testGeofence);
+document.getElementById('importBtn').addEventListener('click', () => importModal.show());
+document.getElementById('runImportBtn').addEventListener('click', importFromJson);
+document.getElementById('exportBtn').addEventListener('click', exportCsv);
+document.getElementById('filterBtn').addEventListener('click', () => document.getElementById('filterPanel').classList.toggle('d-none'));
+document.getElementById('searchText').addEventListener('input', applyFilters);
+document.getElementById('typeFilter').addEventListener('change', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
+document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+  document.getElementById('searchText').value = '';
+  document.getElementById('typeFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  applyFilters();
+});
+document.getElementById('applyTokenBtn').addEventListener('click', () => {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) return;
+  sessionStorage.setItem(authStorageKey, token);
+  localStorage.setItem(authStorageKey, token);
+  initializeAuthorityScope();
+});
+
+document.getElementById('provinceScope').addEventListener('change', async () => {
+  try {
+    clearError();
+    document.getElementById('districtScope').value = '';
+    saveScopeSelection();
+    await loadDistricts();
+    clearScopeData();
+  } catch (error) {
+    showError(error.message || 'Failed to load districts.');
+  }
+});
+
+document.getElementById('districtScope').addEventListener('change', () => {
+  saveScopeSelection();
+  loadLocations();
+  loadAssignments();
+});
+document.getElementById('fType').addEventListener('change', () => {
+  if (!state.editingId) {
+    applyDivisionString(defaultDivisionsByType(document.getElementById('fType').value));
+  }
+});
+document.getElementById('fLat').addEventListener('input', () => {
+  updateLatLngRead();
+  setMapPoint(Number(document.getElementById('fLat').value || 0), Number(document.getElementById('fLng').value || 0));
+});
+document.getElementById('fLng').addEventListener('input', () => {
+  updateLatLngRead();
+  setMapPoint(Number(document.getElementById('fLat').value || 0), Number(document.getElementById('fLng').value || 0));
+});
+document.getElementById('fGeofence').addEventListener('input', () => {
+  setMapPoint(Number(document.getElementById('fLat').value || 0), Number(document.getElementById('fLng').value || 0));
+});
+document.getElementById('prevBtn').addEventListener('click', () => { state.page -= 1; renderTable(); });
+document.getElementById('nextBtn').addEventListener('click', () => { state.page += 1; renderTable(); });
+rowsBody.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  const id = Number(button.dataset.id);
+  const row = state.allRows.find(r => Number(r.id) === id);
+  if (!row) return;
+
+  if (button.dataset.action === 'edit') {
+    openEditor(row);
+    return;
+  }
+
+  if (button.dataset.action === 'map') {
+    window.open(`https://www.google.com/maps?q=${row.latitude},${row.longitude}`, '_blank');
+    return;
+  }
+
+  if (button.dataset.action === 'delete') {
+    handleDeleteAction(row);
+  }
+});
+
+assignmentRowsBody.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-assignment-action]');
+  if (!button) return;
+  const id = Number(button.dataset.assignmentId);
+  const row = state.assignmentRows.find(x => Number(x.id) === id);
+  if (!row) return;
+
+  if (button.dataset.assignmentAction === 'edit') {
+    fillAssignmentForm(row);
+    return;
+  }
+
+  if (button.dataset.assignmentAction === 'delete') {
+    deleteAssignment(id);
+  }
+});
+
+document.getElementById('saveAssignmentBtn').addEventListener('click', saveAssignment);
+document.getElementById('resetAssignmentBtn').addEventListener('click', resetAssignmentForm);
+document.getElementById('refreshAssignmentsBtn').addEventListener('click', loadAssignments);
+
+async function handleDeleteAction(row) {
+  clearError();
+
+  const hardDelete = row.active !== true;
+  const confirmMessage = hardDelete
+    ? `Delete ${row.locationCode} permanently? This cannot be undone.`
+    : `Deactivate ${row.locationCode}? It will remain in history but become inactive.`;
+
+  if (!window.confirm(confirmMessage)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/work-locations/${row.id}?hardDelete=${hardDelete}`, {
+      method: 'DELETE',
+      headers: apiHeaders(),
+    });
+
+    if (!response.ok) {
+      let message = `Action failed (HTTP ${response.status})`;
+      try {
+        const body = await response.json();
+        message = body.message || message;
+      } catch (_e) {}
+      throw new Error(message);
+    }
+
+    if (hardDelete) {
+      state.allRows = state.allRows.filter(item => Number(item.id) !== Number(row.id));
+    } else {
+      const target = state.allRows.find(item => Number(item.id) === Number(row.id));
+      if (target) {
+        target.active = false;
+      }
+    }
+
+    applyFilters();
+  } catch (error) {
+    showError(error.message || 'Failed to deactivate/delete location.');
+  }
+}
+
+applyDivisionString('I,II,III,IV');
+
+async function initializeAuthorityScope() {
+  clearError();
+  try {
+    const provinceSelect = document.getElementById('provinceScope');
+    const districtSelect = document.getElementById('districtScope');
+    const storedScope = readStoredScopeSelection();
+    const previousProvince = document.getElementById('provinceScope').value;
+    const previousDistrict = document.getElementById('districtScope').value;
+    const preferredProvince = previousProvince || storedScope.province;
+    const preferredDistrict = previousDistrict || storedScope.district;
+
+    await loadProvinces();
+
+    if (preferredProvince && state.provinces.some(x => x.provinceCode === preferredProvince)) {
+      provinceSelect.value = preferredProvince;
+    } else if (state.provinces.length) {
+      provinceSelect.value = state.provinces[0].provinceCode;
+    }
+
+    await loadDistricts();
+
+    if (preferredDistrict && state.districts.some(x => x.authorityCode === preferredDistrict)) {
+      districtSelect.value = preferredDistrict;
+    } else if (state.districts.length) {
+      districtSelect.value = state.districts[0].authorityCode;
+    }
+
+    saveScopeSelection();
+
+    if (currentAuthorityScope()) {
+      await loadLocations();
+      await loadAssignments();
+    } else {
+      clearScopeData();
+    }
+  } catch (error) {
+    showError(error.message || 'Failed to initialize authority scope.');
+  }
+}
+
+initializeAuthorityScope();
+</script>
+</body>
+</html>

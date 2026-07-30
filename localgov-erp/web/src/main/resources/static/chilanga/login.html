@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chilanga Town Council - MarshaERP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#f0ece2;min-height:100vh;display:flex;flex-direction:column}
+    .header{background:#1b5e20;border-bottom:4px solid #f9c825;padding:28px 20px 24px;display:flex;flex-direction:column;align-items:center}
+    .main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 16px}
+    .welcome-text{text-align:center;margin-bottom:24px}
+    .welcome-text h1{font-size:1.85rem;font-weight:700;color:#1b5e20;margin-bottom:4px}
+    .welcome-text p{color:#888;font-size:.9rem}
+    .card{background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);padding:32px 36px 28px;width:100%;max-width:460px}
+    .card h2{font-size:1.1rem;font-weight:700;color:#1b5e20;margin-bottom:24px}
+
+    .method-toggle{display:flex;background:#f2f2ee;border-radius:8px;padding:4px;margin-bottom:22px;gap:4px}
+    .method-btn{flex:1;padding:9px 10px;border:none;border-radius:6px;background:transparent;font-size:13px;font-weight:700;color:#888880;cursor:pointer;transition:all .2s}
+    .method-btn.active{background:#1b5e20;color:#fff;box-shadow:0 2px 8px rgba(27,94,32,.25)}
+    .method-btn:focus{outline:2px solid #f9c825;outline-offset:2px}
+
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:.88rem;font-weight:600;color:#333;margin-bottom:7px}
+    .label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+    .label-row a{font-size:.82rem;color:#c9a227;text-decoration:none;font-weight:500}
+    .label-row a:hover{text-decoration:underline}
+    .input-wrap{position:relative;display:flex;align-items:center}
+    .input-wrap .icon{position:absolute;left:12px;color:#aaa;font-size:1rem;pointer-events:none}
+    .input-wrap input{width:100%;padding:11px 36px 11px 38px;border:1.5px solid #d0d0d0;border-radius:7px;font-size:.95rem;color:#333;background:#fafafa;transition:border-color .2s,box-shadow .2s;outline:none}
+    .input-wrap input:focus{border-color:#1b5e20;background:#fff;box-shadow:0 0 0 3px rgba(27,94,32,.1)}
+    .input-wrap input::placeholder{color:#bbb}
+    .toggle-pw{position:absolute;right:11px;background:none;border:none;cursor:pointer;color:#aaa;font-size:.9rem;padding:2px}
+    .toggle-pw:hover{color:#555}
+    .input-hint{font-size:11px;color:#aaa;margin-top:5px;font-weight:500;letter-spacing:.2px}
+    .error-box{background:#fdecea;border:1px solid #f5c6c6;color:#c0392b;padding:9px 12px;border-radius:7px;font-size:.85rem;margin-bottom:16px;display:none;align-items:center;gap:8px}
+    .error-box.show{display:flex}
+    .btn-login{width:100%;padding:13px;background:#1b5e20;color:#fff;font-size:1rem;font-weight:700;border:none;border-radius:7px;cursor:pointer;letter-spacing:.03em;transition:background .2s,transform .15s,box-shadow .2s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:10px}
+    .btn-login:hover{background:#145218;transform:translateY(-1px);box-shadow:0 6px 20px rgba(27,94,32,.28)}
+    .btn-login:disabled{background:#7aad7f;cursor:not-allowed;transform:none}
+    .spinner{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    footer{text-align:center;padding:20px 16px;color:#aaa;font-size:.8rem}
+  </style>
+</head>
+<body>
+<div class="header">
+  <img src="/assets/branding/chilanga-crest.png" alt="Chilanga Town Council Crest" style="height:120px; width:auto; object-fit:contain; display:block; margin:0 auto;">
+</div>
+<div class="main">
+  <div class="welcome-text">
+    <h1>Welcome to Chilanga Town Council</h1>
+    <p>Powered by MarshaERP</p>
+  </div>
+  <div class="card">
+    <h2>Sign in to your account</h2>
+
+    <div class="method-toggle" role="tablist" aria-label="Sign-in method">
+      <button type="button" class="method-btn active" role="tab" aria-selected="true" id="btnEmpId" onclick="switchMethod('empid')">
+        <i class="fas fa-id-card"></i> Employee ID
+      </button>
+      <button type="button" class="method-btn" role="tab" aria-selected="false" id="btnNrc" onclick="switchMethod('nrc')">
+        <i class="fas fa-fingerprint"></i> NRC
+      </button>
+    </div>
+
+    <div class="error-box" id="errBox" role="alert" aria-live="polite">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="errText"></span>
+    </div>
+
+    <form id="loginForm" onsubmit="doLogin(event)">
+      <div class="field">
+        <label for="username" id="usernameLabel">Employee ID</label>
+        <div class="input-wrap">
+          <span class="icon" id="usernameIcon"><i class="fas fa-id-card"></i></span>
+          <input type="text" id="username" placeholder="Employee ID" autocomplete="username" required/>
+        </div>
+        <p class="input-hint" id="usernameHint">Enter your Employee ID (e.g. ZM09-CHL-2024-000001)</p>
+      </div>
+      <div class="field">
+        <div class="label-row">
+          <label for="password">Password</label>
+          <a href="#" onclick="alert('Password recovery is not yet available. Please contact IT support.'); return false;">Forgot password?</a>
+        </div>
+        <div class="input-wrap">
+          <span class="icon"><i class="fas fa-lock"></i></span>
+          <input type="password" id="password" placeholder="Password" autocomplete="current-password" required/>
+          <button type="button" class="toggle-pw" id="tpw" aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <button type="submit" class="btn-login" id="loginBtn">
+        <span id="btnText">Login</span>
+        <div class="spinner" id="btnSpinner"></div>
+      </button>
+    </form>
+  </div>
+</div>
+<footer>&copy; 2026 Chilanga Town Council. All rights reserved.<br/><span style="font-size:.75rem;color:#ccc;">chilanga.marshaerp.com &nbsp;|&nbsp; Powered by MarshaERP</span></footer>
+<script>
+function switchMethod(method) {
+  var input = document.getElementById('username');
+  var label = document.getElementById('usernameLabel');
+  var hint  = document.getElementById('usernameHint');
+  var icon  = document.getElementById('usernameIcon');
+  var btnEmp = document.getElementById('btnEmpId');
+  var btnNrc = document.getElementById('btnNrc');
+
+  if (method === 'empid') {
+    btnEmp.classList.add('active'); btnEmp.setAttribute('aria-selected','true');
+    btnNrc.classList.remove('active'); btnNrc.setAttribute('aria-selected','false');
+    label.textContent = 'Employee ID';
+    input.placeholder = 'Employee ID';
+    hint.textContent  = 'Enter your Employee ID (e.g. ZM09-CHL-2024-000001)';
+    icon.innerHTML = '<i class="fas fa-id-card"></i>';
+    input.setAttribute('inputmode','text');
+  } else {
+    btnNrc.classList.add('active'); btnNrc.setAttribute('aria-selected','true');
+    btnEmp.classList.remove('active'); btnEmp.setAttribute('aria-selected','false');
+    label.textContent = 'NRC Number';
+    input.placeholder = 'e.g. 123456/78/1';
+    hint.textContent  = 'Enter your National Registration Card number';
+    icon.innerHTML = '<i class="fas fa-fingerprint"></i>';
+    input.setAttribute('inputmode','text');
+  }
+  input.value = '';
+  input.focus();
+}
+
+document.getElementById('tpw').addEventListener('click',function(){
+  var pw=document.getElementById('password');
+  var icon=this.querySelector('i');
+  pw.type=pw.type==='password'?'text':'password';
+  icon.className=pw.type==='password'?'fas fa-eye':'fas fa-eye-slash';
+  this.setAttribute('aria-label', pw.type==='password'?'Show password':'Hide password');
+});
+
+function showError(msg) {
+  var box = document.getElementById('errBox');
+  document.getElementById('errText').textContent = msg;
+  box.className = 'error-box show';
+}
+
+function clearError() {
+  document.getElementById('errBox').className = 'error-box';
+}
+
+function setLoading(isLoading) {
+  var btn = document.getElementById('loginBtn');
+  var text = document.getElementById('btnText');
+  var spinner = document.getElementById('btnSpinner');
+  if (isLoading) {
+    btn.disabled = true;
+    text.textContent = 'Signing in…';
+    spinner.style.display = 'block';
+  } else {
+    btn.disabled = false;
+    text.textContent = 'Login';
+    spinner.style.display = 'none';
+  }
+}
+
+async function doLogin(e){
+  e.preventDefault();
+  clearError();
+  var username=document.getElementById('username').value.trim();
+  var password=document.getElementById('password').value;
+  if (!username) { showError('Please enter your Employee ID or NRC number.'); document.getElementById('username').focus(); return; }
+  if (!password) { showError('Please enter your password.'); document.getElementById('password').focus(); return; }
+
+  setLoading(true);
+  try{
+    var res=await fetch('/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,password:password})});
+    var data=await res.json();
+    if(!res.ok)throw new Error(data.message||'Invalid username or password.');
+    localStorage.setItem('erp_token',data.token);
+    localStorage.setItem('erp_user',JSON.stringify(data));
+    localStorage.setItem('erp_user_id', username);
+    window.location.href='/chilanga/dashboard.html';
+  }catch(err){
+    showError(err.message||'Login failed. Please try again.');
+    setLoading(false);
+  }
+}
+
+var t=localStorage.getItem('erp_token');
+if(t){fetch('/auth/me',{headers:{Authorization:'Bearer '+t}}).then(function(r){if(r.ok)window.location.href='/chilanga/dashboard.html';}).catch(function(){});}
+
+var saved = localStorage.getItem('erp_user_id');
+if (saved) document.getElementById('username').value = saved;
+</script>
+</body>
+</html>

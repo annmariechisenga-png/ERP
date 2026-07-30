@@ -1,0 +1,198 @@
+{
+  "header": {
+    "authorityId": "aa3487a3-db51-57a0-bb23-2e50e4bb8141",
+    "authorityName": "KAFUE TOWN COUNCIL",
+    "authorityCode": "KTC",
+    "logoUrl": "https://assets.kafue.gov.zm/logos/ktc.png",
+    "payslipNo": "KTC/2025/06/001234",
+    "verificationCode": "KTC-8F3A-9B2C",
+    "payrollMonthLabel": "JUNE 2025",
+    "payPeriodStart": "2025-06-01",
+    "payPeriodEnd": "2025-06-30",
+    "generatedAt": "2025-06-25T14:30:00+02:00",
+    "printLabel": "PAYSLIP - JUNE 2025"
+  },
+  "employee": {
+    "employeeId": "KTC-2020-001234",
+    "employeeNo": "KTC221",
+    "fullName": "CHISENGA CHISENGA",
+    "department": "ADMINISTRATION",
+    "grade": "LGSS 05",
+    "division": "Div 1",
+    "notch": 1,
+    "employmentType": "PERMANENT",
+    "nrcMasked": "804***/11/***1",
+    "tpinMasked": "100*****380",
+    "napsaMasked": "106***094",
+    "nhimaMasked": "21********12"
+  },
+  "employer": {
+    "authorityName": "KAFUE TOWN COUNCIL",
+    "authorityCode": "KTC",
+    "tpinMasked": "100*****812",
+    "napsaMasked": "401*****89",
+    "nhimaMasked": "20********71",
+    "address": "Kafue Civic Centre, Kafue, Zambia",
+    "contactEmail": "payroll@kafue.gov.zm",
+    "verificationBaseUrl": "https://verify.kafue.gov.zm/payslip"
+  },
+  "earnings": {
+    "items": [
+      {
+        "code": "BAS",
+        "description": "Basic Pay",
+        "units": "1 month",
+        "rate": null,
+        "amount": 11770.16,
+        "taxable": true,
+        "visibleOnPayslip": true
+      },
+      {
+        "code": "HOU",
+        "description": "Housing Allowance",
+        "units": "1 month",
+        "rate": 0.2,
+        "amount": 2354.03,
+        "taxable": false,
+        "visibleOnPayslip": true
+      },
+      {
+        "code": "TRN",
+        "description": "Transport Allowance",
+        "units": "1 month",
+        "rate": 0.17,
+        "amount": 2000.93,
+        "taxable": true,
+        "visibleOnPayslip": true
+      },
+      {
+        "code": "EDU",
+        "description": "Education Allowance",
+        "units": "1 month",
+        "rate": 0.2,
+        "amount": 2354.03,
+        "taxable": true,
+        "visibleOnPayslip": true
+      }
+    ],
+    "totalEarnings": 18479.15,
+    "taxableAllowances": 4354.96,
+    "nonTaxableAllowances": 2354.03
+  },
+  "deductions": {
+    "items": [
+      {
+        "code": "TAX",
+        "description": "PAYE",
+        "authorityRef": "ITA Cap 45",
+        "amount": 3225.02,
+        "category": "STATUTORY"
+      },
+      {
+        "code": "NAPSA",
+        "description": "National Pension Scheme",
+        "authorityRef": "NAPSA Act",
+        "amount": 588.51,
+        "category": "STATUTORY"
+      },
+      {
+        "code": "NHIS",
+        "description": "National Health Insurance",
+        "authorityRef": "NHIS Act",
+        "amount": 184.79,
+        "category": "STATUTORY"
+      },
+      {
+        "code": "SALADV",
+        "description": "Salary Advance",
+        "authorityRef": "Loan SA45",
+        "amount": 833.33,
+        "category": "LOAN"
+      },
+      {
+        "code": "LEVY",
+        "description": "Personal Levy",
+        "authorityRef": "LG Act",
+        "amount": 200,
+        "category": "LEVY"
+      },
+      {
+        "code": "FUN",
+        "description": "Funeral Policy",
+        "authorityRef": "ZSIC/12345",
+        "amount": 81.22,
+        "category": "POLICY"
+      }
+    ],
+    "totalStatutory": 3998.32,
+    "totalOther": 1114.55,
+    "totalDeductions": 5112.87
+  },
+  "employerContributions": {
+    "items": [
+      {
+        "code": "NAPSA_ER",
+        "description": "NAPSA Employer Contribution",
+        "amount": 588.51
+      },
+      {
+        "code": "NHIMA_ER",
+        "description": "NHIMA Employer Contribution",
+        "amount": 184.79
+      }
+    ],
+    "totalEmployerContributions": 773.3
+  },
+  "summary": {
+    "basicSalary": 11770.16,
+    "grossSalary": 18479.15,
+    "taxablePay": 16125.12,
+    "nonTaxablePay": 2354.03,
+    "totalDeductions": 5112.87,
+    "netPay": 13366.28
+  },
+  "payment": {
+    "method": "EFT",
+    "bankName": "Standard Chartered",
+    "accountMasked": "**********5200",
+    "reference": "EFT-20250625-001234",
+    "valueDate": "2025-06-25"
+  },
+  "leave": {
+    "items": [
+      {
+        "leaveType": "Annual Leave",
+        "balance": 26,
+        "unit": "days",
+        "policyMax": 230
+      },
+      {
+        "leaveType": "Sick Leave",
+        "balance": 12,
+        "unit": "days",
+        "policyMax": null
+      },
+      {
+        "leaveType": "Family Care",
+        "balance": 3,
+        "unit": "days",
+        "policyMax": null
+      }
+    ]
+  },
+  "ytd": {
+    "gross": 110874.9,
+    "taxablePay": 96750.72,
+    "paye": 18840.14,
+    "napsaEmployee": 3531.06,
+    "nhimaEmployee": 1108.75,
+    "netPay": 84506.81
+  },
+  "verification": {
+    "verificationCode": "KTC-8F3A-9B2C",
+    "verifyUrl": "https://verify.kafue.gov.zm/payslip?code=KTC-8F3A-9B2C",
+    "qrPayload": "https://verify.kafue.gov.zm/payslip?code=KTC-8F3A-9B2C",
+    "signedAt": "2025-06-25T14:30:00+02:00",
+    "signatureStatus": "SIGNED"
+  }
+}

@@ -1,0 +1,13 @@
+package com.localgov.domain.model;
+
+public enum SalaryAdvanceRequestStatus {
+    SUBMITTED,
+    ELIGIBILITY_FAILED,
+    PENDING_HEAD_APPROVAL,
+    REJECTED_BY_HEAD,
+    PENDING_FINANCE_APPROVAL,
+    REJECTED_BY_FINANCE,
+    APPROVED_FOR_DISBURSEMENT,
+    DISBURSED,
+    CANCELLED
+}

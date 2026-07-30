@@ -1,0 +1,55 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+PLAN-DIR-TOWN,Director of Planning,LGSS/05,1,Leadership,Council Secretary,Town
+PLAN-CH-PHY-TOWN,Chief Physical Planner,LGSS/06,1,Physical Planning,PLAN-DIR-TOWN,Town
+PLAN-TOWN-TOWN,Town Planner,LGSS/07,1,Town Planning Unit,PLAN-CH-PHY-TOWN,Town
+PLAN-ASST-TOWN-TOWN,Assistant Town Planner,LGSS/10,2,Town Planning Unit,PLAN-TOWN-TOWN,Town
+PLAN-BI-TOWN,Building Inspector,LGSS/07,1,Building Inspectorate,PLAN-CH-PHY-TOWN,Town
+PLAN-ASST-BI-TOWN,Assistant Building Inspector,LGSS/10,2,Building Inspectorate,PLAN-BI-TOWN,Town
+PLAN-LS-TOWN,Land Surveyor,LGSS/07,1,Land Survey Unit,PLAN-CH-PHY-TOWN,Town
+PLAN-ASST-LS-TOWN,Assistant Land Surveyor,LGSS/10,1,Land Survey Unit,PLAN-LS-TOWN,Town
+PLAN-CHAIN-TOWN,Chainman,G1,2,Land Survey Unit,PLAN-ASST-LS-TOWN,Town
+PLAN-VAL-TOWN,Valuation Officer,LGSS/07,1,Valuation Unit,PLAN-DIR-TOWN,Town
+PLAN-ASST-VAL-MGMT-TOWN,Assistant Valuation Officer – Property Mgmt,LGSS/10,1,Valuation Unit,PLAN-VAL-TOWN,Town
+PLAN-ASST-VAL-TAX-TOWN,Assistant Valuation Officer – Property Taxation,LGSS/10,1,Valuation Unit,PLAN-VAL-TOWN,Town
+PLAN-DATA-TOWN,Data Entry Clerk,LGSS/18,2,Valuation Unit,PLAN-ASST-VAL-MGMT-TOWN,Town
+PLAN-CH-SOC-TOWN,Chief Socio-Economic Planner,LGSS/06,1,Socio-Economic Planning,PLAN-DIR-TOWN,Town
+PLAN-SOC-COUNCIL-TOWN,Socio-Economic Planner – Council,LGSS/07,2,Socio-Economic Planning,PLAN-CH-SOC-TOWN,Town
+PLAN-SOC-HEALTH-TOWN,Socio-Economic Planner – Health,LGSS/07,1,Socio-Economic Planning,PLAN-CH-SOC-TOWN,Town
+PLAN-SOC-FISH-TOWN,Socio-Economic Planner – Fisheries/Livestock/Vet,LGSS/07,1,Socio-Economic Planning,PLAN-CH-SOC-TOWN,Town
+PLAN-HINFO-TOWN,Health Information Officer,I,1,Specialized Units,PLAN-DIR-TOWN,Town
+PLAN-ENV-TOWN,Environmental Planner,LGSS/07,1,Specialized Units,PLAN-DIR-TOWN,Town
+PLAN-ME-TOWN,Monitoring & Evaluation Officer,LGSS/07,1,Specialized Units,PLAN-DIR-TOWN,Town
+PLAN-DIR-MUN,Director of Planning,LGSS/04,1,Leadership,Town Clerk,Municipal
+PLAN-ADIR-PHY-MUN,Assistant Director – Physical Planning,LGSS/05,1,Physical Planning,PLAN-DIR-MUN,Municipal
+PLAN-SNR-TOWN-MUN,Senior Town Planner,LGSS/06,1,Town Planning Unit,PLAN-ADIR-PHY-MUN,Municipal
+PLAN-TOWN-MUN,Town Planner,LGSS/10,4,Town Planning Unit,PLAN-SNR-TOWN-MUN,Municipal
+PLAN-ASST-TOWN-MUN,Assistant Town Planner,LGSS/10,1,Town Planning Unit,PLAN-TOWN-MUN,Municipal
+PLAN-SNR-PA-MUN,Senior Planning Assistant,LGSS/12,1,Town Planning Unit,PLAN-ASST-TOWN-MUN,Municipal
+PLAN-PA-MUN,Planning Assistant,LGSS/14,2,Town Planning Unit,PLAN-SNR-PA-MUN,Municipal
+PLAN-CH-BI-MUN,Chief Building Inspector,LGSS/06,1,Buildings Inspectorate,PLAN-DIR-MUN,Municipal
+PLAN-SNR-BI-MUN,Senior Building Inspector,LGSS/08,2,Buildings Inspectorate,PLAN-CH-BI-MUN,Municipal
+PLAN-SUPT-BI-MUN,Superintendent,LGSS/10,3,Buildings Inspectorate,PLAN-SNR-BI-MUN,Municipal
+PLAN-BI-MUN,Building Inspector,LGSS/10,3,Buildings Inspectorate,PLAN-SUPT-BI-MUN,Municipal
+PLAN-SNR-LS-MUN,Senior Land Surveyor,LGSS/06,1,Land Survey Unit,PLAN-DIR-MUN,Municipal
+PLAN-LS-MUN,Land Surveyor,LGSS/07,1,Land Survey Unit,PLAN-SNR-LS-MUN,Municipal
+PLAN-ASST-LS-MUN,Assistant Land Surveyor,LGSS/10,2,Land Survey Unit,PLAN-LS-MUN,Municipal
+PLAN-CHAIN-MUN,Chainman,G1,2,Land Survey Unit,PLAN-ASST-LS-MUN,Municipal
+PLAN-CH-VAL-MUN,Chief Valuation Officer,LGSS/05,1,Valuation Section,PLAN-DIR-MUN,Municipal
+PLAN-SNR-VAL-MUN,Senior Valuation Officer,LGSS/06,1,Valuation Section,PLAN-CH-VAL-MUN,Municipal
+PLAN-SNR-VAL-MGMT-MUN,Senior Valuation Officer – Property Mgmt,LGSS/06,1,Valuation Section,PLAN-CH-VAL-MUN,Municipal
+PLAN-SNR-VAL-TAX-MUN,Senior Valuation Officer – Property Taxation,LGSS/06,1,Valuation Section,PLAN-CH-VAL-MUN,Municipal
+PLAN-MGMT-MUN,Management Officer,LGSS/08,1,Valuation Section,PLAN-SNR-VAL-MUN,Municipal
+PLAN-VAL-TAX-MUN,Valuation Officer – Property Taxation,LGSS/08,1,Valuation Section,PLAN-SNR-VAL-TAX-MUN,Municipal
+PLAN-ASST-VAL-MGMT-MUN,Valuation Assistant – Property Mgmt,LGSS/13,1,Valuation Section,PLAN-MGMT-MUN,Municipal
+PLAN-ASST-VAL-TAX-MUN,Valuation Assistant – Property Taxation,LGSS/13,1,Valuation Section,PLAN-VAL-TAX-MUN,Municipal
+PLAN-FIELD-MUN,Field Inspector,LGSS/13,10,Valuation Section,PLAN-CH-VAL-MUN,Municipal
+PLAN-DATA-MUN,Data Entry Clerk,LGSS/13,1,Valuation Section,PLAN-ASST-VAL-MGMT-MUN,Municipal
+PLAN-REV-MUN,Revenue Collector,LGSS/18,6,Valuation Section,PLAN-CH-VAL-MUN,Municipal
+PLAN-CH-SOC-MUN,Chief Planner,LGSS/05,1,Socio-Economic Planning,PLAN-DIR-MUN,Municipal
+PLAN-SNR-SOC-MUN,Senior Socio-Economic Planner,LGSS/06,1,Socio-Economic Planning,PLAN-CH-SOC-MUN,Municipal
+PLAN-SOC-MUN,Socio-Economic Planner,LGSS/07,2,Socio-Economic Planning,PLAN-SNR-SOC-MUN,Municipal
+PLAN-SNR-ENV-MUN,Senior Environmental Planner,LGSS/06,1,Socio-Economic Planning,PLAN-CH-SOC-MUN,Municipal
+PLAN-ENV-MUN,Environmental Planner,LGSS/07,1,Socio-Economic Planning,PLAN-SNR-ENV-MUN,Municipal
+PLAN-SOC-HEALTH-MUN,Socio-Economic Planner – Health Services,LGSS/07,1,Socio-Economic Planning,PLAN-SNR-SOC-MUN,Municipal
+PLAN-SOC-FISH-MUN,Socio-Economic Planner – Fisheries/Livestock/Vet,LGSS/07,1,Socio-Economic Planning,PLAN-SNR-SOC-MUN,Municipal
+PLAN-SNR-ME-MUN,Senior Monitoring & Evaluation Officer,LGSS/06,1,Socio-Economic Planning,PLAN-CH-SOC-MUN,Municipal

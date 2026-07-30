@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalGov ERP - Organizational Chart</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .header h1 { margin: 0 0 5px 0; }
+        .header p { margin: 0; opacity: 0.9; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            background: #f8f9fa;
+        }
+        .controls {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .controls input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 250px;
+        }
+        .controls button {
+            padding: 8px 16px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .controls button.reset {
+            background: #f0f4f9;
+            color: #1a73e8;
+        }
+        .quick-links {
+            padding: 12px 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .quick-link {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .quick-link:hover {
+            background: #1a73e8;
+            color: white;
+        }
+        iframe {
+            width: 100%;
+            height: 650px;
+            border: none;
+            display: block;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: #1a73e8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/api/" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🏛️ Organizational Chart</h1>
+            <p>View department structures, reporting hierarchies, and team compositions across all councils</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">📊 Interactive Organizational Chart</div>
+            <div class="controls">
+                <input type="text" id="positionSearch" placeholder="Position ID (e.g., LEG-DIR-CITY, ENG-DIR)">
+                <button onclick="viewTeam()">🔍 View My Team</button>
+                <button class="reset" onclick="resetView()">🗺️ Full Organization</button>
+            </div>
+            <div class="quick-links">
+                <span style="color:#5f6368;">Quick links:</span>
+                <span class="quick-link" onclick="loadPosition('LEG-DIR-CITY')">Legal Director (City)</span>
+                <span class="quick-link" onclick="loadPosition('COUNC-SEC')">Council Secretary</span>
+                <span class="quick-link" onclick="loadPosition('ENG-DIR')">Engineering Director</span>
+                <span class="quick-link" onclick="loadPosition('PLAN-DIR-TOWN')">Planning Director (Town)</span>
+            </div>
+            <iframe id="orgFrame" src="http://localhost:8088/org-chart-widget.html"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const frame = document.getElementById('orgFrame');
+        const baseUrl = 'http://localhost:8088/org-chart-widget.html';
+        
+        function viewTeam() {
+            const posId = document.getElementById('positionSearch').value.trim();
+            if (posId) {
+                frame.src = `${baseUrl}?employee=${encodeURIComponent(posId)}`;
+            } else {
+                frame.src = baseUrl;
+            }
+        }
+        
+        function resetView() {
+            document.getElementById('positionSearch').value = '';
+            frame.src = baseUrl;
+        }
+        
+        function loadPosition(positionId) {
+            document.getElementById('positionSearch').value = positionId;
+            frame.src = `${baseUrl}?employee=${positionId}`;
+        }
+        
+        document.getElementById('positionSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') viewTeam();
+        });
+    </script>
+</body>
+</html>

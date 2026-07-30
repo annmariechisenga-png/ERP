@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://erp.local/payslip_portal_payload_schema.json",
+  "title": "Authority-Aware Payslip Payload",
+  "type": "object",
+  "required": [
+    "header",
+    "employee",
+    "employer",
+    "earnings",
+    "deductions",
+    "employerContributions",
+    "summary",
+    "payment",
+    "leave",
+    "ytd",
+    "verification"
+  ],
+  "properties": {
+    "header": {
+      "type": "object",
+      "required": [
+        "authorityId",
+        "authorityName",
+        "authorityCode",
+        "logoUrl",
+        "payslipNo",
+        "verificationCode",
+        "payrollMonthLabel",
+        "payPeriodStart",
+        "payPeriodEnd",
+        "generatedAt"
+      ],
+      "properties": {
+        "authorityId": { "type": "string" },
+        "authorityName": { "type": "string" },
+        "authorityCode": { "type": "string" },
+        "logoUrl": { "type": "string" },
+        "payslipNo": { "type": "string" },
+        "verificationCode": { "type": "string" },
+        "payrollMonthLabel": { "type": "string" },
+        "payPeriodStart": { "type": "string", "format": "date" },
+        "payPeriodEnd": { "type": "string", "format": "date" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "printLabel": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "employee": {
+      "type": "object",
+      "required": [
+        "employeeId",
+        "employeeNo",
+        "fullName",
+        "department",
+        "grade",
+        "division",
+        "nrcMasked",
+        "tpinMasked",
+        "napsaMasked",
+        "nhimaMasked"
+      ],
+      "properties": {
+        "employeeId": { "type": "string" },
+        "employeeNo": { "type": "string" },
+        "fullName": { "type": "string" },
+        "department": { "type": "string" },
+        "grade": { "type": "string" },
+        "division": { "type": "string" },
+        "notch": { "type": ["integer", "null"] },
+        "employmentType": { "type": ["string", "null"] },
+        "nrcMasked": { "type": "string" },
+        "tpinMasked": { "type": "string" },
+        "napsaMasked": { "type": "string" },
+        "nhimaMasked": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "employer": {
+      "type": "object",
+      "required": [
+        "authorityName",
+        "authorityCode",
+        "tpinMasked",
+        "napsaMasked",
+        "address",
+        "contactEmail"
+      ],
+      "properties": {
+        "authorityName": { "type": "string" },
+        "authorityCode": { "type": "string" },
+        "tpinMasked": { "type": "string" },
+        "napsaMasked": { "type": "string" },
+        "nhimaMasked": { "type": ["string", "null"] },
+        "address": { "type": "string" },
+        "contactEmail": { "type": "string", "format": "email" },
+        "verificationBaseUrl": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "earnings": {
+      "type": "object",
+      "required": ["items", "totalEarnings", "taxableAllowances", "nonTaxableAllowances"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "description", "units", "amount", "taxable", "visibleOnPayslip"],
+            "properties": {
+              "code": { "type": "string" },
+              "description": { "type": "string" },
+              "units": { "type": "string" },
+              "rate": { "type": ["number", "null"] },
+              "amount": { "type": "number" },
+              "taxable": { "type": "boolean" },
+              "visibleOnPayslip": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "totalEarnings": { "type": "number" },
+        "taxableAllowances": { "type": "number" },
+        "nonTaxableAllowances": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "deductions": {
+      "type": "object",
+      "required": ["items", "totalStatutory", "totalOther", "totalDeductions"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "description", "authorityRef", "amount", "category"],
+            "properties": {
+              "code": { "type": "string" },
+              "description": { "type": "string" },
+              "authorityRef": { "type": "string" },
+              "amount": { "type": "number" },
+              "category": { "type": "string", "enum": ["STATUTORY", "LOAN", "UNION", "LEVY", "POLICY", "OTHER"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "totalStatutory": { "type": "number" },
+        "totalOther": { "type": "number" },
+        "totalDeductions": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "employerContributions": {
+      "type": "object",
+      "required": ["items", "totalEmployerContributions"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "description", "amount"],
+            "properties": {
+              "code": { "type": "string" },
+              "description": { "type": "string" },
+              "amount": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "totalEmployerContributions": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "basicSalary",
+        "grossSalary",
+        "taxablePay",
+        "nonTaxablePay",
+        "totalDeductions",
+        "netPay"
+      ],
+      "properties": {
+        "basicSalary": { "type": "number" },
+        "grossSalary": { "type": "number" },
+        "taxablePay": { "type": "number" },
+        "nonTaxablePay": { "type": "number" },
+        "totalDeductions": { "type": "number" },
+        "netPay": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "payment": {
+      "type": "object",
+      "required": ["method", "bankName", "accountMasked", "reference", "valueDate"],
+      "properties": {
+        "method": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountMasked": { "type": "string" },
+        "reference": { "type": "string" },
+        "valueDate": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "leave": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["leaveType", "balance", "unit"],
+            "properties": {
+              "leaveType": { "type": "string" },
+              "balance": { "type": "number" },
+              "unit": { "type": "string" },
+              "policyMax": { "type": ["number", "null"] }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ytd": {
+      "type": "object",
+      "required": ["gross", "taxablePay", "paye", "napsaEmployee", "nhimaEmployee", "netPay"],
+      "properties": {
+        "gross": { "type": "number" },
+        "taxablePay": { "type": "number" },
+        "paye": { "type": "number" },
+        "napsaEmployee": { "type": "number" },
+        "nhimaEmployee": { "type": "number" },
+        "netPay": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["verificationCode", "verifyUrl", "qrPayload", "signedAt", "signatureStatus"],
+      "properties": {
+        "verificationCode": { "type": "string" },
+        "verifyUrl": { "type": "string" },
+        "qrPayload": { "type": "string" },
+        "signedAt": { "type": "string", "format": "date-time" },
+        "signatureStatus": { "type": "string", "enum": ["SIGNED", "UNSIGNED", "INVALID"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

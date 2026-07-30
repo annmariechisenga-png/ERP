@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Org Chart Widget</title>
+    <style>
+        :root {
+            /* Primary Blues */
+            --blue-light: #42A8EA;
+            --blue-mid: #085CB7;
+            --blue-deep: #09285A;
+            --blue-dark: #001F50;
+
+            /* Light Neutrals */
+            --bg-white: #FFFFFF;
+            --bg-light-1: #F8FAFC;
+            --bg-light-2: #F1F5F9;
+            --border-gray: #E2E8F0;
+
+            /* Copper Accents */
+            --copper-light: #A97049;
+            --copper-mid: #936144;
+            --copper-dark: #81543A;
+
+            /* Standard UI */
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg-white); padding: 20px; color: var(--text-dark); }
+        .container { background: var(--bg-white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-gray); }
+        .header { background: var(--white); color: var(--text-dark); padding: 16px 24px; border-bottom: 2px solid var(--border-gray); }
+        .header h1 { font-size: 20px; margin-bottom: 4px; color: var(--blue-mid); }
+        .header p { font-size: 14px; color: var(--text-muted); }
+        
+        .toolbar { background: var(--bg-light-1); padding: 12px 24px; border-bottom: 1px solid var(--border-gray); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .search-box { display: flex; gap: 8px; flex: 1; }
+        .search-box input { padding: 8px 12px; background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px; font-size: 14px; flex: 1; max-width: 300px; color: var(--text-dark); }
+        .search-box button, .toolbar button { padding: 8px 16px; background: var(--white); border: 1px solid var(--border-gray); border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--blue-mid); transition: all 0.2s; }
+        .search-box button:hover, .toolbar button:hover { border-color: var(--blue-mid); background: var(--bg-light-2); }
+        
+        .current-view { background: var(--bg-light-2); padding: 8px 24px; font-size: 13px; color: var(--blue-deep); border-bottom: 1px solid var(--border-gray); font-weight: 600; }
+        .org-tree { padding: 24px; overflow-x: auto; min-height: 500px; max-height: 70vh; overflow-y: auto; background: var(--white); }
+        
+        .department-section { margin-bottom: 32px; border: 1px solid var(--border-gray); border-radius: 8px; overflow: hidden; background: var(--bg-light-1); }
+        .department-title { background: var(--bg-light-2); padding: 12px 16px; font-size: 16px; font-weight: 700; color: var(--blue-mid); border-bottom: 1px solid var(--border-gray); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .council-group { margin: 16px; border: 1px solid var(--border-gray); border-radius: 8px; overflow: hidden; background: var(--white); }
+        .council-header { background: var(--bg-light-1); padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--copper-mid); }
+        
+        .tree { padding: 16px; display: flex; justify-content: center; flex-wrap: wrap; }
+        .node { display: inline-block; vertical-align: top; text-align: center; padding: 20px 10px; }
+        .node-content { background: var(--white); border: 2px solid var(--blue-light); border-radius: 12px; padding: 12px 16px; min-width: 180px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .node-content:hover { transform: translateY(-3px); border-color: var(--blue-mid); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .node-content.highlight { background: var(--bg-light-2); border-color: var(--blue-deep); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        .node-title { font-weight: 700; font-size: 13px; color: var(--text-dark); margin-bottom: 4px; }
+        .node-id { font-size: 10px; color: var(--blue-mid); font-family: 'Courier New', monospace; margin-bottom: 4px; font-weight: 800; }
+        .node-salary { font-size: 11px; color: var(--copper-mid); font-weight: 800; }
+        
+        .children { padding-top: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; position: relative; }
+        .children::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 20px; background: var(--border-gray); }
+        
+        .stats { font-size: 13px; color: var(--text-muted); margin-left: auto; font-weight: 700; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header"><h1>🏛️ Organizational Chart</h1><p id="subHeader">Departmental Structure</p></div>
+    <div class="toolbar">
+        <div class="search-box"><input type="text" id="employee-search" placeholder="Position ID or Title..."><button id="search-btn">Find Position</button></div>
+        <button id="expand-all">📂 Expand All</button><button id="collapse-all">📁 Collapse All</button>
+        <div class="stats" id="stats"></div>
+    </div>
+    <div class="current-view" id="current-view-label">📍 Loading...</div>
+    <div id="org-tree" class="org-tree"><div class="loading">Loading organizational chart...</div></div>
+</div>
+<script>
+    let orgData = null;
+    let currentEmployeeId = null;
+    
+    function getUrlParam(p) { return new URLSearchParams(window.location.search).get(p); }
+    
+    async function loadData() {
+        try {
+            const response = await fetch('org-data/org_chart.json?t=' + Date.now());
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            orgData = await response.json();
+            return true;
+        } catch(e) {
+            document.getElementById('org-tree').innerHTML = '<div class="error">❌ Failed to load data: ' + e.message + '</div>';
+            return false;
+        }
+    }
+    
+    function findEmployee(id) {
+        if (!orgData) return null;
+        for (const [dept, councils] of Object.entries(orgData)) {
+            for (const [council, data] of Object.entries(councils)) {
+                if (data.all_positions && data.all_positions[id]) {
+                    return { department: dept, council, position: data.all_positions[id], rootPositions: data.root_positions };
+                }
+            }
+        }
+        return null;
+    }
+
+    function renderDeptView(deptName) {
+        if (!orgData[deptName]) return '<div class="error">Department not found: ' + escapeHtml(deptName) + '</div>';
+        document.getElementById('current-view-label').innerHTML = `📍 Showing: ${deptName} Department`;
+        document.getElementById('subHeader').textContent = `${deptName} Departmental Structure`;
+        
+        let html = `<div class="department-section"><div class="department-title">🏢 ${deptName}</div>`;
+        const councils = orgData[deptName];
+        for (const council of Object.keys(councils).sort()) {
+            const data = councils[council];
+            html += `<div class="council-group">
+                <div class="council-header">🏛️ ${council} Council</div>
+                <div class="tree">${data.root_positions.map(r => renderNode(r, false, true)).join('')}</div>
+            </div>`;
+        }
+        html += `</div>`;
+        return html;
+    }
+    
+    function renderNode(node, isHighlight, isRoot = false) {
+        const hasChildren = node.direct_reports && node.direct_reports.length;
+        const estText = node.establishment > 1 ? ` (x${node.establishment})` : '';
+        return `<div class="node" data-id="${node.position_id}">
+            <div class="node-content ${isHighlight ? 'highlight' : ''}" onclick="toggleChildren(this)">
+                <div class="node-title">${escapeHtml(node.title)}</div>
+                <div class="node-id">${node.position_id}</div>
+                <div class="node-salary">${node.salary_scale || ''}${estText}</div>
+            </div>
+            ${hasChildren ? `<div class="children" style="${isRoot ? '' : 'display:none'}">${node.direct_reports.map(c => renderNode(c, c.position_id === currentEmployeeId, false)).join('')}</div>` : ''}
+        </div>`;
+    }
+    
+    function renderFullView() {
+        document.getElementById('current-view-label').innerHTML = '📍 Showing: Full Organization';
+        let html = '';
+        for (const dept of Object.keys(orgData).sort()) {
+            html += renderDeptView(dept);
+        }
+        return html;
+    }
+    
+    function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function toggleChildren(el) { const n = el.closest('.node'), c = n?.querySelector('.children'); if(c) c.style.display = c.style.display === 'none' ? 'flex' : 'none'; }
+    function expandAll() { document.querySelectorAll('.children').forEach(c => c.style.display = 'flex'); }
+    function collapseAll() { document.querySelectorAll('.children').forEach(c => c.style.display = 'none'); }
+    
+    async function init() {
+        const loaded = await loadData();
+        if (!loaded) return;
+        
+        const dept = getUrlParam('department');
+        const urlEmp = getUrlParam('employee');
+
+        if (dept) {
+            document.getElementById('org-tree').innerHTML = renderDeptView(dept);
+        } else if (urlEmp) {
+            const emp = findEmployee(urlEmp);
+            if (emp) {
+                currentEmployeeId = urlEmp;
+                document.getElementById('org-tree').innerHTML = renderDeptView(emp.department);
+                // Highlight and expand to employee
+                setTimeout(() => {
+                    const node = document.querySelector(`[data-id="${urlEmp}"]`);
+                    if (node) {
+                        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        node.querySelector('.node-content').classList.add('highlight');
+                    }
+                }, 500);
+            } else {
+                document.getElementById('org-tree').innerHTML = '<div class="error">❌ Employee ID "' + escapeHtml(urlEmp) + '" not found</div>';
+            }
+        } else {
+            document.getElementById('org-tree').innerHTML = renderFullView();
+        }
+        
+        document.getElementById('search-btn').onclick = () => { const v = document.getElementById('employee-search').value.trim(); if(v) window.location.href = `?employee=${encodeURIComponent(v)}`; };
+        document.getElementById('expand-all').onclick = expandAll;
+        document.getElementById('collapse-all').onclick = collapseAll;
+    }
+    
+    init();
+</script>
+</body>
+</html>

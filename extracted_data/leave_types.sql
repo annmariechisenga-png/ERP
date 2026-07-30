@@ -1,1 +1,0 @@
-INSERT INTO leave_types VALUES(1,'MOTHERS_DAY','Mother''s Day','One day off per month for female officers - non-cumulative. Notification to Supervisor and HR required.',FALSE,TRUE,FALSE,TRUE,12,'Female Only',TRUE,1,'2026-02-23 22:26:25');

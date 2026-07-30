@@ -1,0 +1,10 @@
+LOAD DATABASE
+     FROM sqlite:///home/chisenga/projects/ERP/hr_platform.db
+     INTO postgresql://chisenga:$MeatbalL20082012$@localhost:5432/erpdb
+
+WITH include drop, create tables, create indexes, reset sequences,
+     workers = 2, concurrency = 1,
+     batch rows = 5000
+
+CAST type datetime to timestamptz drop default drop not null using zero-dates-to-null,
+     type timestamp to timestamptz drop default drop not null using zero-dates-to-null;

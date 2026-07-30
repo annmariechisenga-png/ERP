@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chilanga Town Council — MarshaERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #EDEBE4;
+        }
+
+        /* ── Header ── */
+        .header-banner {
+            background: #1E5C1E;
+            width: 100%;
+            padding: 32px 20px 58px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .header-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: #F5C800;
+        }
+        .crest-img {
+            width: 155px;
+            height: auto;
+            filter: drop-shadow(0 6px 18px rgba(0,0,0,0.5));
+        }
+
+        /* SVG fallback */
+        .crest-fallback {
+            display: none;
+            width: 155px;
+            height: 155px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Body ── */
+        .page-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 38px 20px 60px;
+            gap: 22px;
+        }
+        .welcome-heading { text-align: center; }
+        .welcome-heading h1 {
+            font-size: 27px; font-weight: 800;
+            color: #1E5C1E; letter-spacing: 0.2px;
+        }
+        .welcome-heading p {
+            font-size: 13px; color: #999990;
+            margin-top: 5px; font-weight: 500;
+        }
+
+        /* ── Card ── */
+        .login-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            padding: 34px 38px 38px;
+            width: 100%; max-width: 480px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        /* ── Sign-in method toggle ── */
+        .method-toggle {
+            display: flex;
+            background: #F2F2EE;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 22px;
+            gap: 4px;
+        }
+        .method-btn {
+            flex: 1;
+            padding: 9px 10px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 700;
+            color: #888880;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .method-btn.active {
+            background: #1E5C1E;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(30,92,30,0.25);
+        }
+
+        /* ── Form ── */
+        .form-group { margin-bottom: 18px; }
+        .form-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .form-group label {
+            font-size: 14px; font-weight: 700; color: #2A2A2A;
+        }
+        .forgot-link {
+            font-size: 13px; font-weight: 700;
+            color: #C9960A; text-decoration: none; transition: color 0.2s;
+        }
+        .forgot-link:hover { color: #A87A06; }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper .field-icon {
+            position: absolute; left: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: #BBBBBB; font-size: 14px; pointer-events: none;
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: 13px 14px 13px 40px;
+            border: 1.5px solid #D8D8D0;
+            border-radius: 8px;
+            font-size: 14px; color: #2A2A2A;
+            font-family: inherit; background: #FFFFFF;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-wrapper input::placeholder { color: #C0C0C0; }
+        .input-wrapper input:focus {
+            border-color: #1E5C1E;
+            box-shadow: 0 0 0 3px rgba(30,92,30,0.1);
+        }
+        .toggle-pwd {
+            position: absolute; right: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: #BBBBBB; cursor: pointer; font-size: 14px;
+        }
+        .toggle-pwd:hover { color: #555; }
+
+        .input-hint {
+            font-size: 11px; color: #AAAAAA; margin-top: 5px;
+            font-weight: 500; letter-spacing: 0.2px;
+        }
+
+        .error-box {
+            display: none;
+            background: #FEF2F2; border: 1px solid #FCA5A5;
+            color: #DC2626; padding: 11px 14px; border-radius: 8px;
+            font-size: 13px; font-weight: 700; margin-bottom: 16px;
+            align-items: center; gap: 8px;
+        }
+
+        .btn-login {
+            width: 100%; padding: 14px;
+            background: #1E5C1E; color: #FFFFFF;
+            border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 800; letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(30,92,30,0.28);
+            display: flex; align-items: center;
+            justify-content: center; gap: 10px;
+            margin-top: 6px;
+        }
+        .btn-login:hover {
+            background: #175217;
+            box-shadow: 0 6px 20px rgba(30,92,30,0.38);
+            transform: translateY(-1px);
+        }
+        .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .spinner {
+            display: none; width: 17px; height: 17px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%; animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Footer ── */
+        .page-footer {
+            text-align: center; padding: 18px 20px;
+            font-size: 13px; color: #AAAAAA; font-weight: 500;
+            border-top: 1px solid #E0DED8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-banner">
+        <img id="crestImg" class="crest-img" src="chilanga-crest.png" onerror="this.src='chilanga-crest.jpg'" alt="Chilanga Town Council Crest">
+    </div>
+
+    <div class="page-body">
+        <div class="welcome-heading">
+            <h1>Welcome to Chilanga Town Council</h1>
+            <p>Powered by MarshaERP</p>
+        </div>
+
+        <div class="login-card">
+            <!-- Sign-in method toggle -->
+            <div class="method-toggle">
+                <button type="button" class="method-btn active" id="btnEmpId" onclick="switchMethod('empid')">
+                    <i class="fas fa-id-card"></i> Employee ID
+                </button>
+                <button type="button" class="method-btn" id="btnNrc" onclick="switchMethod('nrc')">
+                    <i class="fas fa-fingerprint"></i> Sign in with NRC
+                </button>
+            </div>
+
+            <div id="errorBox" class="error-box">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid credentials. Please try again.</span>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label id="usernameLabel" for="employeeId">Username</label>
+                    <div class="input-wrapper" style="margin-top:8px;">
+                        <i class="fas fa-id-card field-icon" id="usernameIcon"></i>
+                        <input type="text" id="employeeId"
+                               placeholder="e.g. ZM09-CHL-2024-000001"
+                               autocomplete="username" required>
+                    </div>
+                    <p class="input-hint" id="usernameHint">Enter your Employee ID (e.g. ZM09-CHL-2024-000001)</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group-header">
+                        <label for="password">Password</label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock field-icon"></i>
+                        <input type="password" id="password" placeholder="Password"
+                               autocomplete="current-password" required>
+                        <i class="fas fa-eye toggle-pwd" id="togglePwd" onclick="togglePassword()"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="btnText">Login</span>
+                    <div class="spinner" id="btnSpinner"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        &copy; 2026 Chilanga Town Council. All rights reserved.
+    </div>
+
+    <script>
+        // ── Crest image fallback ──
+        document.getElementById('crestImg').addEventListener('error', function () {
+            this.style.display = 'none';
+            const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+            svg.setAttribute('width','155'); svg.setAttribute('height','160');
+            svg.setAttribute('viewBox','0 0 150 160'); svg.setAttribute('fill','none');
+            svg.innerHTML = `
+                <path d="M12 10 H138 V90 Q75 148 12 90 Z" fill="none" stroke="#F5C800" stroke-width="4"/>
+                <path d="M12 55 H75 V90 Q43 122 12 90 Z" fill="#2D7A2D" opacity=".45"/>
+                <path d="M75 55 H138 V90 Q107 122 75 148 Z" fill="#C4A882" opacity=".35"/>
+                <line x1="75" y1="10" x2="75" y2="148" stroke="#F5C800" stroke-width="2" opacity=".5"/>
+                <line x1="12" y1="55" x2="138" y2="55" stroke="#F5C800" stroke-width="2" opacity=".5"/>
+                <rect x="20" y="130" width="110" height="20" rx="4" fill="#F5C800"/>
+                <text x="75" y="144" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A1A1A" font-family="Arial">TOWN</text>
+                <text x="26" y="105" font-size="8" font-weight="bold" fill="#F5C800" font-family="Arial">CHILANGA</text>
+                <text x="88" y="105" font-size="8" font-weight="bold" fill="#F5C800" font-family="Arial">COUNCIL</text>`;
+            this.parentElement.appendChild(svg);
+        });
+
+        // ── Toggle Employee ID / NRC ──
+        function switchMethod(method) {
+            const input = document.getElementById('employeeId');
+            const label = document.getElementById('usernameLabel');
+            const hint  = document.getElementById('usernameHint');
+            const icon  = document.getElementById('usernameIcon');
+            const btnEmp = document.getElementById('btnEmpId');
+            const btnNrc = document.getElementById('btnNrc');
+
+            if (method === 'empid') {
+                btnEmp.classList.add('active');
+                btnNrc.classList.remove('active');
+                label.textContent = 'Username';
+                input.placeholder = 'e.g. ZM09-CHL-2024-000001';
+                hint.textContent  = 'Enter your Employee ID (e.g. ZM09-CHL-2024-000001)';
+                icon.className    = 'fas fa-id-card field-icon';
+                input.setAttribute('inputmode','text');
+            } else {
+                btnNrc.classList.add('active');
+                btnEmp.classList.remove('active');
+                label.textContent = 'NRC Number';
+                input.placeholder = 'e.g. 123456/78/1';
+                hint.textContent  = 'Enter your National Registration Card number';
+                icon.className    = 'fas fa-fingerprint field-icon';
+                input.setAttribute('inputmode','text');
+            }
+            input.value = '';
+            input.focus();
+        }
+
+        // ── Password show/hide ──
+        function togglePassword() {
+            const pwd  = document.getElementById('password');
+            const icon = document.getElementById('togglePwd');
+            pwd.type = pwd.type === 'password' ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
+
+        // ── Login ──
+        async function handleLogin(e) {
+            e.preventDefault();
+            const errBox  = document.getElementById('errorBox');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('btnSpinner');
+            const btn     = document.getElementById('loginBtn');
+
+            errBox.style.display = 'none';
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            btn.disabled = true;
+
+            const employeeId = document.getElementById('employeeId').value.trim();
+            const password   = document.getElementById('password').value;
+
+            try {
+                const res  = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employeeId, password, authority: 'chilanga' })
+                });
+                const data = await res.json();
+                if (data.success || data.token) {
+                    if (data.token) localStorage.setItem('erp_token', data.token);
+                    localStorage.setItem('erp_user_id', employeeId);
+                    window.location.href = 'index.html';
+                } else {
+                    showError(data.error || 'Invalid credentials. Please try again.');
+                }
+            } catch (_) {
+                // Dev mode — auth API not live, pass through
+                localStorage.setItem('erp_user_id', employeeId);
+                window.location.href = 'index.html';
+            } finally {
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        function showError(msg) {
+            const b = document.getElementById('errorBox');
+            document.getElementById('errorText').textContent = msg;
+            b.style.display = 'flex';
+        }
+
+        // Pre-fill saved ID
+        const saved = localStorage.getItem('erp_user_id');
+        if (saved) document.getElementById('employeeId').value = saved;
+    </script>
+</body>
+</html>

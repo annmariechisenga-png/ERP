@@ -1,0 +1,14 @@
+scale_id,scale_code,scale_name,level,applicable_to
+1,LGSS/01,"Town Clerk - City Council",1,"City Council"
+2,LGSS/02,"Town Clerk - Municipal Council",2,"Municipal Council"
+3,LGSS/03,"Council Secretary - Town Council",3,"Town Council"
+4,LGSS/05,"Assistant Director - Public Health (Municipal/City)",5,"Municipal/City Council"
+5,LGSS/06,"Assistant Director - Public Health (Town) / Chief Officer",6,All
+6,LGSS/07,"Senior Officer Level",7,All
+7,LGSS/08,"Officer Level",8,All
+8,LGSS/09,"Superintendent Level",9,All
+9,LGSS/10,"Assistant Superintendent Level",10,All
+10,LGSS/17,"Support Staff Level",17,All
+11,LGSS,"General LGSS Scale",15,All
+12,G1,"General Staff Level 1",20,All
+13,G3,"General Staff Level 3",22,All

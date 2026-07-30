@@ -1,0 +1,86 @@
+position_id,title,salary_scale,establishment,section,reports_to,council_type
+Leadership,HR-DIR-TOWN,Director of Human Resource & Administration,5,Council Secretary,1,Town
+Human Resources,HR-CHRO-TOWN,Chief Human Resources Officer,6,HR-DIR-TOWN,1,Town
+Human Resources,HR-SNR-HRO-TOWN,Senior Human Resource Officer,7,HR-CHRO-TOWN,1,Town
+Human Resources,HR-HRO-TOWN,Human Resources Officer,8,HR-SNR-HRO-TOWN,3,Town
+HR – Health Services,HR-HRM-HEALTH-TOWN,Human Resource Management Officer,8,HR-DIR-TOWN,1,Town
+HR – Fisheries & Veterinary,HR-HRM-FISH-TOWN,Human Resource Management Officer,8,HR-DIR-TOWN,1,Town
+Administration Leadership,HR-CH-ADMIN-TOWN,Chief Administrative & Committee Officer,6,HR-DIR-TOWN,1,Town
+Administration Unit,HR-ADMIN-TOWN,Administrative Officer,10,HR-CH-ADMIN-TOWN,1,Town
+Administration Unit,HR-SEC-TOWN,Personal Secretary,10,HR-CH-ADMIN-TOWN,1,Town
+Administration Unit,HR-STENO-TOWN,Stenographer,12,HR-CH-ADMIN-TOWN,1,Town
+Administration Unit,HR-TYPIST-TOWN,Typist,14,HR-ADMIN-TOWN,2,Town
+Administration Unit,HR-ORDERLY-TOWN,Office Orderly,3,HR-ADMIN-TOWN,6,Town
+Administration Unit,HR-DRIVER-TOWN,Driver,1,HR-ADMIN-TOWN,4,Town
+Administration – Health,HR-ADMIN-HEALTH-TOWN,Administrative Officer,10,HR-DIR-TOWN,1,Town
+Administration – Health,HR-STENO-HEALTH-TOWN,Stenographer,12,HR-DIR-TOWN,1,Town
+Administration – Health,HR-DRIVER-HEALTH-TOWN,Driver,3,HR-DIR-TOWN,3,Town
+Administration – Health,HR-GW-HEALTH-TOWN,General Worker,3,HR-DIR-TOWN,3,Town
+Committee Unit,HR-COMM-CLERK-TOWN,Committee Clerk,10,HR-CH-ADMIN-TOWN,1,Town
+Committee Unit,HR-ASST-COMM-TOWN,Assistant Committee Clerk,12,HR-COMM-CLERK-TOWN,2,Town
+Registry Unit,HR-REG-SUP-TOWN,Registry Supervisor,14,HR-ADMIN-TOWN,1,Town
+Registry Unit,HR-REG-CLERK-TOWN,Registry Clerk,17,HR-REG-SUP-TOWN,5,Town
+HR-SNR-SEC-TOWN,Senior Security Officer,LGSS/08,1,Security Section,HR-DIR-TOWN,Town
+HR-SEC-OFFICER-TOWN,Security Officer,LGSS/10,1,Security Section,HR-SNR-SEC-TOWN,Town
+HR-SERGEANT-TOWN,Town Sergeant,LGSS/12,1,Security Section,HR-SNR-SEC-TOWN,Town
+HR-SUB-INSPECTOR-TOWN,Sub-Inspector,LGSS/16,4,Security Section,HR-SNR-SEC-TOWN,Town
+HR-POLICE-TOWN,Police Constable,G3,10,Security Section,HR-SNR-SEC-TOWN,Town
+Leadership,HRA-DIR-MUN,Director of Human Resource & Administration,4,Town Clerk,1,Town
+HRA-CHRO-MUN,Chief Human Resource Officer,LGSS/06,1,Human Resource Section,HRA-DIR-MUN,Town
+HRA-SNR-HRO-MUN,Senior Human Resource Officer,LGSS/07,2,Human Resource Section,HRA-CHRO-MUN,Town
+HRA-HRO-MUN,Human Resource Officer,LGSS/08,7,Human Resource Section,HRA-SNR-HRO-MUN,Town
+HRA-CH-ADMIN-MUN,Chief Administrative Officer,LGSS/06,1,Administration Section,HRA-DIR-MUN,Town
+HRA-SNR-ADMIN-MUN,Senior Administrative Officer,LGSS/07,2,Administration Section,HRA-CH-ADMIN-MUN,Town
+HRA-ADMIN-MUN,Administrative Officer,LGSS/08,6,Administration Section,HRA-SNR-ADMIN-MUN,Town
+HRA-SEC-MUN,Personal Secretary,LGSS/10,1,Administration Section,HRA-ADMIN-MUN,Town
+HRA-STENO-MUN,Stenographer,LGSS/12,2,Administration Section,HRA-ADMIN-MUN,Town
+HRA-TYPIST-MUN,Typist,LGSS/14,9,Administration Section,HRA-ADMIN-MUN,Town
+HRA-HEAD-DRIVER-MUN,Head Driver,G1,1,Administration Section,HRA-ADMIN-MUN,Town
+HRA-DRIVER-MUN,Driver,G1,24,Administration Section,HRA-ADMIN-MUN,Town
+HRA-ORDERLY-MUN,Office Orderly,G3,20,Administration Section,HRA-ADMIN-MUN,Town
+HRA-WATCHMAN-MUN,Watchman,G3,15,Administration Section,HRA-ADMIN-MUN,Town
+Registry Unit,HRA-REG-SUP-MUN,Registry Supervisor,14,HRA-ADMIN-MUN,2,Town
+Registry Unit,HRA-REG-CLERK-MUN,Registry Clerk,17,HRA-REG-SUP-MUN,15,Town
+HRA-CH-COMM-MUN,Chief Committee Clerk,LGSS/06,1,Committee Section,HRA-DIR-MUN,Town
+HRA-SNR-COMM-MUN,Senior Committee Clerk,LGSS/08,1,Committee Section,HRA-CH-COMM-MUN,Town
+HRA-COMM-CLERK-MUN,Committee Clerk,LGSS/10,3,Committee Section,HRA-SNR-COMM-MUN,Town
+HRA-ASST-COMM-MUN,Assistant Committee Clerk,LGSS/12,2,Committee Section,HRA-COMM-CLERK-MUN,Town
+HRA-CH-SEC-MUN,Chief Security Officer,LGSS/06,1,Security Section,HRA-DIR-MUN,Town
+HRA-SNR-SEC-MUN,Senior Security Officer,LGSS/07,1,Security Section,HRA-CH-SEC-MUN,Town
+HRA-SEC-OFFICER-MUN,Security Officer,LGSS/08,1,Security Section,HRA-SNR-SEC-MUN,Town
+HRA-SERGEANT-MUN,Town Sergeant,LGSS/10,2,Security Section,HRA-SNR-SEC-MUN,Town
+HRA-INSPECTOR-MUN,Inspector,LGSS/12,2,Security Section,HRA-SNR-SEC-MUN,Town
+HRA-SUB-INSPECTOR-MUN,Sub Inspector,LGSS/14,4,Security Section,HRA-SNR-SEC-MUN,Town
+HRA-POLICE-MUN,Police Constable,G1,65,Security Section,HRA-SNR-SEC-MUN,Town
+Leadership,HRA-DIR-CITY,Director of Human Resource & Administration,3,Town Clerk,1,Town
+HR Management & Development,HRA-ADIR-HRMDEV-CITY,Assistant Director – HR Management & Development,5,HRA-DIR-CITY,1,Town
+HR Management & Development,HRA-CHRO-CITY,Chief Human Resource Officer,6,HRA-ADIR-HRMDEV-CITY,1,Town
+HR Management & Development,HRA-SNR-HRO-CITY,Senior Human Resource Officer,7,HRA-CHRO-CITY,3,Town
+HR Management & Development,HRA-HRO-CITY,Human Resource Officer,8,HRA-SNR-HRO-CITY,10,Town
+HRA-ADIR-ADMIN-CITY,Assistant Director – Administration,LGSS/05,1,Administration Section,HRA-DIR-CITY,Town
+Administration Unit,HRA-CH-ADMIN-CITY,Chief Administrative Officer,6,HRA-ADIR-ADMIN-CITY,1,Town
+Administration Unit,HRA-SNR-ADMIN-CITY,Senior Administrative Officer,7,HRA-CH-ADMIN-CITY,8,Town
+Administration Unit,HRA-ADMIN-CITY,Administrative Officer,8,HRA-SNR-ADMIN-CITY,8,Town
+Administration Unit,HRA-SNR-PRINT-CITY,Senior Printing Officer,8,HRA-CH-ADMIN-CITY,1,Town
+Administration Unit,HRA-PRINT-CITY,Printing Officer,10,HRA-SNR-PRINT-CITY,1,Town
+Administration Unit,HRA-SEC-CITY,Personal Secretary,11,HRA-ADMIN-CITY,1,Town
+Administration Unit,HRA-STENO-CITY,Stenographer,12,HRA-ADMIN-CITY,7,Town
+Administration Unit,HRA-TYPIST-CITY,Typist,14,HRA-ADMIN-CITY,7,Town
+Administration Unit,HRA-HEAD-DRIVER-CITY,Head Driver,1,HRA-ADMIN-CITY,1,Town
+Administration Unit,HRA-DRIVER-CITY,Driver,1,HRA-ADMIN-CITY,24,Town
+Administration Unit,HRA-ORDERLY-CITY,Office Orderly,3,HRA-ADMIN-CITY,20,Town
+Administration Unit,HRA-WATCHMAN-CITY,Watchman,3,HRA-ADMIN-CITY,15,Town
+Administration Unit,HRA-GW-CITY,General Worker,3,HRA-ADMIN-CITY,95,Town
+Registry Unit,HRA-REG-SUP-CITY,Registry Supervisor,14,HRA-ADMIN-CITY,3,Town
+Registry Unit,HRA-REG-CLERK-CITY,Registry Clerk,17,HRA-REG-SUP-CITY,16,Town
+HRA-CH-COMM-CITY,Chief Committee Clerk,LGSS/06,1,Committee Section,HRA-DIR-CITY,Town
+HRA-SNR-COMM-CITY,Senior Committee Clerk,LGSS/08,2,Committee Section,HRA-CH-COMM-CITY,Town
+HRA-COMM-CLERK-CITY,Committee Clerk,LGSS/10,7,Committee Section,HRA-SNR-COMM-CITY,Town
+HRA-ASST-COMM-CITY,Assistant Committee Clerk,LGSS/12,5,Committee Section,HRA-COMM-CLERK-CITY,Town
+HRA-CH-SEC-CITY,Chief Security Officer,LGSS/06,1,Security Section,HRA-DIR-CITY,Town
+HRA-SNR-SEC-CITY,Senior Security Officer,LGSS/08,1,Security Section,HRA-CH-SEC-CITY,Town
+HRA-SEC-OFFICER-CITY,Security Officer,LGSS/10,2,Security Section,HRA-SNR-SEC-CITY,Town
+HRA-SERGEANT-CITY,Town Sergeant,LGSS/12,2,Security Section,HRA-SNR-SEC-CITY,Town
+HRA-INSPECTOR-CITY,Inspector,LGSS/14,4,Security Section,HRA-SNR-SEC-CITY,Town
+HRA-SUB-INSPECTOR-CITY,Sub Inspector,LGSS/14,15,Security Section,HRA-SNR-SEC-CITY,Town
+HRA-POLICE-CITY,Police Constable,G1,65,Security Section,HRA-SNR-SEC-CITY,Town
