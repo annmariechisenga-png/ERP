@@ -180,3 +180,7 @@ node_modules/
 #---------------------
 # Generated SQL exports
 extracted_data/
+
+#-------------------
+payroll_anomalies_dec2025.csv
+payroll_dec2025_anomalies.csv
