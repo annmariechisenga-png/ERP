@@ -1,0 +1,182 @@
+-- V10: Create and seed provinces and authority master tables
+-- 10 Zambian provinces + all 116 Local Authority councils
+
+CREATE TABLE IF NOT EXISTS erp_province (
+    province_code  VARCHAR(10)  NOT NULL,
+    country_code   VARCHAR(5)   NOT NULL DEFAULT 'ZM',
+    province_name  VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_erp_province PRIMARY KEY (province_code),
+    CONSTRAINT uq_erp_province_name UNIQUE (province_name)
+);
+
+CREATE TABLE IF NOT EXISTS erp_authority_master (
+    authority_id         VARCHAR(40)  NOT NULL,
+    country_code         VARCHAR(5)   NOT NULL DEFAULT 'ZM',
+    province_code        VARCHAR(10)  NOT NULL,
+    legacy_authority_code VARCHAR(20) NOT NULL,
+    display_code         VARCHAR(20)  NOT NULL,
+    authority_ref        VARCHAR(30)  NOT NULL,
+    official_name        VARCHAR(150) NOT NULL,
+    authority_type       VARCHAR(50)  NOT NULL,
+    status               VARCHAR(20)  NOT NULL DEFAULT 'active',
+    valid_from           DATE,
+    valid_to             DATE,
+    CONSTRAINT pk_erp_authority_master PRIMARY KEY (authority_id),
+    CONSTRAINT uq_erp_authority_ref UNIQUE (authority_ref),
+    CONSTRAINT uq_erp_authority_legacy_code UNIQUE (legacy_authority_code),
+    CONSTRAINT uq_erp_authority_official_name UNIQUE (official_name),
+    CONSTRAINT fk_erp_authority_province
+        FOREIGN KEY (province_code) REFERENCES erp_province (province_code)
+);
+
+CREATE INDEX IF NOT EXISTS idx_erp_authority_province
+    ON erp_authority_master (province_code);
+
+CREATE INDEX IF NOT EXISTS idx_erp_authority_type
+    ON erp_authority_master (authority_type);
+
+-- ─── Provinces ────────────────────────────────────────────────────────────────
+
+INSERT INTO erp_province (province_code, country_code, province_name) VALUES
+    ('ZM-01', 'ZM', 'Western'),
+    ('ZM-02', 'ZM', 'Central'),
+    ('ZM-03', 'ZM', 'Eastern'),
+    ('ZM-04', 'ZM', 'Luapula'),
+    ('ZM-05', 'ZM', 'Northern'),
+    ('ZM-06', 'ZM', 'North-Western'),
+    ('ZM-07', 'ZM', 'Southern'),
+    ('ZM-08', 'ZM', 'Copperbelt'),
+    ('ZM-09', 'ZM', 'Lusaka'),
+    ('ZM-10', 'ZM', 'Muchinga')
+ON CONFLICT (province_code) DO NOTHING;
+
+-- ─── Authority Master — 116 Local Authorities ─────────────────────────────────
+
+INSERT INTO erp_authority_master (authority_id, country_code, province_code, legacy_authority_code, display_code, authority_ref, official_name, authority_type, status) VALUES
+-- Western Province (ZM-01) — 16 councils
+('c6181a75-2d28-55ab-8f46-e38131896074','ZM','ZM-01','KLO','KLO','ZM-01-KLO','Kalabo Town Council','Town Council','active'),
+('6b6cccae-4702-511b-8923-7f3ae99c24c3','ZM','ZM-01','KOM','KOM','ZM-01-KOM','Kaoma Town Council','Town Council','active'),
+('0038d4de-4879-590e-8449-9f65845d0e75','ZM','ZM-01','LML','LML','ZM-01-LML','Limulunga Town Council','Town Council','active'),
+('10c705b6-5b6f-528e-b0f4-b1337ddb9395','ZM','ZM-01','LPM','LPM','ZM-01-LPM','Luampa Town Council','Town Council','active'),
+('4a30bc72-17b6-5eb3-9c03-28577692961d','ZM','ZM-01','LKL','LKL','ZM-01-LKL','Lukulu Town Council','Town Council','active'),
+('da43dcc1-917f-54a5-9fed-bcc6bdb17122','ZM','ZM-01','MTT','MTT','ZM-01-MTT','Mitete Town Council','Town Council','active'),
+('36ee7de1-c055-50db-b0bc-02c41747fa50','ZM','ZM-01','MGU','MGU','ZM-01-MGU','Mongu Municipal Council','Municipal Council','active'),
+('257b8b3f-2de5-57a1-ac1f-7519d80bd068','ZM','ZM-01','MLB','MLB','ZM-01-MLB','Mulobezi Town Council','Town Council','active'),
+('5ffeee6a-1e28-59e9-b519-47eb5a7ff828','ZM','ZM-01','MWD','MWD','ZM-01-MWD','Mwandi Town Council','Town Council','active'),
+('19edd1bc-de71-5240-8d08-d6ffd97a33e4','ZM','ZM-01','NLL','NLL','ZM-01-NLL','Nalolo Town Council','Town Council','active'),
+('eca13749-f222-5fca-900a-a36a3276aee3','ZM','ZM-01','NKY','NKY','ZM-01-NKY','Nkeyema Town Council','Town Council','active'),
+('5add994b-44af-5707-9d73-b61c4b642517','ZM','ZM-01','SNG','SNG','ZM-01-SNG','Senanga Town Council','Town Council','active'),
+('79afd927-72e4-5fed-af4b-16eccad89741','ZM','ZM-01','SSH','SSH','ZM-01-SSH','Sesheke Town Council','Town Council','active'),
+('3117a05f-09bf-5e69-8d02-8778a9847e91','ZM','ZM-01','SGM','SGM','ZM-01-SGM','Shangombo Town Council','Town Council','active'),
+('70b4156e-9de5-5fb1-91b4-36eb579f2246','ZM','ZM-01','SKG','SKG','ZM-01-SKG','Sikongo Town Council','Town Council','active'),
+('47b6a60c-cb56-51ad-887a-5eda84de650d','ZM','ZM-01','SOM','SOM','ZM-01-SOM','Sioma Town Council','Town Council','active'),
+-- Central Province (ZM-02) — 11 councils
+('057f3975-1c85-55eb-9fdf-25ddbdb968f4','ZM','ZM-02','CBB','CBB','ZM-02-CBB','Chibombo Town Council','Town Council','active'),
+('28fbb278-e7cb-5c29-b42f-98fa5ba0a4d3','ZM','ZM-02','CSM','CSM','ZM-02-CSM','Chisamba Town Council','Town Council','active'),
+('b590db67-9986-536d-9c75-8f1a3728b5ea','ZM','ZM-02','CTM','CTM','ZM-02-CTM','Chitambo Town Council','Town Council','active'),
+('48a18f75-5605-5418-9489-99c8052998dc','ZM','ZM-02','KBW','KBW','ZM-02-KBW','Kabwe Municipal Council','Municipal Council','active'),
+('dcfcf021-1f50-5ca6-9266-0599283c377d','ZM','ZM-02','KPM','KPM','ZM-02-KPM','Kapiri Mposhi Town Council','Town Council','active'),
+('a23916c0-7d4d-5627-9734-dd341e2fcbb4','ZM','ZM-02','LNO','LNO','ZM-02-LNO','Luano Town Council','Town Council','active'),
+('275469af-dc8b-595c-96a8-25908730c24d','ZM','ZM-02','MKU','MKU','ZM-02-MKU','Mkushi Town Council','Town Council','active'),
+('5a8ab3e5-0f26-5e4d-b0ec-0d31229dc8cd','ZM','ZM-02','MBW','MBW','ZM-02-MBW','Mumbwa Town Council','Town Council','active'),
+('23e14477-abf2-54d9-b255-7f1644f5e6d1','ZM','ZM-02','NGB','NGB','ZM-02-NGB','Ngabwe Town Council','Town Council','active'),
+('f8b760af-6af9-541e-9a4d-e810ecd221de','ZM','ZM-02','SRJ','SRJ','ZM-02-SRJ','Serenje Town Council','Town Council','active'),
+('a24fdd30-b6fa-574c-a9d5-c8e3e8a90ed9','ZM','ZM-02','SBY','SBY','ZM-02-SBY','Shibuyunji Town Council','Town Council','active'),
+-- Eastern Province (ZM-03) — 15 councils
+('d4c33205-9312-5189-82ce-8cff24a1f6f9','ZM','ZM-03','CDZ','CDZ','ZM-03-CDZ','Chadiza Town Council','Town Council','active'),
+('73e2e946-a2ce-5c3e-bdb9-78edb560534d','ZM','ZM-03','CMA','CMA','ZM-03-CMA','Chama Town Council','Town Council','active'),
+('0552ae2a-1ed1-5865-ab23-48121078f419','ZM','ZM-03','CSF','CSF','ZM-03-CSF','Chasefu Town Council','Town Council','active'),
+('85ada063-afed-5086-a974-b6b4d78b133a','ZM','ZM-03','CPG','CPG','ZM-03-CPG','Chipangali Town Council','Town Council','active'),
+('67ffa471-f931-5815-a7d1-4d0c6ba0a015','ZM','ZM-03','CPT','CPT','ZM-03-CPT','Chipata City Council','City Council','active'),
+('471ac084-a0cc-5fe6-b89e-04d0afc402ee','ZM','ZM-03','KSN','KSN','ZM-03-KSN','Kasenengwa Town Council','Town Council','active'),
+('9a988145-8841-5ff2-9a35-1ac8134b086d','ZM','ZM-03','KTT','KTT','ZM-03-KTT','Katete Town Council','Town Council','active'),
+('f1b84e0d-ac01-5c99-9ca1-62946fc00ec6','ZM','ZM-03','LMZ','LMZ','ZM-03-LMZ','Lumezi Town Council','Town Council','active'),
+('ab8ecefc-d5fb-5f1c-863c-b06ec1a414ba','ZM','ZM-03','LND','LND','ZM-03-LND','Lundazi Town Council','Town Council','active'),
+('107d80f1-397b-5112-8037-b464a2b7354b','ZM','ZM-03','LSG','LSG','ZM-03-LSG','Lusangazi Town Council','Town Council','active'),
+('fd4207ad-a839-51a1-b279-7c15baa80e8c','ZM','ZM-03','MMB','MMB','ZM-03-MMB','Mambwe Town Council','Town Council','active'),
+('11b2049d-0ef2-564d-a20c-481870b681e6','ZM','ZM-03','NYM','NYM','ZM-03-NYM','Nyimba Town Council','Town Council','active'),
+('8ffa74a6-0520-5485-ac54-2abe7b5e3fde','ZM','ZM-03','PTK','PTK','ZM-03-PTK','Petauke Town Council','Town Council','active'),
+('d7bf143c-8d6d-5bcb-890e-8b27bdc16da4','ZM','ZM-03','SND','SND','ZM-03-SND','Sinda Town Council','Town Council','active'),
+('6dd71fa0-799f-5516-bb55-38541be6dc81','ZM','ZM-03','VBW','VBW','ZM-03-VBW','Vubwi Town Council','Town Council','active'),
+-- Luapula Province (ZM-04) — 12 councils
+('1f248d7f-69b8-55de-8bde-c8fc51857035','ZM','ZM-04','CHB','CHB','ZM-04-CHB','Chembe Town Council','Town Council','active'),
+('a40b1e88-3431-517e-9387-34a117fc0bf5','ZM','ZM-04','CHG','CHG','ZM-04-CHG','Chiengi Town Council','Town Council','active'),
+('cdf9042e-95bd-5d9f-a4b7-373ade4a2708','ZM','ZM-04','CFB','CFB','ZM-04-CFB','Chifunabuli Town Council','Town Council','active'),
+('bd6ed6ec-4118-50cd-a501-03cea8da9c8c','ZM','ZM-04','CPL','CPL','ZM-04-CPL','Chipili Town Council','Town Council','active'),
+('8b70dcc4-aa93-50a6-a278-e362143c0059','ZM','ZM-04','KWB','KWB','ZM-04-KWB','Kawambwa Town Council','Town Council','active'),
+('9c7b56b4-8cfa-535f-8c8e-a6b2d9a12558','ZM','ZM-04','LNG','LNG','ZM-04-LNG','Lunga Town Council','Town Council','active'),
+('00ae4447-a43b-5e27-9dd4-e2c53b90d5fc','ZM','ZM-04','MNS','MNS','ZM-04-MNS','Mansa Municipal Council','Municipal Council','active'),
+('7eb2abbd-37db-53f5-bcf1-e8f17101672d','ZM','ZM-04','MLG','MLG','ZM-04-MLG','Milenge Town Council','Town Council','active'),
+('64de9840-4a66-5728-912f-51ac7675c97a','ZM','ZM-04','MSB','MSB','ZM-04-MSB','Mwansabombwe Town Council','Town Council','active'),
+('b8686f88-509e-5fe2-a1f2-cdd7b783a986','ZM','ZM-04','MWE','MWE','ZM-04-MWE','Mwense Town Council','Town Council','active'),
+('5e6f8425-e82c-5b4b-8966-80f365b15d37','ZM','ZM-04','NCL','NCL','ZM-04-NCL','Nchelenge Town Council','Town Council','active'),
+('0fab397f-70ce-5657-a05e-2a90b5edfe6c','ZM','ZM-04','SMF','SMF','ZM-04-SMF','Samfya Town Council','Town Council','active'),
+-- Northern Province (ZM-05) — 12 councils
+('fa099192-91b8-54e8-b920-8522ff5274f9','ZM','ZM-05','CLB','CLB','ZM-05-CLB','Chilubi Town Council','Town Council','active'),
+('2b8d6e94-58e2-5c77-9e5e-5455bf11139a','ZM','ZM-05','KPT','KPT','ZM-05-KPT','Kaputa Town Council','Town Council','active'),
+('1a7d6157-9060-554b-b0d8-0062f487cc83','ZM','ZM-05','KSM','KSM','ZM-05-KSM','Kasama Municipal Council','Municipal Council','active'),
+('a3b62aae-7bea-5e16-856d-92dd027bd766','ZM','ZM-05','LNT','LNT','ZM-05-LNT','Lunte Town Council','Town Council','active'),
+('6523cf0b-a598-59e7-8476-e616ce0f2fd7','ZM','ZM-05','LPS','LPS','ZM-05-LPS','Lupososhi Town Council','Town Council','active'),
+('b36a6601-8966-5fce-9a74-c1793560400f','ZM','ZM-05','LWI','LWI','ZM-05-LWI','Luwingu Town Council','Town Council','active'),
+('69b8dde6-5a13-56f9-a18c-0bd110e27ac4','ZM','ZM-05','MBL','MBL','ZM-05-MBL','Mbala Municipal Council','Municipal Council','active'),
+('ace745bc-5897-5410-8f2a-11c9ac36f473','ZM','ZM-05','MPR','MPR','ZM-05-MPR','Mporokoso Town Council','Town Council','active'),
+('32cf50b2-511f-586b-9a1e-4783cb74fc76','ZM','ZM-05','MPL','MPL','ZM-05-MPL','Mpulungu Town Council','Town Council','active'),
+('92045712-ea71-5454-a979-16c8a37c1571','ZM','ZM-05','MNG','MNG','ZM-05-MNG','Mungwi Town Council','Town Council','active'),
+('979a2f04-6b7d-50df-a4b6-eef0054aa996','ZM','ZM-05','NSM','NSM','ZM-05-NSM','Nsama Town Council','Town Council','active'),
+('1a8ad9eb-a465-5af7-b368-ae5a8cc915ee','ZM','ZM-05','SGH','SGH','ZM-05-SGH','Senga Hill Town Council','Town Council','active'),
+-- North-Western Province (ZM-06) — 11 councils
+('79c79e92-6160-56f0-9809-023ce26ef2af','ZM','ZM-06','CVM','CVM','ZM-06-CVM','Chavuma Town Council','Town Council','active'),
+('ccb138d6-b0b2-555c-8649-eb311e787282','ZM','ZM-06','IKG','IKG','ZM-06-IKG','Ikelenge Town Council','Town Council','active'),
+('9807a836-7f5d-506a-a4b5-ce303b64fb6a','ZM','ZM-06','KBP','KBP','ZM-06-KBP','Kabompo Town Council','Town Council','active'),
+('f472a12f-535f-59ee-9664-cc6457db2fae','ZM','ZM-06','KLB','KLB','ZM-06-KLB','Kalumbila Town Council','Town Council','active'),
+('cf903097-c70f-541e-92b7-0a3dde2719be','ZM','ZM-06','KSP','KSP','ZM-06-KSP','Kasempa Town Council','Town Council','active'),
+('1a121918-380f-5114-8062-64ed9233fc6d','ZM','ZM-06','MYG','MYG','ZM-06-MYG','Manyinga Town Council','Town Council','active'),
+('4309a5db-b794-507a-b98b-b4c604a2459a','ZM','ZM-06','MFB','MFB','ZM-06-MFB','Mufumbwe Town Council','Town Council','active'),
+('b323e4c6-3a33-5f20-8c9f-47f0d14ad64d','ZM','ZM-06','MSD','MSD','ZM-06-MSD','Mushindamo Town Council','Town Council','active'),
+('a974f076-132f-5711-965d-a8c38f989216','ZM','ZM-06','MWN','MWN','ZM-06-MWN','Mwinilunga Town Council','Town Council','active'),
+('f0149d07-9897-5136-aa23-6e7f5bd2e00b','ZM','ZM-06','SLW','SLW','ZM-06-SLW','Solwezi Municipal Council','Municipal Council','active'),
+('5cff4dc3-20de-5ebc-a6f5-1ed1269d1ea7','ZM','ZM-06','ZMB','ZMB','ZM-06-ZMB','Zambezi Town Council','Town Council','active'),
+-- Southern Province (ZM-07) — 15 councils
+('31bd1b0e-036a-5d5a-b850-5b86edb22e8d','ZM','ZM-07','CKT','CKT','ZM-07-CKT','Chikankata Town Council','Town Council','active'),
+('2a31c796-1fa8-50ba-a88a-83b54a078533','ZM','ZM-07','CRD','CRD','ZM-07-CRD','Chirundu Town Council','Town Council','active'),
+('ea84f96c-b18b-517c-bc6b-64a276b7a751','ZM','ZM-07','CHM','CHM','ZM-07-CHM','Choma Municipal Council','Municipal Council','active'),
+('9199cff0-017d-53a6-8ea9-57f74cf46c07','ZM','ZM-07','GWB','GWB','ZM-07-GWB','Gwembe Town Council','Town Council','active'),
+('5cadee49-6f64-5ea9-8505-3a54555c1aa0','ZM','ZM-07','ITT','ITT','ZM-07-ITT','Itezhi Tezhi Town Council','Town Council','active'),
+('158190c8-908a-5cdc-88d6-c8213a0bd017','ZM','ZM-07','KLM','KLM','ZM-07-KLM','Kalomo Town Council','Town Council','active'),
+('1c818383-9dd3-58b7-b69e-7e6b487652d3','ZM','ZM-07','KZG','KZG','ZM-07-KZG','Kazungula Town Council','Town Council','active'),
+('d55353e3-76ad-5093-9b1a-e142b621c0bb','ZM','ZM-07','LIV','LCC','ZM-07-LCC','Livingstone City Council','City Council','active'),
+('5f0b7b6a-45bc-5d5d-a07f-6f77cd6bd612','ZM','ZM-07','MZB','MZB','ZM-07-MZB','Mazabuka Municipal Council','Municipal Council','active'),
+('cd075bb4-21af-5574-a117-fb1155e392c6','ZM','ZM-07','MNZ','MNZ','ZM-07-MNZ','Monze Town Council','Town Council','active'),
+('7d198ccc-bf3a-58b4-b6e3-94e85d308762','ZM','ZM-07','NMW','NMW','ZM-07-NMW','Namwala Town Council','Town Council','active'),
+('d415ddcb-c973-5771-9f8a-1051c6e9b16a','ZM','ZM-07','PMB','PMB','ZM-07-PMB','Pemba Town Council','Town Council','active'),
+('fbb6f1eb-b2d5-589e-ad9b-48b137aa4065','ZM','ZM-07','SVG','SVG','ZM-07-SVG','Siavonga Town Council','Town Council','active'),
+('3e46732e-0f52-544d-918b-0ea7301f2654','ZM','ZM-07','SNZ','SNZ','ZM-07-SNZ','Sinazongwe Town Council','Town Council','active'),
+('2d7f7e7a-c40f-56c3-b07e-5f21a64e871b','ZM','ZM-07','ZIM','ZIM','ZM-07-ZIM','Zimba Town Council','Town Council','active'),
+-- Copperbelt Province (ZM-08) — 10 councils
+('c2b30ff8-e2f8-5e63-bd18-6f731e99eaf6','ZM','ZM-08','CLC','CLC','ZM-08-CLC','Chililabombwe Municipal Council','Municipal Council','active'),
+('9e37ef0f-57df-5e3b-b8ab-28c7a55fa30d','ZM','ZM-08','CHN','CHN','ZM-08-CHN','Chingola Municipal Council','Municipal Council','active'),
+('4fc79fe3-c517-5cbb-8a62-46c8c1376118','ZM','ZM-08','KLS','KLS','ZM-08-KLS','Kalulushi Municipal Council','Municipal Council','active'),
+('47f871aa-10f1-52f8-9fc0-6be4c5592ea5','ZM','ZM-08','KIT','KCC','ZM-08-KCC','Kitwe City Council','City Council','active'),
+('42cde67b-1412-565a-b04a-4a4eb988afef','ZM','ZM-08','LUN','LUN','ZM-08-LUN','Luanshya Municipal Council','Municipal Council','active'),
+('bba355b6-7bc4-5566-aaac-3d59a5598ff1','ZM','ZM-08','LFW','LFW','ZM-08-LFW','Lufwanyama Town Council','Town Council','active'),
+('db4a98fa-723f-5fd3-a60a-41173633f979','ZM','ZM-08','MST','MST','ZM-08-MST','Masaiti Town Council','Town Council','active'),
+('e258d4b2-ff10-5476-a1be-93e472f23e0c','ZM','ZM-08','MPG','MPG','ZM-08-MPG','Mpongwe Town Council','Town Council','active'),
+('ec24bff5-975c-5059-860a-e1219edccd0b','ZM','ZM-08','MUF','MUF','ZM-08-MUF','Mufulira Municipal Council','Municipal Council','active'),
+('d9dbd497-b72d-5e8c-a93e-9062829af3f7','ZM','ZM-08','NDL','NDL','ZM-08-NDL','Ndola City Council','City Council','active'),
+-- Lusaka Province (ZM-09) — 6 councils
+('555b0509-db30-5e7f-96d2-c39c20acd968','ZM','ZM-09','CHL','CHL','ZM-09-CHL','Chilanga Town Council','Town Council','active'),
+('08ba2c88-7dea-53ea-b738-012ec810c180','ZM','ZM-09','CHW','CHW','ZM-09-CHW','Chongwe Municipal Council','Municipal Council','active'),
+('20759bdd-b7ee-5181-90e0-a7d9578b4336','ZM','ZM-09','KAF','KAF','ZM-09-KAF','Kafue Town Council','Town Council','active'),
+('07109ef5-6d1d-518e-b795-d4c5c3364e28','ZM','ZM-09','LWG','LWG','ZM-09-LWG','Luangwa Town Council','Town Council','active'),
+('aa3487a3-db51-57a0-bb23-2e50e4bb8141','ZM','ZM-09','LSK','LCC','ZM-09-LCC','Lusaka City Council','City Council','active'),
+('5d1e2fba-4e20-5fb5-9605-a48da85aec48','ZM','ZM-09','RFN','RFN','ZM-09-RFN','Rufunsa Town Council','Town Council','active'),
+-- Muchinga Province (ZM-10) — 8 councils
+('49bcf57c-6b62-56dd-bc7c-613bfa4283c6','ZM','ZM-10','CNS','CNS','ZM-10-CNS','Chinsali Municipal Council','Municipal Council','active'),
+('36456b12-aac3-5979-859b-fba3c46126dc','ZM','ZM-10','ISK','ISK','ZM-10-ISK','Isoka Town Council','Town Council','active'),
+('117606af-25bc-5175-af97-272a1af39827','ZM','ZM-10','KCB','KCB','ZM-10-KCB','Kanchibiya Town Council','Town Council','active'),
+('ef561c9f-42eb-5f68-8b63-670a8e556200','ZM','ZM-10','LVM','LVM','ZM-10-LVM','Lavushimanda Town Council','Town Council','active'),
+('d931fa11-6ed4-5f63-9f97-89a2c3ed523d','ZM','ZM-10','MFG','MFG','ZM-10-MFG','Mafinga Town Council','Town Council','active'),
+('cb82c600-0eeb-5db0-8d5b-57cb44c5a0bd','ZM','ZM-10','MPK','MPK','ZM-10-MPK','Mpika Town Council','Town Council','active'),
+('afb9dddc-097e-56e2-9ae3-256ea6ffe6fe','ZM','ZM-10','NKD','NKD','ZM-10-NKD','Nakonde Town Council','Town Council','active'),
+('f66f622b-9116-511a-8a92-8cdbcfe3991a','ZM','ZM-10','SWA','SWA','ZM-10-SWA','Shiwang''andu Town Council','Town Council','active')
+ON CONFLICT (authority_id) DO NOTHING;
