@@ -138,6 +138,15 @@
         </dependency>
     </dependencies>
 
+    <!-- Flyway / DB connection properties (dev) -->
+    <properties>
+        <DB_URL>jdbc:postgresql://localhost:5432/localgov_erp</DB_URL>
+        <DB_USERNAME>erp_admin</DB_USERNAME>
+        <DB_PASSWORD></DB_PASSWORD>
+    </properties>
+
+
+
     <build>
         <plugins>
             <!-- Spring Boot plugin -->
@@ -148,11 +157,26 @@
                     <mainClass>com.localgov.web.LocalGovErpApplication</mainClass>
                 </configuration>
             </plugin>
-
-            <!-- Flyway plugin activation (inherits config from parent) -->
+            <!-- Flyway plugin — full configuration (was in parent pluginManagement) -->
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
+                <version>9.22.3</version>
+                <configuration>
+                    <url>${DB_URL}</url>
+                    <user>${DB_USERNAME}</user>
+                    <password>${DB_PASSWORD}</password>
+                    <locations>
+                        <location>filesystem:src/main/resources/db/migration</location>
+                    </locations>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.6.2</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
