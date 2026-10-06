@@ -104,3 +104,12 @@ app:
       retention-days: ${APP_PRIVACY_RETENTION_DAYS:365}
       notice-version: ${APP_PRIVACY_NOTICE_VERSION:2026.04}
       dpo-contact: ${APP_DPO_CONTACT:dpo@localgov.test}
+
+# PII Encryption — required for employee data protection
+# Keys must be 32-byte base64-encoded values.
+# Generate with: openssl rand -base64 32
+pii:
+  encryption:
+    key: ${PII_ENCRYPTION_KEY:}
+  hmac:
+    key: ${PII_HMAC_KEY:}
