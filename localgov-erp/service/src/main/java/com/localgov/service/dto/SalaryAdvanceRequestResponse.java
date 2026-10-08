@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public record SalaryAdvanceRequestResponse(
         Long id,
         String requestNumber,
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         String authorityRef,
         String authorityTypeAtRequest,

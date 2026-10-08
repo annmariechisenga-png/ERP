@@ -12,14 +12,14 @@ import java.util.Collection;
 import java.util.List;
 
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
-    List<LeaveRequest> findByEmployeeIdOrderByCreatedAtDesc(Long employeeId);
+    List<LeaveRequest> findByEmployeeIdOrderByCreatedAtDesc(String employeeId);
 
     List<LeaveRequest> findByStatusOrderByCreatedAtAsc(LeaveStatus status);
 
     Page<LeaveRequest> findByStatusOrderByCreatedAtAsc(LeaveStatus status, Pageable pageable);
 
     boolean existsByEmployeeIdAndLeaveTypeAndStatusInAndStartDateBetween(
-            Long employeeId,
+            String employeeId,
             LeaveType leaveType,
             Collection<LeaveStatus> statuses,
             LocalDate startDate,

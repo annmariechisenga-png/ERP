@@ -53,7 +53,7 @@ public class LeaveAccrualService {
      */
     @Transactional
     public int processMonthlyAccrual() {
-        List<Employee> activeEmployees = employeeRepository.findByActiveTrue();
+        List<Employee> activeEmployees = employeeRepository.findByIsActiveTrue();
         int updated = 0;
 
         for (Employee employee : activeEmployees) {
@@ -75,7 +75,7 @@ public class LeaveAccrualService {
      * @return true if the balance was updated
      */
     @Transactional
-    public boolean accrueForEmployee(Long employeeId) {
+    public boolean accrueForEmployee(String employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + employeeId));
         return accrueForEmployee(employee);
@@ -84,7 +84,7 @@ public class LeaveAccrualService {
     private boolean accrueForEmployee(Employee employee) {
         String division = employee.getDivision();
         if (division == null || division.isBlank() || "N/A".equalsIgnoreCase(division.trim())) {
-            log.debug("Skipping accrual for employee {} — no division assigned", employee.getId());
+            log.debug("Skipping accrual for employee {} — no division assigned", employee.getEmployeeId());
             return false;
         }
 
@@ -104,7 +104,7 @@ public class LeaveAccrualService {
         Optional<LeavePolicy> policyOpt = resolvePolicy(leaveType, division);
         if (policyOpt.isEmpty()) {
             log.debug("No {} policy for division {} — skipping employee {}",
-                    leaveType, division, employee.getId());
+                    leaveType, division, employee.getEmployeeId());
             return false;
         }
 
@@ -112,7 +112,7 @@ public class LeaveAccrualService {
         Double accrualRate = policy.getAccrualRate();
         if (accrualRate == null || accrualRate <= 0) {
             log.debug("{} policy for division {} has no accrual rate — skipping employee {}",
-                    leaveType, division, employee.getId());
+                    leaveType, division, employee.getEmployeeId());
             return false;
         }
 
@@ -137,7 +137,7 @@ public class LeaveAccrualService {
         Integer maxAccumulation = policy.getMaxAccumulation();
         if (maxAccumulation != null && newBalance > maxAccumulation) {
             log.debug("Employee {} {} balance {} would exceed max accumulation {} — capping",
-                    employee.getId(), leaveType, newBalance, maxAccumulation);
+                    employee.getEmployeeId(), leaveType, newBalance, maxAccumulation);
             newBalance = maxAccumulation;
         }
 
@@ -153,7 +153,7 @@ public class LeaveAccrualService {
 
         leaveBalanceRepository.save(balance);
         log.debug("Accrued {} days {} for employee {} (division {}): {} → {}",
-                accrualDays, leaveType, employee.getId(), division, currentBalance, newBalance);
+                accrualDays, leaveType, employee.getEmployeeId(), division, currentBalance, newBalance);
         return true;
     }
 

@@ -20,7 +20,7 @@ public class EmployeeWorkLocation {
     private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "location_id", nullable = false)
     private Long locationId;
@@ -67,11 +67,11 @@ public class EmployeeWorkLocation {
         this.id = id;
     }
 
-    public Long getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 

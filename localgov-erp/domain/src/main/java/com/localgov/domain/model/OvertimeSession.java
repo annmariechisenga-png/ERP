@@ -21,10 +21,10 @@ public class OvertimeSession {
     private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "team_id")
-    private Long teamId;
+    private String teamId;
 
     @Column(name = "session_date", nullable = false)
     private LocalDate sessionDate;
@@ -72,7 +72,7 @@ public class OvertimeSession {
     private String status;
 
     @Column(name = "supervisor_id")
-    private Long supervisorId;
+    private String supervisorId;
 
     @Column(name = "work_description")
     private String workDescription;
@@ -105,11 +105,11 @@ public class OvertimeSession {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getEmployeeId() { return employeeId; }
-    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
 
-    public Long getTeamId() { return teamId; }
-    public void setTeamId(Long teamId) { this.teamId = teamId; }
+    public String getTeamId() { return teamId; }
+    public void setTeamId(String teamId) { this.teamId = teamId; }
 
     public LocalDate getSessionDate() { return sessionDate; }
     public void setSessionDate(LocalDate sessionDate) { this.sessionDate = sessionDate; }
@@ -153,8 +153,8 @@ public class OvertimeSession {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public Long getSupervisorId() { return supervisorId; }
-    public void setSupervisorId(Long supervisorId) { this.supervisorId = supervisorId; }
+    public String getSupervisorId() { return supervisorId; }
+    public void setSupervisorId(String supervisorId) { this.supervisorId = supervisorId; }
 
     public String getWorkDescription() { return workDescription; }
     public void setWorkDescription(String workDescription) { this.workDescription = workDescription; }

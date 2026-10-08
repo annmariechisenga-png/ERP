@@ -27,7 +27,7 @@ public class CalculationAuditor {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public LeaveCalculationAuditLog log(Long employeeId, String division, LeaveCalculationResult result,
+    public LeaveCalculationAuditLog log(String employeeId, String division, LeaveCalculationResult result,
                                          int originalRequestedDays, AuditTriggerType triggerType) {
         AuthenticatedUserContext ctx = userContextResolver.resolve();
 

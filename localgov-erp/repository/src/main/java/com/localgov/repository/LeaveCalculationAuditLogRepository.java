@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LeaveCalculationAuditLogRepository extends JpaRepository<LeaveCalculationAuditLog, Long> {
-    List<LeaveCalculationAuditLog> findByEmployeeIdOrderByCreatedAtDesc(Long employeeId);
+    List<LeaveCalculationAuditLog> findByEmployeeIdOrderByCreatedAtDesc(String employeeId);
     List<LeaveCalculationAuditLog> findByLeaveRequestId(Long leaveRequestId);
 }

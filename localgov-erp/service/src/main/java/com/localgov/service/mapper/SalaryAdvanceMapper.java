@@ -18,7 +18,7 @@ public class SalaryAdvanceMapper {
         return new SalaryAdvanceRequestResponse(
                 request.getId(),
                 request.getRequestNumber(),
-                request.getEmployee().getId(),
+                request.getEmployee().getEmployeeId(),
                 request.getEmployee().getEmployeeCode(),
             request.getAuthorityRef(),
             request.getAuthorityTypeAtRequest(),
@@ -76,7 +76,7 @@ public class SalaryAdvanceMapper {
                 deduction.getId(),
                 deduction.getSalaryAdvanceRequest().getId(),
                 deduction.getSalaryAdvanceRequest().getRequestNumber(),
-                deduction.getEmployee().getId(),
+                deduction.getEmployee().getEmployeeId(),
                 deduction.getEmployee().getEmployeeCode(),
                 deduction.getInstallmentNo(),
                 deduction.getTotalInstallments(),

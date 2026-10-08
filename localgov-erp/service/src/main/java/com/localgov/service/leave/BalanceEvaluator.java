@@ -40,7 +40,7 @@ public class BalanceEvaluator {
         return !"NONE".equals(resolveBucket(type)) && !isConditionOfService(type);
     }
 
-    public Integer readBalance(Long employeeId, String bucket) {
+    public Integer readBalance(String employeeId, String bucket) {
         if ("NONE".equals(bucket)) return null;
         LeaveBalance lb = leaveBalanceRepository.findById(employeeId).orElse(null);
         if (lb == null) return "LOCAL_LEAVE".equals(bucket) ? DEFAULT_LOCAL_LEAVE_BALANCE : DEFAULT_VACATION_LEAVE_BALANCE;

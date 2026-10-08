@@ -21,7 +21,7 @@ public class CommutedOvertime {
     private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "effective_from", nullable = false)
     private LocalDate effectiveFrom;
@@ -73,8 +73,8 @@ public class CommutedOvertime {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getEmployeeId() { return employeeId; }
-    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
 
     public LocalDate getEffectiveFrom() { return effectiveFrom; }
     public void setEffectiveFrom(LocalDate effectiveFrom) { this.effectiveFrom = effectiveFrom; }

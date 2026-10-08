@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 
 public record EmploymentPlacementRequest(
-        @JsonProperty("officer_id") @NotNull @Positive Long officerId,
+        @JsonProperty("officer_id") @NotBlank String officerId,
         @JsonProperty("authority_id") @NotBlank String authorityId,
         @JsonProperty("salary_scale") @NotBlank String salaryScale,
         @JsonProperty("notch_number") @NotNull @Positive Integer notchNumber,

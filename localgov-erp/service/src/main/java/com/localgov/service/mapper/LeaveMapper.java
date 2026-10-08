@@ -20,7 +20,7 @@ public class LeaveMapper {
         ) {
         return new LeaveRequestResponse(
                 leaveRequest.getId(),
-                leaveRequest.getEmployee().getId(),
+                leaveRequest.getEmployee().getEmployeeId(),
                 leaveRequest.getEmployee().getEmployeeCode(),
                 leaveRequest.getLeaveType(),
             leaveRequest.getCompassionateRelation(),

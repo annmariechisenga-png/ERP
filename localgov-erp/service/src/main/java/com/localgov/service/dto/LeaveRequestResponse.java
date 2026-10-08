@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public record LeaveRequestResponse(
         Long id,
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         LeaveType leaveType,
         CompassionateLeaveRelation compassionateRelation,

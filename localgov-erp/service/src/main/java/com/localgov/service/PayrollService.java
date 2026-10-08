@@ -94,7 +94,7 @@ public class PayrollService {
         return payrollMapper.toResponse(savedRecord);
     }
 
-    public List<PayrollRecordResponse> getEmployeePayrollHistory(Long employeeId) {
+    public List<PayrollRecordResponse> getEmployeePayrollHistory(String employeeId) {
         employeeService.getEmployeeEntity(employeeId);
         return payrollRecordRepository.findByEmployeeIdOrderByPayPeriodDesc(employeeId)
                 .stream()

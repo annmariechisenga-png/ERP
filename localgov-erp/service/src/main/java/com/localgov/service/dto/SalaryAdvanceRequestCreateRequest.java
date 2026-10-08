@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public record SalaryAdvanceRequestCreateRequest(
-        @NotNull @Positive Long employeeId,
+        String employeeId,
         @NotBlank @Size(max = 30) String authorityRef,
         @NotNull @DecimalMin(value = "0.01") BigDecimal requestedAmount,
         @NotNull @Positive Integer requestedInstallments,

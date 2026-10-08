@@ -7,7 +7,7 @@ public record SalaryAdvancePendingDeductionItemResponse(
         Long deductionId,
         Long salaryAdvanceRequestId,
         String requestNumber,
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         Integer installmentNo,
         Integer totalInstallments,

@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 public class OvertimeTeam {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "team_code", nullable = false, unique = true, length = 30)
     private String teamCode;
@@ -25,7 +24,7 @@ public class OvertimeTeam {
     private String teamName;
 
     @Column(name = "hod_id")
-    private Long hodId;
+    private String hodId;
 
     @Column(name = "is_active", nullable = false)
     private Boolean active;
@@ -43,8 +42,8 @@ public class OvertimeTeam {
         }
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public String getTeamCode() { return teamCode; }
     public void setTeamCode(String teamCode) { this.teamCode = teamCode; }
@@ -52,8 +51,8 @@ public class OvertimeTeam {
     public String getTeamName() { return teamName; }
     public void setTeamName(String teamName) { this.teamName = teamName; }
 
-    public Long getHodId() { return hodId; }
-    public void setHodId(Long hodId) { this.hodId = hodId; }
+    public String getHodId() { return hodId; }
+    public void setHodId(String hodId) { this.hodId = hodId; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }

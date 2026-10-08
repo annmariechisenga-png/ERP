@@ -34,7 +34,7 @@ public class LeaveAccessValidator {
      * Validates that the authenticated user can view/read the target employee's leave data.
      * Permitted: self, supervisor, HOD, HR (same authority), or ADMIN.
      */
-    public void validateReadAccess(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    public void validateReadAccess(AuthenticatedUserContext caller, String targetEmployeeId) {
         if (isAdmin(caller)) return;
         if (isSelf(caller, targetEmployeeId)) return;
         if (isSupervisorOf(caller, targetEmployeeId)) return;
@@ -49,7 +49,7 @@ public class LeaveAccessValidator {
      * Permitted: supervisor, HOD, HR (same authority), or ADMIN.
      * NOT permitted: self-approval.
      */
-    public void validateApprovalAccess(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    public void validateApprovalAccess(AuthenticatedUserContext caller, String targetEmployeeId) {
         if (isSelf(caller, targetEmployeeId)) {
             throw new AccessDeniedException("Employees cannot approve their own leave requests.");
         }
@@ -65,7 +65,7 @@ public class LeaveAccessValidator {
      * Validates that the authenticated user can submit leave on behalf of the target employee.
      * Permitted: self, HR (same authority), or ADMIN.
      */
-    public void validateSubmissionAccess(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    public void validateSubmissionAccess(AuthenticatedUserContext caller, String targetEmployeeId) {
         if (isAdmin(caller)) return;
         if (isSelf(caller, targetEmployeeId)) return;
         if (isHrSameAuthority(caller, targetEmployeeId)) return;
@@ -73,7 +73,7 @@ public class LeaveAccessValidator {
         throw new AccessDeniedException("You are not authorised to submit leave for this employee.");
     }
 
-    private boolean isSelf(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    private boolean isSelf(AuthenticatedUserContext caller, String targetEmployeeId) {
         return caller.employeeId() != null && caller.employeeId().equals(targetEmployeeId);
     }
 
@@ -81,21 +81,21 @@ public class LeaveAccessValidator {
         return caller.role() != null && caller.role().contains("ADMIN");
     }
 
-    private boolean isSupervisorOf(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    private boolean isSupervisorOf(AuthenticatedUserContext caller, String targetEmployeeId) {
         return employeeRepository.findById(targetEmployeeId)
                 .map(Employee::getSupervisorId)
                 .map(supervisorId -> supervisorId.equals(caller.employeeId()))
                 .orElse(false);
     }
 
-    private boolean isHodOf(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    private boolean isHodOf(AuthenticatedUserContext caller, String targetEmployeeId) {
         return employeeRepository.findById(targetEmployeeId)
                 .map(Employee::getHodId)
                 .map(hodId -> hodId.equals(caller.employeeId()))
                 .orElse(false);
     }
 
-    private boolean isHrSameAuthority(AuthenticatedUserContext caller, Long targetEmployeeId) {
+    private boolean isHrSameAuthority(AuthenticatedUserContext caller, String targetEmployeeId) {
         if (caller.role() == null || !caller.role().contains("HR")) {
             return false;
         }

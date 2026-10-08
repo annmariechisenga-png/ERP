@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record LeaveRequestCreateRequest(
-        @NotNull @Positive Long employeeId,
+        String employeeId,
         @NotNull LeaveType leaveType,
         CompassionateLeaveRelation compassionateRelation,
         @NotNull @FutureOrPresent LocalDate startDate,

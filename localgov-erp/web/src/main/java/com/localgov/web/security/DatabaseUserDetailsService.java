@@ -42,7 +42,7 @@ public class DatabaseUserDetailsService implements UserDetailsService {
                 })
                 .or(() -> {
                     // Try to find by employee code (e.g. ZM09-CHL-2024-000001)
-                    return employeeRepository.findByEmployeeCode(username)
+                    return employeeRepository.findByEmployeeId(username)
                             .flatMap(emp -> userAccountRepository.findByEmployeeId(emp.getId())
                                     .filter(item -> Boolean.TRUE.equals(item.getActive())));
                 })

@@ -57,12 +57,12 @@ public class AuthenticatedUserContextResolver {
         UserAccount account = userAccountRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new IllegalStateException("No user account found for: " + username));
 
-        Long employeeId = null;
+        String employeeId = null;
         String division = null;
         if (account.getEmployeeId() != null) {
             Employee employee = employeeRepository.findById(account.getEmployeeId()).orElse(null);
             if (employee != null) {
-                employeeId = employee.getId();
+                employeeId = employee.getEmployeeId();
                 division = employee.getDivision();
             }
         }

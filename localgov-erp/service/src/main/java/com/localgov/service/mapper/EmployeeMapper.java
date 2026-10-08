@@ -10,40 +10,54 @@ import java.util.Locale;
 @Component
 public class EmployeeMapper {
 
+    /**
+     * Applies an upsert request to an Employee entity.
+     * Field names align with the employees table schema.
+     */
     public void applyUpsertRequest(Employee employee, EmployeeUpsertRequest request) {
-        employee.setEmployeeCode(request.employeeCode());
+        if (request.employeeId() != null) {
+            employee.setEmployeeId(request.employeeId());
+        }
         employee.setFirstName(request.firstName());
+        employee.setMiddleName(request.middleName());
         employee.setLastName(request.lastName());
         employee.setEmail(request.email());
         employee.setDepartment(request.department());
-        employee.setPositionTitle(request.positionTitle());
-        employee.setBaseSalary(request.baseSalary());
-        employee.setHireDate(request.hireDate());
-        employee.setGender(normalizeGender(request.gender()));
-        employee.setDivision(request.division());
-        employee.setRole(request.role());
+        employee.setPosition(request.position());
+        employee.setDateOfFirstAppointment(request.dateOfFirstAppointment());
+        employee.setSex(normalizeSex(request.sex()));
+        employee.setSalaryScale(request.salaryScale());
+        employee.setAuthorityCode(request.authorityCode());
     }
 
-    private String normalizeGender(String value) {
+    /**
+     * Normalizes the sex field to lowercase, defaulting to "other".
+     */
+    private String normalizeSex(String value) {
         if (value == null || value.isBlank()) {
             return "other";
         }
         return value.trim().toLowerCase(Locale.ROOT);
     }
 
+    /**
+     * Maps an Employee entity to a response DTO.
+     * Division is computed on read via Employee.getDivision().
+     */
     public EmployeeResponse toResponse(Employee employee) {
         return new EmployeeResponse(
-                employee.getId(),
-                employee.getEmployeeCode(),
+                employee.getEmployeeId(),
                 employee.getFirstName(),
+                employee.getMiddleName(),
                 employee.getLastName(),
                 employee.getEmail(),
                 employee.getDepartment(),
-                employee.getPositionTitle(),
-                employee.getBaseSalary(),
-                employee.getHireDate(),
-                employee.getRole(),
-                employee.getGender(),
+                employee.getPosition(),
+                employee.getDateOfFirstAppointment(),
+                employee.getSex(),
+                employee.getSalaryScale(),
+                employee.getAuthorityCode(),
+                employee.getDivision(),
                 employee.getCreatedAt()
         );
     }

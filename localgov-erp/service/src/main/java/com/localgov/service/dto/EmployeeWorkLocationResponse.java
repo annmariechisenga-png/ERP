@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public record EmployeeWorkLocationResponse(
         Long id,
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         String employeeName,
         Long locationId,

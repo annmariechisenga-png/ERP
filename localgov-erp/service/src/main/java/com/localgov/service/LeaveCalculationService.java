@@ -99,7 +99,7 @@ public class LeaveCalculationService {
 
         String bucket = balanceEvaluator.resolveBucket(request.leaveType());
         boolean deducts = balanceEvaluator.deductsFromBalance(request.leaveType());
-        Integer currentBalance = balanceEvaluator.readBalance(employee.getId(), bucket);
+        Integer currentBalance = balanceEvaluator.readBalance(employee.getEmployeeId(), bucket);
         Integer remaining = deducts && currentBalance != null ? currentBalance - schedule.chargeableDays() : null;
 
         LimitResult limits = limitEnforcer.enforce(policy, schedule.chargeableDays(), currentBalance);
@@ -136,7 +136,7 @@ public class LeaveCalculationService {
      * Must only be called after a real {@link com.localgov.domain.model.LeaveRequest} has been persisted.
      */
     @Transactional
-    public void logSubmissionAuditAndAllowance(Long employeeId, Long leaveRequestId, LeaveCalculationResult result) {
+    public void logSubmissionAuditAndAllowance(String employeeId, Long leaveRequestId, LeaveCalculationResult result) {
         var auditEntry = calculationAuditor.log(employeeId, resolveEmployeeDivision(employeeId), result,
                 result.chargeableDays(), AuditTriggerType.SUBMISSION);
         calculationAuditor.attachLeaveRequestId(auditEntry.getId(), leaveRequestId);
@@ -168,7 +168,7 @@ public class LeaveCalculationService {
         return countWorkingDays(startDate, endDate, division);
     }
 
-    private String resolveEmployeeDivision(Long employeeId) {
+    private String resolveEmployeeDivision(String employeeId) {
         Employee employee = employeeService.getEmployeeEntity(employeeId);
         return employee != null ? employee.getDivision() : null;
     }
@@ -191,7 +191,7 @@ public class LeaveCalculationService {
 
         boolean paidWithinWindow = vacationLeaveAllowanceRepository
                 .findFirstByEmployeeIdAndStatusAndCreatedAtAfterOrderByCreatedAtDesc(
-                        employee.getId(), AllowanceStatus.PAID, cutoff)
+                        employee.getEmployeeId(), AllowanceStatus.PAID, cutoff)
                 .isPresent();
 
         if (paidWithinWindow) {
@@ -201,7 +201,7 @@ public class LeaveCalculationService {
         return new AllowanceEligibility(true, "ELIGIBLE");
     }
 
-    private void recordVacationLeaveAllowance(Long employeeId, Long leaveRequestId, LeaveCalculationResult result) {
+    private void recordVacationLeaveAllowance(String employeeId, Long leaveRequestId, LeaveCalculationResult result) {
         AuthenticatedUserContext ctx = userContextResolver.resolve();
 
         VacationLeaveAllowance allowance = new VacationLeaveAllowance();

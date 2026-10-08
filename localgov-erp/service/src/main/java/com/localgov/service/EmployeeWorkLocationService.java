@@ -40,7 +40,7 @@ public class EmployeeWorkLocationService {
         this.workLocationRepository = workLocationRepository;
     }
 
-    public List<EmployeeWorkLocationResponse> getAssignments(Long employeeId, Long locationId, boolean activeOnly, String authorityCode) {
+    public List<EmployeeWorkLocationResponse> getAssignments(String employeeId, Long locationId, boolean activeOnly, String authorityCode) {
         List<EmployeeWorkLocation> rows;
         String normalizedAuthority = normalizeAuthorityCode(authorityCode);
         boolean hasAuthorityFilter = normalizedAuthority != null && !"ALL".equalsIgnoreCase(normalizedAuthority);
@@ -61,7 +61,7 @@ public class EmployeeWorkLocationService {
         } else {
             rows = assignmentRepository.findAll().stream()
                     .sorted((a, b) -> {
-                        int employeeCompare = Long.compare(a.getEmployeeId(), b.getEmployeeId());
+                        int employeeCompare = a.getEmployeeId().compareTo(b.getEmployeeId());
                         if (employeeCompare != 0) {
                             return employeeCompare;
                         }
@@ -145,7 +145,8 @@ public class EmployeeWorkLocationService {
             throw new BusinessValidationException("Assignment authority code must match the selected work location authority code");
         }
 
-        if (request.createdBy() != null && !employeeRepository.existsById(request.createdBy())) {
+        if (request.createdBy() != null
+                && !employeeRepository.existsById(String.valueOf(request.createdBy()))) {
             throw new BusinessValidationException("createdBy employee not found: " + request.createdBy());
         }
 

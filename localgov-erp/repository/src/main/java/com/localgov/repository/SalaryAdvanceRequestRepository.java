@@ -11,9 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface SalaryAdvanceRequestRepository extends JpaRepository<SalaryAdvanceRequest, Long> {
-    List<SalaryAdvanceRequest> findByEmployeeIdOrderByCreatedAtDesc(Long employeeId);
+    List<SalaryAdvanceRequest> findByEmployeeIdOrderByCreatedAtDesc(String employeeId);
 
-    Page<SalaryAdvanceRequest> findByEmployeeId(Long employeeId, Pageable pageable);
+    Page<SalaryAdvanceRequest> findByEmployeeId(String employeeId, Pageable pageable);
 
         @Query("""
             SELECT r FROM SalaryAdvanceRequest r
@@ -24,5 +24,5 @@ public interface SalaryAdvanceRequestRepository extends JpaRepository<SalaryAdva
             @Param("status") SalaryAdvanceRequestStatus status,
             Pageable pageable);
 
-    boolean existsByEmployeeIdAndStatusIn(Long employeeId, List<SalaryAdvanceRequestStatus> statuses);
+    boolean existsByEmployeeIdAndStatusIn(String employeeId, List<SalaryAdvanceRequestStatus> statuses);
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface EmployeeLeaveMasterRepository extends JpaRepository<EmployeeLeaveMaster, Long> {
 
     // Find by employee ID
-    Optional<EmployeeLeaveMaster> findByEmployeeId(Long employeeId);
+    Optional<EmployeeLeaveMaster> findByEmployeeId(String employeeId);
 
     // Find all active records
     List<EmployeeLeaveMaster> findByIsActiveTrue();
@@ -21,7 +21,7 @@ public interface EmployeeLeaveMasterRepository extends JpaRepository<EmployeeLea
     @Query(value = "SELECT employee_id, opening_balance, total_taken_thirty_year, is_active " +
                    "FROM employee_leave_master WHERE employee_id = :empId", 
            nativeQuery = true)
-    Optional<EmployeeLeaveMaster> getLeaveMasterByEmployeeId(@Param("empId") Long employeeId);
+    Optional<EmployeeLeaveMaster> getLeaveMasterByEmployeeId(@Param("empId") String employeeId);
 
     // Get all active employees with their leave data
     @Query(value = "SELECT employee_id, opening_balance, total_taken_thirty_year, is_active " +

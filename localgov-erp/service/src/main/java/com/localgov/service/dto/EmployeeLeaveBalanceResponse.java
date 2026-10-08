@@ -1,7 +1,7 @@
 package com.localgov.service.dto;
 
 public record EmployeeLeaveBalanceResponse(
-        Long employeeId,
+        String employeeId,
         Integer localLeaveBalance,
         Integer vacationLeaveBalance
 ) {

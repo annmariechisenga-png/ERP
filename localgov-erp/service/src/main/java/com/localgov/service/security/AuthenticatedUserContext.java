@@ -7,7 +7,7 @@ package com.localgov.service.security;
  */
 public record AuthenticatedUserContext(
         String username,
-        Long employeeId,
+        String employeeId,
         String authorityCode,
         String authorityType,
         String role,

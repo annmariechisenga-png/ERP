@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SalaryAdvanceDeductionRepository extends JpaRepository<SalaryAdvanceDeduction, Long> {
-    boolean existsByEmployee_IdAndStatus(Long employeeId, SalaryAdvanceDeductionStatus status);
+    boolean existsByEmployee_IdAndStatus(String employeeId, SalaryAdvanceDeductionStatus status);
 
     List<SalaryAdvanceDeduction> findByEmployee_IdAndStatusAndScheduledPayPeriodLessThanEqualOrderByScheduledPayPeriodAsc(
-            Long employeeId,
+            String employeeId,
             SalaryAdvanceDeductionStatus status,
             LocalDate scheduledPayPeriod
     );
@@ -24,12 +24,12 @@ public interface SalaryAdvanceDeductionRepository extends JpaRepository<SalaryAd
             List<SalaryAdvanceDeduction> findByStatusAndScheduledPayPeriodLessThanEqualAndEmployee_Id(
                 SalaryAdvanceDeductionStatus status,
                 LocalDate scheduledPayPeriod,
-                Long employeeId
+                String employeeId
             );
 
                 List<SalaryAdvanceDeduction> findByScheduledPayPeriodLessThanEqualAndEmployee_Id(
                     LocalDate scheduledPayPeriod,
-                    Long employeeId
+                    String employeeId
                 );
 
                 List<SalaryAdvanceDeduction> findByScheduledPayPeriodLessThanEqual(LocalDate scheduledPayPeriod);

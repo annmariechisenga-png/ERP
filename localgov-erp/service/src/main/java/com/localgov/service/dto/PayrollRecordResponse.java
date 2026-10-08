@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record PayrollRecordResponse(
         Long id,
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         LocalDate payPeriod,
         BigDecimal baseSalary,

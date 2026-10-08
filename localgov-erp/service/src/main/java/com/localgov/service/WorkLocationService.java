@@ -140,13 +140,13 @@ public class WorkLocationService {
         Page<WorkLocationAudit> rows = workLocationAuditRepository
                 .findHistoryByLocationIdWithFilters(locationId, normalizedAction, fromAt, toAt, pageable);
 
-        Map<Long, Employee> employees = employeeRepository.findAllById(
+        Map<String, Employee> employees = employeeRepository.findAllById(
                         rows.getContent().stream().map(WorkLocationAudit::getPerformedBy).distinct().toList())
                 .stream()
                 .collect(Collectors.toMap(Employee::getId, Function.identity()));
 
         return rows.map(row -> {
-            Employee actor = employees.get(row.getPerformedBy());
+            Employee actor = employees.get(String.valueOf(row.getPerformedBy()));
             String actorName = null;
             if (actor != null) {
                 actorName = (actor.getFirstName() + " " + actor.getLastName()).trim();
@@ -197,7 +197,7 @@ public class WorkLocationService {
         Page<WorkLocationAudit> rows = workLocationAuditRepository
                 .findHistoryByLocationIdWithFilters(locationId, normalizedAction, fromAt, toAt, all);
 
-        Map<Long, Employee> employees = employeeRepository.findAllById(
+        Map<String, Employee> employees = employeeRepository.findAllById(
                         rows.getContent().stream().map(WorkLocationAudit::getPerformedBy).distinct().toList())
                 .stream()
                 .collect(Collectors.toMap(Employee::getId, Function.identity()));
@@ -209,7 +209,7 @@ public class WorkLocationService {
                 java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 
         for (WorkLocationAudit row : rows.getContent()) {
-            Employee actor = employees.get(row.getPerformedBy());
+            Employee actor = employees.get(String.valueOf(row.getPerformedBy()));
             String userCode = actor == null ? "" : nullSafe(actor.getEmployeeCode());
             String userName = actor == null ? "" : (actor.getFirstName() + " " + actor.getLastName()).trim();
             csv.append(csvEscape(row.getPerformedAt() == null ? "" : row.getPerformedAt().format(fmt))).append(',');
@@ -396,7 +396,7 @@ public class WorkLocationService {
         if (performedBy == null) {
             throw new BusinessValidationException("performedBy is required for work location audit");
         }
-        if (!employeeRepository.existsById(performedBy)) {
+        if (!employeeRepository.existsById(String.valueOf(performedBy))) {
             throw new BusinessValidationException("performedBy employee not found: " + performedBy);
         }
         return performedBy;

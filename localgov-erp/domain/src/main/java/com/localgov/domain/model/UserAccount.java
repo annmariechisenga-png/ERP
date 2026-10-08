@@ -25,8 +25,8 @@ public class UserAccount {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
-    @Column(name = "employee_id", nullable = false, unique = true)
-    private Long employeeId;
+    @Column(name = "employee_id", nullable = false, unique = true, length = 50)
+    private String employeeId;
 
     @Column(name = "roles_csv", nullable = false, length = 200)
     private String rolesCsv;
@@ -122,11 +122,11 @@ public class UserAccount {
         this.passwordHash = passwordHash;
     }
 
-    public Long getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 

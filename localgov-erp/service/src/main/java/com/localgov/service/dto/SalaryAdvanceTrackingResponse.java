@@ -10,7 +10,7 @@ import java.util.List;
 public record SalaryAdvanceTrackingResponse(
         Long requestId,
         String requestNumber,
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         SalaryAdvanceRequestStatus status,
         SalaryAdvanceEligibilityStatus eligibilityStatus,

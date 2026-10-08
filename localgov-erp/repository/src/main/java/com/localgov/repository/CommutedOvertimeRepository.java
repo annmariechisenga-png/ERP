@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CommutedOvertimeRepository extends JpaRepository<CommutedOvertime, Long> {
 
-    List<CommutedOvertime> findByEmployeeIdOrderByEffectiveFromDesc(Long employeeId);
+    List<CommutedOvertime> findByEmployeeIdOrderByEffectiveFromDesc(String employeeId);
 
     /**
      * Returns any active commuted overtime record that covers the given date.
@@ -25,6 +25,6 @@ public interface CommutedOvertimeRepository extends JpaRepository<CommutedOverti
               AND (c.effectiveTo IS NULL OR c.effectiveTo >= :onDate)
             """)
     List<CommutedOvertime> findActiveOnDate(
-            @Param("employeeId") Long employeeId,
+            @Param("employeeId") String employeeId,
             @Param("onDate") LocalDate onDate);
 }

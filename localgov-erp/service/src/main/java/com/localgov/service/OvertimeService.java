@@ -104,7 +104,7 @@ public class OvertimeService {
      *         created session (if any)
      */
     @Transactional
-    public OvertimeTriggerResult checkOvertimeTrigger(Long employeeId, LocalDateTime clockOutTime) {
+    public OvertimeTriggerResult checkOvertimeTrigger(String employeeId, LocalDateTime clockOutTime) {
         if (employeeId == null || clockOutTime == null) {
             throw new BusinessValidationException("employeeId and clockOutTime are required");
         }
@@ -217,7 +217,7 @@ public class OvertimeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Active team not found by code: " + request.teamCode()));
 
         List<Employee> teamMembers = employeeRepository
-                .findByTeamIdAndDivisionIgnoreCaseAndActiveTrue(team.getId(), "IV");
+                .findBySupervisorIdAndIsActiveTrue(team.getHodId());
 
         if (teamMembers.isEmpty()) {
             return new TeamOvertimeSmsResponse(
@@ -233,7 +233,7 @@ public class OvertimeService {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDate sessionDate = now.toLocalDate();
-        List<Long> sessionIds = new ArrayList<>();
+        List<String> sessionIds = new ArrayList<>();
 
         for (Employee member : teamMembers) {
             BigDecimal hourlyRate = resolveHourlyRate(member);
@@ -243,7 +243,7 @@ public class OvertimeService {
                     .setScale(2, RoundingMode.HALF_UP);
 
             OvertimeSession session = new OvertimeSession();
-            session.setEmployeeId(member.getId());
+            session.setEmployeeId(member.getEmployeeId());
             session.setTeamId(team.getId());
             session.setSessionDate(sessionDate);
             session.setOvertimeStart(now);
@@ -253,13 +253,13 @@ public class OvertimeService {
             session.setRateMultiplier(MULTIPLIER_STANDARD);
             session.setHourlyRate(hourlyRate);
             session.setAmountDue(amountDue);
-            session.setSupervisorId(supervisor.getId());
+            session.setSupervisorId(supervisor.getEmployeeId());
             session.setWorkDescription(request.reason());
             session.setSource("sms");
             session.setStatus("pending_hod");
 
             OvertimeSession saved = overtimeSessionRepository.save(session);
-            sessionIds.add(saved.getId());
+            sessionIds.add(String.valueOf(saved.getId()));
         }
 
         String msg = "Overtime recorded for " + teamMembers.size() + " workers";
@@ -277,7 +277,7 @@ public class OvertimeService {
     // ── Supervisor approval / rejection ──────────────────────────────────────
 
     @Transactional
-    public OvertimeSessionResponse approveOvertimeSession(Long sessionId, Long supervisorId) {
+    public OvertimeSessionResponse approveOvertimeSession(Long sessionId, String supervisorId) {
         OvertimeSession session = requireSession(sessionId);
         if (!"pending_supervisor".equals(session.getStatus())) {
             throw new BusinessValidationException("Session is not in pending_supervisor status");
@@ -291,7 +291,7 @@ public class OvertimeService {
     }
 
     @Transactional
-    public OvertimeSessionResponse rejectOvertimeSession(Long sessionId, Long supervisorId, String reason) {
+    public OvertimeSessionResponse rejectOvertimeSession(Long sessionId, String supervisorId, String reason) {
         OvertimeSession session = requireSession(sessionId);
         if (!"pending_supervisor".equals(session.getStatus())) {
             throw new BusinessValidationException("Session is not in pending_supervisor status");
@@ -306,14 +306,14 @@ public class OvertimeService {
 
     // ── Queries ───────────────────────────────────────────────────────────────
 
-    public Page<OvertimeSessionResponse> getSessionsForEmployee(Long employeeId, int page, int size) {
+    public Page<OvertimeSessionResponse> getSessionsForEmployee(String employeeId, int page, int size) {
         int safeSize = size <= 0 ? 20 : Math.min(size, 100);
         return overtimeSessionRepository
                 .findByEmployeeIdOrderBySessionDateDesc(employeeId, PageRequest.of(Math.max(page, 0), safeSize))
                 .map(this::toResponse);
     }
 
-    public Page<OvertimeSessionResponse> getPendingForSupervisor(Long supervisorId, String status, int page, int size) {
+    public Page<OvertimeSessionResponse> getPendingForSupervisor(String supervisorId, String status, int page, int size) {
         int safeSize = size <= 0 ? 20 : Math.min(size, 100);
         String normalizedStatus = (status == null || status.isBlank()) ? null : status.trim().toLowerCase();
         return overtimeSessionRepository
@@ -355,19 +355,19 @@ public class OvertimeService {
             return List.of();
         }
 
-        Map<Long, Employee> employeesById = employeeRepository.findAllById(
+        Map<String, Employee> employeesById = employeeRepository.findAllById(
                         sessions.stream().map(OvertimeSession::getEmployeeId).distinct().toList())
                 .stream()
                 .collect(java.util.stream.Collectors.toMap(Employee::getId, e -> e));
 
-        Map<Long, List<OvertimeSession>> grouped = new LinkedHashMap<>();
+        Map<String, List<OvertimeSession>> grouped = new LinkedHashMap<>();
         for (OvertimeSession s : sessions) {
             grouped.computeIfAbsent(s.getEmployeeId(), ignored -> new ArrayList<>()).add(s);
         }
 
         List<OvertimePayrollExportRow> rows = new ArrayList<>();
-        for (Map.Entry<Long, List<OvertimeSession>> entry : grouped.entrySet()) {
-            Long employeeId = entry.getKey();
+        for (Map.Entry<String, List<OvertimeSession>> entry : grouped.entrySet()) {
+            String employeeId = entry.getKey();
             List<OvertimeSession> employeeSessions = entry.getValue().stream()
                     .sorted(Comparator.comparing(OvertimeSession::getSessionDate))
                     .toList();
@@ -619,12 +619,12 @@ public class OvertimeService {
             return new NotificationSummary(0, 0);
         }
 
-        Map<Long, Employee> employeesById = employeeRepository.findAllById(
+        Map<String, Employee> employeesById = employeeRepository.findAllById(
                         sessions.stream().map(OvertimeSession::getEmployeeId).distinct().toList())
                 .stream()
                 .collect(java.util.stream.Collectors.toMap(Employee::getId, e -> e));
 
-        Map<Long, List<OvertimeSession>> byEmployee = new LinkedHashMap<>();
+        Map<String, List<OvertimeSession>> byEmployee = new LinkedHashMap<>();
         for (OvertimeSession session : sessions) {
             byEmployee.computeIfAbsent(session.getEmployeeId(), ignored -> new ArrayList<>()).add(session);
         }
@@ -633,7 +633,7 @@ public class OvertimeService {
         int skipped = 0;
         String payrollMonth = payrollDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
 
-        for (Map.Entry<Long, List<OvertimeSession>> entry : byEmployee.entrySet()) {
+        for (Map.Entry<String, List<OvertimeSession>> entry : byEmployee.entrySet()) {
             Employee employee = employeesById.get(entry.getKey());
             if (employee == null || employee.getPhone() == null || employee.getPhone().isBlank()) {
                 skipped++;

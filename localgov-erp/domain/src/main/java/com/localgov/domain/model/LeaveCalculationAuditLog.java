@@ -23,7 +23,7 @@ public class LeaveCalculationAuditLog {
     private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "leave_request_id")
     private Long leaveRequestId;
@@ -100,7 +100,7 @@ public class LeaveCalculationAuditLog {
     }
 
     public Long getId() { return id; }
-    public Long getEmployeeId() { return employeeId; }
+    public String getEmployeeId() { return employeeId; }
     public Long getLeaveRequestId() { return leaveRequestId; }
     public String getLeaveType() { return leaveType; }
     public String getDivision() { return division; }
@@ -124,7 +124,7 @@ public class LeaveCalculationAuditLog {
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
-        private Long employeeId;
+        private String employeeId;
         private Long leaveRequestId;
         private String leaveType;
         private String division;
@@ -142,7 +142,7 @@ public class LeaveCalculationAuditLog {
         private String authorityType;
         private String role;
 
-        public Builder employeeId(Long v) { this.employeeId = v; return this; }
+        public Builder employeeId(String v) { this.employeeId = v; return this; }
         public Builder leaveRequestId(Long v) { this.leaveRequestId = v; return this; }
         public Builder leaveType(String v) { this.leaveType = v; return this; }
         public Builder division(String v) { this.division = v; return this; }

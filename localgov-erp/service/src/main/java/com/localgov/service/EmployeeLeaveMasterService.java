@@ -18,7 +18,7 @@ public class EmployeeLeaveMasterService {
     }
     
     // Get by specific employee
-    public EmployeeLeaveMaster getByEmployeeId(Long employeeId) {
+    public EmployeeLeaveMaster getByEmployeeId(String employeeId) {
         return leaveMasterRepository.findByEmployeeId(employeeId)
             .orElseThrow(() -> new RuntimeException("Employee not found"));
     }

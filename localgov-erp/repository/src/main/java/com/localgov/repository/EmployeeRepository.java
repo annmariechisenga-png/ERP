@@ -3,22 +3,32 @@ package com.localgov.repository;
 import com.localgov.domain.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Optional<Employee> findByEmployeeCode(String employeeCode);
+/**
+ * Repository for Employee (mapped to {@code employees} table).
+ *
+ * <p>The primary key is the council-scoped text {@code employee_id}.
+ * All finder methods use the new field names from the V115 schema.
+ */
+public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
-    Optional<Employee> findByEmployeeCodeIgnoreCase(String employeeCode);
+    Optional<Employee> findByEmployeeId(String employeeId);
+
+    Optional<Employee> findByEmployeeIdIgnoreCase(String employeeId);
 
     Optional<Employee> findByEmailIgnoreCase(String email);
 
-    boolean existsByEmployeeCode(String employeeCode);
+    boolean existsByEmployeeId(String employeeId);
 
     boolean existsByEmail(String email);
 
-    boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+    boolean existsByEmailIgnoreCaseAndEmployeeIdNot(String email, String employeeId);
 
-    java.util.List<Employee> findByTeamIdAndDivisionIgnoreCaseAndActiveTrue(Long teamId, String division);
+    List<Employee> findByIsActiveTrue();
 
-    java.util.List<Employee> findByActiveTrue();
+    List<Employee> findByAuthorityCodeAndIsActiveTrue(String authorityCode);
+
+    List<Employee> findBySupervisorIdAndIsActiveTrue(String supervisorId);
 }

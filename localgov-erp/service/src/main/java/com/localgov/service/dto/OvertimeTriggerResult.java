@@ -6,7 +6,7 @@ package com.localgov.service.dto;
  * When false, {@code skipReason} explains why no session was created.
  */
 public record OvertimeTriggerResult(
-        Long employeeId,
+        String employeeId,
         boolean sessionCreated,
         String skipReason,
         OvertimeSessionResponse session
@@ -15,7 +15,7 @@ public record OvertimeTriggerResult(
         return new OvertimeTriggerResult(session.employeeId(), true, null, session);
     }
 
-    public static OvertimeTriggerResult skipped(Long employeeId, String reason) {
+    public static OvertimeTriggerResult skipped(String employeeId, String reason) {
         return new OvertimeTriggerResult(employeeId, false, reason, null);
     }
 }

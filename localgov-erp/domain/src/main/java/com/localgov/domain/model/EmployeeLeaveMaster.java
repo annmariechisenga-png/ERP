@@ -9,7 +9,7 @@ public class EmployeeLeaveMaster {
 
     @Id
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "opening_balance", precision = 10, scale = 2)
     private BigDecimal openingBalance;
@@ -25,7 +25,7 @@ public class EmployeeLeaveMaster {
     }
 
     // Parameterized constructor
-    public EmployeeLeaveMaster(Long employeeId, BigDecimal openingBalance, 
+    public EmployeeLeaveMaster(String employeeId, BigDecimal openingBalance, 
                                BigDecimal totalTakenThirtyYear, Boolean isActive) {
         this.employeeId = employeeId;
         this.openingBalance = openingBalance;
@@ -34,11 +34,11 @@ public class EmployeeLeaveMaster {
     }
 
     // Getters and Setters
-    public Long getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 

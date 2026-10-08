@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record PayrollCalculationRequest(
-        @NotNull @Positive Long employeeId,
+        String employeeId,
         @NotNull LocalDate payPeriod,
         @NotNull @DecimalMin(value = "0.0") BigDecimal overtimeHours,
         @NotNull @DecimalMin(value = "0.0") BigDecimal overtimeRate,

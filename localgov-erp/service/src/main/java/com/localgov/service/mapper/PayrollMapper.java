@@ -10,7 +10,7 @@ public class PayrollMapper {
     public PayrollRecordResponse toResponse(PayrollRecord record) {
         return new PayrollRecordResponse(
                 record.getId(),
-                record.getEmployee().getId(),
+                record.getEmployee().getEmployeeId(),
                 record.getEmployee().getEmployeeCode(),
                 record.getPayPeriod(),
                 record.getBaseSalary(),

@@ -126,7 +126,7 @@ public class LeaveService {
 
         if (request.leaveType() == LeaveType.FAMILY_CARE) {
             int annualLimit = policy.getAnnualLimit() != null ? policy.getAnnualLimit() : 3;
-            int usedThisYear = leaveRequestRepository.findByEmployeeIdOrderByCreatedAtDesc(employee.getId()).stream()
+            int usedThisYear = leaveRequestRepository.findByEmployeeIdOrderByCreatedAtDesc(employee.getEmployeeId()).stream()
                     .filter(r -> r.getLeaveType() == LeaveType.FAMILY_CARE)
                     .filter(r -> r.getStartDate() != null && r.getStartDate().getYear() == LocalDate.now().getYear())
                     .filter(r -> r.getStatus() != LeaveStatus.CANCELLED)
@@ -140,7 +140,7 @@ public class LeaveService {
         }
 
         LeaveBalanceMutation balanceMutation = applyBalance(
-                employee.getId(), request.leaveType(),
+                employee.getEmployeeId(), request.leaveType(),
                 new LeaveComputation(calc.startDate(), calc.leaveEndDate(), calc.chargeableDays()));
 
         LeaveRequest lr = new LeaveRequest();
@@ -163,7 +163,7 @@ public class LeaveService {
         LeaveRequest saved = leaveRequestRepository.save(lr);
 
         leaveCalculationService.logSubmissionAuditAndAllowance(
-                employee.getId(), saved.getId(), calc);
+                employee.getEmployeeId(), saved.getId(), calc);
 
         return leaveMapper.toResponse(
                 saved,
@@ -181,7 +181,7 @@ public class LeaveService {
         }
 
         AuthenticatedUserContext caller = userContextResolver.resolve();
-        leaveAccessValidator.validateApprovalAccess(caller, lr.getEmployee().getId());
+        leaveAccessValidator.validateApprovalAccess(caller, lr.getEmployee().getEmployeeId());
 
         lr.setStatus(Boolean.TRUE.equals(req.approved()) ? LeaveStatus.APPROVED : LeaveStatus.REJECTED);
         lr.setApprovedBy(caller.username());
@@ -213,13 +213,13 @@ public class LeaveService {
                 .map(leaveMapper::toResponse);
     }
 
-    public List<LeaveRequestResponse> getEmployeeLeaveRequests(Long employeeId) {
+    public List<LeaveRequestResponse> getEmployeeLeaveRequests(String employeeId) {
         employeeService.getEmployeeEntity(employeeId);
         return leaveRequestRepository.findByEmployeeIdOrderByCreatedAtDesc(employeeId)
                 .stream().map(leaveMapper::toResponse).toList();
     }
 
-    public EmployeeLeaveBalanceResponse getEmployeeLeaveBalance(Long employeeId) {
+    public EmployeeLeaveBalanceResponse getEmployeeLeaveBalance(String employeeId) {
         employeeService.getEmployeeEntity(employeeId);
         LeaveBalance lb = leaveBalanceRepository.findById(employeeId).orElse(null);
         return new EmployeeLeaveBalanceResponse(
@@ -232,7 +232,7 @@ public class LeaveService {
     // Balance management
     // ══════════════════════════════════════════════════════════════════════
 
-    private LeaveBalanceMutation applyBalance(Long employeeId, LeaveType leaveType,
+    private LeaveBalanceMutation applyBalance(String employeeId, LeaveType leaveType,
                                                LeaveComputation comp) {
         if (CONDITION_OF_SERVICE_TYPES.contains(leaveType)) {
             return new LeaveBalanceMutation(0, false, "CONDITION_OF_SERVICE", null);
@@ -267,7 +267,7 @@ public class LeaveService {
         return "NONE";
     }
 
-    private LeaveBalance initBalance(Long employeeId) {
+    private LeaveBalance initBalance(String employeeId) {
         LeaveBalance lb = new LeaveBalance();
         lb.setEmployeeId(employeeId);
         lb.setLocalLeaveBalance(DEFAULT_LOCAL_LEAVE_BALANCE);

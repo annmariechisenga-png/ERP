@@ -96,7 +96,7 @@ public class SalaryAdvanceService {
         Employee employee = employeeService.getEmployeeEntity(request.employeeId());
 
         boolean hasActiveAdvanceRequest = salaryAdvanceRequestRepository.existsByEmployeeIdAndStatusIn(
-                employee.getId(),
+                employee.getEmployeeId(),
                 ACTIVE_ADVANCE_STATUSES
         );
         if (hasActiveAdvanceRequest) {
@@ -218,7 +218,7 @@ public class SalaryAdvanceService {
         return toResponseDto(getRequestEntity(requestId));
     }
 
-    public List<SalaryAdvanceRequestResponse> getEmployeeRequests(Long employeeId) {
+    public List<SalaryAdvanceRequestResponse> getEmployeeRequests(String employeeId) {
         employeeService.getEmployeeEntity(employeeId);
         return salaryAdvanceRequestRepository.findByEmployeeIdOrderByCreatedAtDesc(employeeId)
                 .stream()
@@ -241,7 +241,7 @@ public class SalaryAdvanceService {
 
         public SalaryAdvancePendingDeductionReportResponse getPendingDeductionsReport(
             LocalDate payPeriod,
-            Long employeeId,
+            String employeeId,
             String status
         ) {
         if (payPeriod == null) {
@@ -323,7 +323,7 @@ public class SalaryAdvanceService {
         return new SalaryAdvanceTrackingResponse(
             request.getId(),
             request.getRequestNumber(),
-            request.getEmployee().getId(),
+            request.getEmployee().getEmployeeId(),
             request.getEmployee().getEmployeeCode(),
             request.getStatus(),
             request.getEligibilityStatus(),
@@ -340,7 +340,7 @@ public class SalaryAdvanceService {
         );
         }
 
-        public SalaryAdvanceTrackingSummaryPageResponse getEmployeeTrackingSummaries(Long employeeId, Integer page, Integer size) {
+        public SalaryAdvanceTrackingSummaryPageResponse getEmployeeTrackingSummaries(String employeeId, Integer page, Integer size) {
         employeeService.getEmployeeEntity(employeeId);
 
         int resolvedPage = page == null ? 0 : page;
@@ -407,7 +407,7 @@ public class SalaryAdvanceService {
 
         Employee employee = request.getEmployee();
         boolean hasRunningAdvance = salaryAdvanceDeductionRepository.existsByEmployee_IdAndStatus(
-                employee.getId(),
+                employee.getEmployeeId(),
                 SalaryAdvanceDeductionStatus.PENDING
         );
 

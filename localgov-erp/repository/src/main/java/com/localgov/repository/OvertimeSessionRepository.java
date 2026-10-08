@@ -14,13 +14,13 @@ import java.util.List;
 
 public interface OvertimeSessionRepository extends JpaRepository<OvertimeSession, Long> {
 
-    List<OvertimeSession> findByEmployeeIdOrderBySessionDateDesc(Long employeeId);
+    List<OvertimeSession> findByEmployeeIdOrderBySessionDateDesc(String employeeId);
 
-    Page<OvertimeSession> findByEmployeeIdOrderBySessionDateDesc(Long employeeId, Pageable pageable);
+    Page<OvertimeSession> findByEmployeeIdOrderBySessionDateDesc(String employeeId, Pageable pageable);
 
     List<OvertimeSession> findBySupervisorIdAndStatusOrderBySessionDateDesc(Long supervisorId, String status);
 
-    boolean existsByEmployeeIdAndSessionDate(Long employeeId, LocalDate sessionDate);
+    boolean existsByEmployeeIdAndSessionDate(String employeeId, LocalDate sessionDate);
 
     @Query("""
             SELECT s FROM OvertimeSession s
@@ -29,7 +29,7 @@ public interface OvertimeSessionRepository extends JpaRepository<OvertimeSession
               AND s.status NOT IN ('rejected','cancelled')
             """)
     List<OvertimeSession> findActiveByEmployeeIdAndSessionDate(
-            @Param("employeeId") Long employeeId,
+            @Param("employeeId") String employeeId,
             @Param("sessionDate") LocalDate sessionDate);
 
     @Query("""

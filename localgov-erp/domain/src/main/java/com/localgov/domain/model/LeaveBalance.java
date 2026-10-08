@@ -11,7 +11,7 @@ public class LeaveBalance {
 
     @Id
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "local_leave_balance")
     private Integer localLeaveBalance;
@@ -19,11 +19,11 @@ public class LeaveBalance {
     @Column(name = "vacation_leave_balance")
     private Integer vacationLeaveBalance;
 
-    public Long getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 

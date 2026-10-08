@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 
 public record LeaveCalculationRequest(
-        @NotNull @Positive Long employeeId,
+        String employeeId,
         @NotNull LeaveType leaveType,
         @NotNull LocalDate startDate,
         @Min(1) Integer requestedDays,

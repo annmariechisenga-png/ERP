@@ -18,5 +18,5 @@ public interface VacationLeaveAllowanceRepository extends JpaRepository<Vacation
      * Used by the 24-month rule: only {@code PAID} records may block future allowance eligibility.
      */
     Optional<VacationLeaveAllowance> findFirstByEmployeeIdAndStatusAndCreatedAtAfterOrderByCreatedAtDesc(
-            Long employeeId, AllowanceStatus status, LocalDateTime since);
+            String employeeId, AllowanceStatus status, LocalDateTime since);
 }

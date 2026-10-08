@@ -35,14 +35,14 @@ public class EmployeeService {
         return employeeRepository.findAll().stream().map(employeeMapper::toResponse).toList();
     }
 
-    public EmployeeResponse getEmployeeById(Long id) {
+    public EmployeeResponse getEmployeeById(String id) {
         return employeeMapper.toResponse(getEmployeeEntity(id));
     }
 
     @Transactional
     public EmployeeResponse createEmployee(EmployeeUpsertRequest request) {
-        if (employeeRepository.existsByEmployeeCode(request.employeeCode())) {
-            throw new BusinessValidationException("Employee code already exists: " + request.employeeCode());
+        if (employeeRepository.existsByEmployeeId(request.employeeId())) {
+            throw new BusinessValidationException("Employee code already exists: " + request.employeeId());
         }
         if (employeeRepository.existsByEmail(request.email())) {
             throw new BusinessValidationException("Employee email already exists: " + request.email());
@@ -51,21 +51,21 @@ public class EmployeeService {
         Employee employee = new Employee();
         employeeMapper.applyUpsertRequest(employee, request);
         Employee savedEmployee = employeeRepository.save(employee);
-        ensureDefaultLeaveBalance(savedEmployee.getId());
+        ensureDefaultLeaveBalance(savedEmployee.getEmployeeId());
         return employeeMapper.toResponse(savedEmployee);
     }
 
     @Transactional
-    public EmployeeResponse updateEmployee(Long id, EmployeeUpsertRequest request) {
+    public EmployeeResponse updateEmployee(String id, EmployeeUpsertRequest request) {
         Employee employee = getEmployeeEntity(id);
 
-        employeeRepository.findByEmployeeCode(request.employeeCode())
-                .filter(existing -> !existing.getId().equals(id))
+        employeeRepository.findByEmployeeId(request.employeeId())
+                .filter(existing -> !existing.getEmployeeId().equals(id))
                 .ifPresent(existing -> {
-                    throw new BusinessValidationException("Employee code already exists: " + request.employeeCode());
+                    throw new BusinessValidationException("Employee code already exists: " + request.employeeId());
                 });
 
-        if (employeeRepository.existsByEmailIgnoreCaseAndIdNot(request.email(), id)) {
+        if (employeeRepository.existsByEmailIgnoreCaseAndEmployeeIdNot(request.email(), id)) {
             throw new BusinessValidationException("Employee email already exists: " + request.email());
         }
 
@@ -74,7 +74,7 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void deleteEmployee(Long id) {
+    public void deleteEmployee(String id) {
         if (!employeeRepository.existsById(id)) {
             throw new ResourceNotFoundException("Employee not found with id: " + id);
         }
@@ -82,12 +82,12 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public Employee getEmployeeEntity(Long id) {
+    public Employee getEmployeeEntity(String id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
     }
 
-    private void ensureDefaultLeaveBalance(Long employeeId) {
+    private void ensureDefaultLeaveBalance(String employeeId) {
         if (leaveBalanceRepository.existsById(employeeId)) {
             return;
         }

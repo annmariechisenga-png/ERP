@@ -28,7 +28,7 @@ public class VacationLeaveAllowance {
     private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    private String employeeId;
 
     @Column(name = "leave_request_id")
     private Long leaveRequestId;
@@ -72,8 +72,8 @@ public class VacationLeaveAllowance {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Long getEmployeeId() { return employeeId; }
-    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
     public Long getLeaveRequestId() { return leaveRequestId; }
     public void setLeaveRequestId(Long leaveRequestId) { this.leaveRequestId = leaveRequestId; }
     public String getAuthorityCode() { return authorityCode; }

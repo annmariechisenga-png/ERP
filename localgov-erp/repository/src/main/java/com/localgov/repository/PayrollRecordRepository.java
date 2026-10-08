@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PayrollRecordRepository extends JpaRepository<PayrollRecord, Long> {
-    List<PayrollRecord> findByEmployeeIdOrderByPayPeriodDesc(Long employeeId);
+    List<PayrollRecord> findByEmployeeIdOrderByPayPeriodDesc(String employeeId);
 
-    boolean existsByEmployeeIdAndPayPeriod(Long employeeId, java.time.LocalDate payPeriod);
+    boolean existsByEmployeeIdAndPayPeriod(String employeeId, java.time.LocalDate payPeriod);
 }

@@ -36,7 +36,7 @@ public class EmployeeWorkLocationController {
     @GetMapping
     @Operation(summary = "List assignments", description = "Filter by employeeId, locationId, and activeOnly.")
     public List<EmployeeWorkLocationResponse> getAssignments(
-            @RequestParam(required = false) Long employeeId,
+            @RequestParam(required = false) String employeeId,
             @RequestParam(required = false) Long locationId,
             @RequestParam(defaultValue = "false") boolean activeOnly,
             @RequestParam(required = false) String authorityCode

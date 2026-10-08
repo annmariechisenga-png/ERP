@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record EmployeeWorkLocationUpsertRequest(
-        @NotNull Long employeeId,
+        @NotNull String employeeId,
         @NotNull Long locationId,
         String authorityCode,
         Boolean primary,

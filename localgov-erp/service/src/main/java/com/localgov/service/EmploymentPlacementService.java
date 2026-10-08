@@ -50,8 +50,10 @@ public class EmploymentPlacementService {
                 .findCurrentByScaleAndNotch(request.salaryScale(), request.notchNumber())
                 .orElseThrow(() -> new BusinessValidationException("Invalid scale/notch combination"));
 
+        Long officerId = Long.valueOf(request.officerId());
+
         EmploymentHistory history = new EmploymentHistory();
-        history.setOfficerId(request.officerId());
+        history.setOfficerId(officerId);
         history.setAuthorityId(request.authorityId());
         history.setSalaryScale(request.salaryScale());
         history.setNotchNumber(request.notchNumber());
@@ -69,7 +71,7 @@ public class EmploymentPlacementService {
 
         EmploymentPlacementAuditLog audit = new EmploymentPlacementAuditLog();
         audit.setEventType("EMPLOYMENT_PLACEMENT");
-        audit.setOfficerId(request.officerId());
+        audit.setOfficerId(officerId);
         audit.setDetails("Placed at " + request.salaryScale() + " Notch " + request.notchNumber());
         audit.setCreatedBy(request.userId());
         audit.setCreatedAt(LocalDateTime.now());
