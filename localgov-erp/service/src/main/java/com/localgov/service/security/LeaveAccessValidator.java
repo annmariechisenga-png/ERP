@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
  * <ul>
  *   <li>Employee → own data only</li>
  *   <li>Supervisor → employee.supervisor_id = current user</li>
- *   <li>HOD → employee.hod_id = current user</li>
  *   <li>HR → same authority_code</li>
  *   <li>Admin → full access</li>
  * </ul>
@@ -32,13 +31,12 @@ public class LeaveAccessValidator {
 
     /**
      * Validates that the authenticated user can view/read the target employee's leave data.
-     * Permitted: self, supervisor, HOD, HR (same authority), or ADMIN.
+     * Permitted: self, supervisor, HR (same authority), or ADMIN.
      */
     public void validateReadAccess(AuthenticatedUserContext caller, String targetEmployeeId) {
         if (isAdmin(caller)) return;
         if (isSelf(caller, targetEmployeeId)) return;
         if (isSupervisorOf(caller, targetEmployeeId)) return;
-        if (isHodOf(caller, targetEmployeeId)) return;
         if (isHrSameAuthority(caller, targetEmployeeId)) return;
 
         throw new AccessDeniedException("You are not authorised to access this employee's leave data.");
@@ -46,7 +44,7 @@ public class LeaveAccessValidator {
 
     /**
      * Validates that the authenticated user can approve/reject the target employee's leave.
-     * Permitted: supervisor, HOD, HR (same authority), or ADMIN.
+     * Permitted: supervisor, HR (same authority), or ADMIN.
      * NOT permitted: self-approval.
      */
     public void validateApprovalAccess(AuthenticatedUserContext caller, String targetEmployeeId) {
@@ -55,7 +53,6 @@ public class LeaveAccessValidator {
         }
         if (isAdmin(caller)) return;
         if (isSupervisorOf(caller, targetEmployeeId)) return;
-        if (isHodOf(caller, targetEmployeeId)) return;
         if (isHrSameAuthority(caller, targetEmployeeId)) return;
 
         throw new AccessDeniedException("You are not authorised to approve this employee's leave request.");
@@ -88,12 +85,10 @@ public class LeaveAccessValidator {
                 .orElse(false);
     }
 
-    private boolean isHodOf(AuthenticatedUserContext caller, String targetEmployeeId) {
-        return employeeRepository.findById(targetEmployeeId)
-                .map(Employee::getHodId)
-                .map(hodId -> hodId.equals(caller.employeeId()))
-                .orElse(false);
-    }
+    // NOTE: HOD-based access (isHodOf) was removed because Employee.getHodId()
+    // is a deferred-feature stub that unconditionally returns null, so the branch
+    // could never grant access. When HOD tracking is implemented, re-add the
+    // method and its test together in the same commit.
 
     private boolean isHrSameAuthority(AuthenticatedUserContext caller, String targetEmployeeId) {
         if (caller.role() == null || !caller.role().contains("HR")) {
