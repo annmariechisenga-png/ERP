@@ -210,7 +210,7 @@ public class OvertimeService {
             throw new BusinessValidationException("overtimeHours must be greater than zero");
         }
 
-        Employee supervisor = employeeRepository.findById(request.supervisorId())
+        Employee supervisor = employeeRepository.findById(String.valueOf(request.supervisorId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Supervisor not found: " + request.supervisorId()));
 
         OvertimeTeam team = overtimeTeamRepository.findByTeamCodeIgnoreCaseAndActiveTrue(request.teamCode().trim())
@@ -358,7 +358,7 @@ public class OvertimeService {
         Map<String, Employee> employeesById = employeeRepository.findAllById(
                         sessions.stream().map(OvertimeSession::getEmployeeId).distinct().toList())
                 .stream()
-                .collect(java.util.stream.Collectors.toMap(Employee::getId, e -> e));
+                .collect(java.util.stream.Collectors.toMap(Employee::getEmployeeId, e -> e));
 
         Map<String, List<OvertimeSession>> grouped = new LinkedHashMap<>();
         for (OvertimeSession s : sessions) {
@@ -622,7 +622,7 @@ public class OvertimeService {
         Map<String, Employee> employeesById = employeeRepository.findAllById(
                         sessions.stream().map(OvertimeSession::getEmployeeId).distinct().toList())
                 .stream()
-                .collect(java.util.stream.Collectors.toMap(Employee::getId, e -> e));
+                .collect(java.util.stream.Collectors.toMap(Employee::getEmployeeId, e -> e));
 
         Map<String, List<OvertimeSession>> byEmployee = new LinkedHashMap<>();
         for (OvertimeSession session : sessions) {

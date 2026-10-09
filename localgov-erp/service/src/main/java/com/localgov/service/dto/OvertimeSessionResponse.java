@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record OvertimeSessionResponse(
         Long id,
         String employeeId,
-        Long teamId,
+        String teamId,
         LocalDate sessionDate,
         LocalDateTime overtimeStart,
         LocalDateTime overtimeEnd,

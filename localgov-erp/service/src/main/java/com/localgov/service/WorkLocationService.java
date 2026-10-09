@@ -141,9 +141,14 @@ public class WorkLocationService {
                 .findHistoryByLocationIdWithFilters(locationId, normalizedAction, fromAt, toAt, pageable);
 
         Map<String, Employee> employees = employeeRepository.findAllById(
-                        rows.getContent().stream().map(WorkLocationAudit::getPerformedBy).distinct().toList())
+                        rows.getContent().stream()
+                                .map(WorkLocationAudit::getPerformedBy)
+                                .filter(java.util.Objects::nonNull)
+                                .map(String::valueOf)
+                                .distinct()
+                                .toList())
                 .stream()
-                .collect(Collectors.toMap(Employee::getId, Function.identity()));
+                .collect(Collectors.toMap(Employee::getEmployeeId, Function.identity()));
 
         return rows.map(row -> {
             Employee actor = employees.get(String.valueOf(row.getPerformedBy()));
@@ -198,9 +203,14 @@ public class WorkLocationService {
                 .findHistoryByLocationIdWithFilters(locationId, normalizedAction, fromAt, toAt, all);
 
         Map<String, Employee> employees = employeeRepository.findAllById(
-                        rows.getContent().stream().map(WorkLocationAudit::getPerformedBy).distinct().toList())
+                        rows.getContent().stream()
+                                .map(WorkLocationAudit::getPerformedBy)
+                                .filter(java.util.Objects::nonNull)
+                                .map(String::valueOf)
+                                .distinct()
+                                .toList())
                 .stream()
-                .collect(Collectors.toMap(Employee::getId, Function.identity()));
+                .collect(Collectors.toMap(Employee::getEmployeeId, Function.identity()));
 
         StringBuilder csv = new StringBuilder();
         csv.append("Date & Time,User Code,User Name,Action,Field Changed,Old Value,New Value\r\n");

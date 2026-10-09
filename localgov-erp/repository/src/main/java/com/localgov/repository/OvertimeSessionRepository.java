@@ -18,7 +18,7 @@ public interface OvertimeSessionRepository extends JpaRepository<OvertimeSession
 
     Page<OvertimeSession> findByEmployeeIdOrderBySessionDateDesc(String employeeId, Pageable pageable);
 
-    List<OvertimeSession> findBySupervisorIdAndStatusOrderBySessionDateDesc(Long supervisorId, String status);
+    List<OvertimeSession> findBySupervisorIdAndStatusOrderBySessionDateDesc(String supervisorId, String status);
 
     boolean existsByEmployeeIdAndSessionDate(String employeeId, LocalDate sessionDate);
 
@@ -39,7 +39,7 @@ public interface OvertimeSessionRepository extends JpaRepository<OvertimeSession
             ORDER BY s.sessionDate DESC
             """)
     Page<OvertimeSession> findBySupervisorWithFilter(
-            @Param("supervisorId") Long supervisorId,
+            @Param("supervisorId") String supervisorId,
             @Param("status") String status,
             Pageable pageable);
 

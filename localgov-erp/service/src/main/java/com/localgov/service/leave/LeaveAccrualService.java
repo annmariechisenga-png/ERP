@@ -116,10 +116,10 @@ public class LeaveAccrualService {
             return false;
         }
 
-        LeaveBalance balance = leaveBalanceRepository.findById(employee.getId())
+        LeaveBalance balance = leaveBalanceRepository.findById(employee.getEmployeeId())
                 .orElseGet(() -> {
                     LeaveBalance newBalance = new LeaveBalance();
-                    newBalance.setEmployeeId(employee.getId());
+                    newBalance.setEmployeeId(employee.getEmployeeId());
                     newBalance.setLocalLeaveBalance(0);
                     newBalance.setVacationLeaveBalance(0);
                     return newBalance;
