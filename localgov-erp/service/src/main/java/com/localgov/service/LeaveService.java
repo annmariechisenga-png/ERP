@@ -128,7 +128,7 @@ public class LeaveService {
             int annualLimit = policy.getAnnualLimit() != null ? policy.getAnnualLimit() : 3;
             int usedThisYear = leaveRequestRepository.findByEmployeeIdOrderByCreatedAtDesc(employee.getEmployeeId()).stream()
                     .filter(r -> r.getLeaveType() == LeaveType.FAMILY_CARE)
-                    .filter(r -> r.getStartDate() != null && r.getStartDate().getYear() == LocalDate.now().getYear())
+                    .filter(r -> r.getStartDate() != null && r.getStartDate().getYear() == request.startDate().getYear())
                     .filter(r -> r.getStatus() != LeaveStatus.CANCELLED)
                     .mapToInt(r -> r.getDaysRequested() != null ? r.getDaysRequested() : 0)
                     .sum();
