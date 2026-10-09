@@ -230,10 +230,10 @@ public class EmployeeWorkLocationService {
     }
 
     private List<EmployeeWorkLocationResponse> mapResponses(List<EmployeeWorkLocation> rows) {
-        Map<Long, Employee> employees = employeeRepository.findAllById(
+        Map<String, Employee> employees = employeeRepository.findAllById(
                         rows.stream().map(EmployeeWorkLocation::getEmployeeId).distinct().toList())
                 .stream()
-                .collect(Collectors.toMap(Employee::getId, Function.identity()));
+                .collect(Collectors.toMap(Employee::getEmployeeId, Function.identity()));
 
         Map<Long, WorkLocation> locations = workLocationRepository.findAllById(
                         rows.stream().map(EmployeeWorkLocation::getLocationId).distinct().toList())
