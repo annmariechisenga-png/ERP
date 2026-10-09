@@ -573,15 +573,6 @@ public class Employee {
 
     /** @deprecated Use {@link #getEmployeeId()} instead. */
     @Deprecated
-    public Long getId() {
-        // Legacy code expects a Long. Return null; callers must be migrated.
-        // This will throw at runtime if used — the compiler is the guide.
-        throw new UnsupportedOperationException(
-            "Employee.getId() is deprecated. Use getEmployeeId() instead.");
-    }
-
-    /** @deprecated Use {@link #getFirstName()} + {@link #getLastName()}. */
-    @Deprecated
     public String getEmployeeCode() {
         return employeeId;
     }
