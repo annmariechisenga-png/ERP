@@ -41,7 +41,7 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get employee by ID", description = "Allowed roles: ADMIN, HR")
-    public EmployeeResponse getEmployeeById(@PathVariable @Positive Long id) {
+    public EmployeeResponse getEmployeeById(@PathVariable String id) {
         return employeeService.getEmployeeById(id);
     }
 
@@ -54,14 +54,14 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update employee", description = "Allowed roles: ADMIN, HR")
-    public EmployeeResponse updateEmployee(@PathVariable @Positive Long id, @Valid @RequestBody EmployeeUpsertRequest request) {
+    public EmployeeResponse updateEmployee(@PathVariable String id, @Valid @RequestBody EmployeeUpsertRequest request) {
         return employeeService.updateEmployee(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete employee", description = "Allowed roles: ADMIN, HR")
-    public void deleteEmployee(@PathVariable @Positive Long id) {
+    public void deleteEmployee(@PathVariable String id) {
         employeeService.deleteEmployee(id);
     }
 }

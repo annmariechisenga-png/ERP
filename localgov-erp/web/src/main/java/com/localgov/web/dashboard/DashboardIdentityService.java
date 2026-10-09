@@ -43,7 +43,7 @@ public class DashboardIdentityService {
                 : dashboardProfileService.resolvePositionTitle(positionId);
 
         return new DashboardIdentityResponse(
-                employee.getId(),
+                employee.getEmployeeId(),
                 employee.getEmployeeCode(),
                 employeeName(employee),
                 employee.getEmail(),

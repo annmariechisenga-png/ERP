@@ -102,14 +102,14 @@ public class SalaryAdvanceController {
 
     @GetMapping("/requests/employee/{employeeId}")
     @Operation(summary = "List employee salary advance requests", description = "Allowed roles: ADMIN, HR, HEAD, FINANCE, PAYROLL, EMPLOYEE")
-    public List<SalaryAdvanceRequestResponse> getEmployeeRequests(@PathVariable @Positive Long employeeId) {
+    public List<SalaryAdvanceRequestResponse> getEmployeeRequests(@PathVariable String employeeId) {
         return salaryAdvanceService.getEmployeeRequests(employeeId);
     }
 
     @GetMapping("/requests/employee/{employeeId}/tracking")
     @Operation(summary = "List paged employee tracking summaries", description = "Allowed roles: ADMIN, HR, HEAD, FINANCE, PAYROLL, EMPLOYEE")
     public SalaryAdvanceTrackingSummaryPageResponse getEmployeeTrackingSummaries(
-            @PathVariable @Positive Long employeeId,
+            @PathVariable String employeeId,
             @RequestParam(defaultValue = "0") @Min(0) Integer page,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) Integer size
     ) {
@@ -120,7 +120,7 @@ public class SalaryAdvanceController {
     @Operation(summary = "Get pending deduction reconciliation", description = "Allowed roles: ADMIN, HR, HEAD, FINANCE, PAYROLL, EMPLOYEE")
     public SalaryAdvancePendingDeductionReportResponse getPendingDeductions(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate payPeriod,
-            @RequestParam(required = false) @Positive Long employeeId,
+            @RequestParam(required = false) String employeeId,
             @RequestParam(required = false) String status
     ) {
         return salaryAdvanceService.getPendingDeductionsReport(payPeriod, employeeId, status);

@@ -27,7 +27,7 @@ public class EmployeeLeaveMasterController {
     // GET a specific employee's leave record by ID
     // URL: http://localhost:8086/api/leave-master/employee/{employeeId}
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<EmployeeLeaveMaster> getByEmployeeId(@PathVariable Long employeeId) {
+    public ResponseEntity<EmployeeLeaveMaster> getByEmployeeId(@PathVariable String employeeId) {
         return leaveMasterRepository.findByEmployeeId(employeeId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

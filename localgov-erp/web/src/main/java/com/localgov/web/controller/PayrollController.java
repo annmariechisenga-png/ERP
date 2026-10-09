@@ -60,7 +60,7 @@ public class PayrollController {
 
     @GetMapping("/employee/{employeeId}")
     @Operation(summary = "Get employee payroll history", description = "Allowed roles: ADMIN, PAYROLL")
-    public List<PayrollRecordResponse> getPayrollHistory(@PathVariable @Positive Long employeeId) {
+    public List<PayrollRecordResponse> getPayrollHistory(@PathVariable String employeeId) {
         return payrollService.getEmployeePayrollHistory(employeeId);
     }
 }

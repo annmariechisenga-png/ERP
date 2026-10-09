@@ -30,22 +30,11 @@ public class DatabaseUserDetailsService implements UserDetailsService {
         // Try to find by username first, then by employee ID (if numeric), then by employee code
         UserAccount account = userAccountRepository.findByUsernameIgnoreCase(username)
                 .filter(item -> Boolean.TRUE.equals(item.getActive()))
-                .or(() -> {
-                    // Try to parse as employee ID if numeric
-                    try {
-                        Long empId = Long.parseLong(username);
-                        return userAccountRepository.findByEmployeeId(empId)
-                                .filter(item -> Boolean.TRUE.equals(item.getActive()));
-                    } catch (NumberFormatException e) {
-                        return java.util.Optional.empty();
-                    }
-                })
-                .or(() -> {
-                    // Try to find by employee code (e.g. ZM09-CHL-2024-000001)
-                    return employeeRepository.findByEmployeeId(username)
-                            .flatMap(emp -> userAccountRepository.findByEmployeeId(emp.getId())
-                                    .filter(item -> Boolean.TRUE.equals(item.getActive())));
-                })
+                .or(() -> userAccountRepository.findByEmployeeId(username)
+                        .filter(item -> Boolean.TRUE.equals(item.getActive())))
+                .or(() -> employeeRepository.findByEmployeeId(username)
+                        .flatMap(emp -> userAccountRepository.findByEmployeeId(emp.getEmployeeId())
+                                .filter(item -> Boolean.TRUE.equals(item.getActive()))))
                 .orElseThrow(() -> new UsernameNotFoundException("User account not found: " + username));
 
         List<String> roles = parseRoles(account.getRolesCsv());

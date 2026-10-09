@@ -54,7 +54,7 @@ public class OvertimeController {
                       "and day-type multiplier. Creates a pending_supervisor session when applicable."
     )
     public OvertimeTriggerResult triggerOvertimeCheck(
-            @RequestParam Long employeeId,
+            @RequestParam String employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime clockOutTime
     ) {
         return overtimeService.checkOvertimeTrigger(employeeId, clockOutTime);
@@ -90,7 +90,7 @@ public class OvertimeController {
     @GetMapping("/employee/{employeeId}")
     @Operation(summary = "List overtime sessions for an employee (paginated, most recent first)")
     public Page<OvertimeSessionResponse> getEmployeeSessions(
-            @PathVariable Long employeeId,
+            @PathVariable String employeeId,
             @RequestParam(defaultValue = "0")  int page,
             @RequestParam(defaultValue = "20") int size
     ) {
@@ -104,7 +104,7 @@ public class OvertimeController {
                       "Use status=pending_supervisor|approved|rejected to filter."
     )
     public Page<OvertimeSessionResponse> getSupervisorQueue(
-            @PathVariable Long supervisorId,
+            @PathVariable String supervisorId,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0")  int page,
             @RequestParam(defaultValue = "20") int size

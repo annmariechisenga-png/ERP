@@ -66,7 +66,7 @@ public class LeaveController {
     @Operation(summary = "Preview leave calculation",
                description = "Pure read-only preview. No database writes.")
     public LeaveCalculationResult calculateLeave(
-            @RequestParam @Positive Long employeeId,
+            @RequestParam String employeeId,
             @RequestParam LeaveType leaveType,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @Min(1) Integer requestedDays,
@@ -88,7 +88,7 @@ public class LeaveController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Submit leave request with supporting document", description = "Allowed roles: ADMIN, HR, EMPLOYEE")
     public LeaveRequestResponse submitLeaveRequestWithDocument(
-            @RequestParam @Positive Long employeeId,
+            @RequestParam String employeeId,
             @RequestParam LeaveType leaveType,
             @RequestParam(required = false) CompassionateLeaveRelation compassionateRelation,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -198,13 +198,13 @@ public class LeaveController {
 
     @GetMapping("/employee/{employeeId}")
     @Operation(summary = "List leave requests by employee", description = "Allowed roles: ADMIN, HR, EMPLOYEE")
-    public List<LeaveRequestResponse> getEmployeeLeaveRequests(@PathVariable @Positive Long employeeId) {
+    public List<LeaveRequestResponse> getEmployeeLeaveRequests(@PathVariable String employeeId) {
         return leaveService.getEmployeeLeaveRequests(employeeId);
     }
 
     @GetMapping("/balance/employee/{employeeId}")
     @Operation(summary = "Get employee leave balances", description = "Allowed roles: ADMIN, HR, EMPLOYEE")
-    public EmployeeLeaveBalanceResponse getEmployeeLeaveBalance(@PathVariable @Positive Long employeeId) {
+    public EmployeeLeaveBalanceResponse getEmployeeLeaveBalance(@PathVariable String employeeId) {
         return leaveService.getEmployeeLeaveBalance(employeeId);
     }
 

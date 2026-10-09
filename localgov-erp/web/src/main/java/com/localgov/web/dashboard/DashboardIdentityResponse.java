@@ -1,7 +1,7 @@
 package com.localgov.web.dashboard;
 
 public record DashboardIdentityResponse(
-        Long employeeId,
+        String employeeId,
         String employeeCode,
         String employeeName,
         String email,
