@@ -28,7 +28,7 @@ class PiiEncryptionServiceTest {
     void setUp() {
         service = new PiiEncryptionServiceImpl(TEST_ENC_KEY, TEST_HMAC_KEY);
         service.validateAndInit();
-        ctx = new AuthenticatedUserContext("testuser", 1L, "CHILANGA", "COUNCIL", "HR_OFFICER", "II");
+        ctx = new AuthenticatedUserContext("testuser", "EMP-0001", "CHILANGA", "COUNCIL", "HR_OFFICER", "II");
     }
 
     @Test

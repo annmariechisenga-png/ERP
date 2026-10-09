@@ -43,13 +43,16 @@ class PayrollServiceTest {
 
     @Test
     void calculatePayrollComputesNetPayAndReturnsResponse() {
-        Employee employee = new Employee();
-        employee.setId(1L);
-        employee.setEmployeeCode("EMP-1001");
-        employee.setBaseSalary(new BigDecimal("2500.00"));
+        Employee employee = new Employee() {
+            @Override
+            public BigDecimal getBaseSalary() {
+                return new BigDecimal("2500.00");
+            }
+        };
+        employee.setEmployeeId("EMP-1001");
 
-        when(employeeService.getEmployeeEntity(1L)).thenReturn(employee);
-        when(payrollRecordRepository.existsByEmployeeIdAndPayPeriod(1L, LocalDate.of(2026, 3, 1))).thenReturn(false);
+        when(employeeService.getEmployeeEntity("EMP-1001")).thenReturn(employee);
+        when(payrollRecordRepository.existsByEmployeeIdAndPayPeriod("EMP-1001", LocalDate.of(2026, 3, 1))).thenReturn(false);
         when(salaryAdvanceDeductionRepository.findByEmployee_IdAndStatusAndScheduledPayPeriodLessThanEqualOrderByScheduledPayPeriodAsc(
             any(), any(), any()
         )).thenReturn(List.of());
@@ -63,7 +66,7 @@ class PayrollServiceTest {
             PayrollRecord record = invocation.getArgument(0);
             return new com.localgov.service.dto.PayrollRecordResponse(
                 record.getId(),
-                record.getEmployee().getId(),
+                record.getEmployee().getEmployeeId(),
                 record.getEmployee().getEmployeeCode(),
                 record.getPayPeriod(),
                 record.getBaseSalary(),
@@ -76,7 +79,7 @@ class PayrollServiceTest {
         });
 
         PayrollCalculationRequest request = new PayrollCalculationRequest(
-                1L,
+                "EMP-1001",
                 LocalDate.of(2026, 3, 1),
                 new BigDecimal("4.00"),
                 new BigDecimal("20.00"),
@@ -86,22 +89,25 @@ class PayrollServiceTest {
         var response = payrollService.calculatePayroll(request);
 
         assertThat(response.id()).isEqualTo(10L);
-        assertThat(response.employeeId()).isEqualTo(1L);
+        assertThat(response.employeeId()).isEqualTo("EMP-1001");
         assertThat(response.netPay()).isEqualByComparingTo("2560.00");
     }
 
-        @Test
-        void calculatePayrollThrowsWhenPayrollAlreadyExistsForPeriod() {
-        Employee employee = new Employee();
-        employee.setId(1L);
-        employee.setEmployeeCode("EMP-1001");
-        employee.setBaseSalary(new BigDecimal("2500.00"));
+    @Test
+    void calculatePayrollThrowsWhenPayrollAlreadyExistsForPeriod() {
+        Employee employee = new Employee() {
+            @Override
+            public BigDecimal getBaseSalary() {
+                return new BigDecimal("2500.00");
+            }
+        };
+        employee.setEmployeeId("EMP-1001");
 
-        when(employeeService.getEmployeeEntity(1L)).thenReturn(employee);
-        when(payrollRecordRepository.existsByEmployeeIdAndPayPeriod(1L, LocalDate.of(2026, 4, 1))).thenReturn(true);
+        when(employeeService.getEmployeeEntity("EMP-1001")).thenReturn(employee);
+        when(payrollRecordRepository.existsByEmployeeIdAndPayPeriod("EMP-1001", LocalDate.of(2026, 4, 1))).thenReturn(true);
 
         PayrollCalculationRequest request = new PayrollCalculationRequest(
-            1L,
+            "EMP-1001",
             LocalDate.of(2026, 4, 18),
             new BigDecimal("1.00"),
             new BigDecimal("20.00"),
@@ -111,23 +117,26 @@ class PayrollServiceTest {
         assertThatThrownBy(() -> payrollService.calculatePayroll(request))
             .isInstanceOf(BusinessValidationException.class)
             .hasMessageContaining("Payroll already exists");
-        }
+    }
 
-        @Test
-        void calculatePayrollThrowsWhenDeductionsExceedGrossPay() {
-        Employee employee = new Employee();
-        employee.setId(1L);
-        employee.setEmployeeCode("EMP-1001");
-        employee.setBaseSalary(new BigDecimal("2500.00"));
+    @Test
+    void calculatePayrollThrowsWhenDeductionsExceedGrossPay() {
+        Employee employee = new Employee() {
+            @Override
+            public BigDecimal getBaseSalary() {
+                return new BigDecimal("2500.00");
+            }
+        };
+        employee.setEmployeeId("EMP-1001");
 
-        when(employeeService.getEmployeeEntity(1L)).thenReturn(employee);
-        when(payrollRecordRepository.existsByEmployeeIdAndPayPeriod(1L, LocalDate.of(2026, 5, 1))).thenReturn(false);
+        when(employeeService.getEmployeeEntity("EMP-1001")).thenReturn(employee);
+        when(payrollRecordRepository.existsByEmployeeIdAndPayPeriod("EMP-1001", LocalDate.of(2026, 5, 1))).thenReturn(false);
         when(salaryAdvanceDeductionRepository.findByEmployee_IdAndStatusAndScheduledPayPeriodLessThanEqualOrderByScheduledPayPeriodAsc(
             any(), any(), any()
         )).thenReturn(List.of());
 
         PayrollCalculationRequest request = new PayrollCalculationRequest(
-            1L,
+            "EMP-1001",
             LocalDate.of(2026, 5, 1),
             new BigDecimal("0.00"),
             new BigDecimal("0.00"),
@@ -137,5 +146,5 @@ class PayrollServiceTest {
         assertThatThrownBy(() -> payrollService.calculatePayroll(request))
             .isInstanceOf(BusinessValidationException.class)
             .hasMessageContaining("Total deductions cannot exceed gross pay");
-        }
+    }
 }
