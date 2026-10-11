@@ -251,22 +251,25 @@ COMMENT ON FUNCTION reverse_journal IS
 'Reverses a posted journal. Logs to audit_event with source_module = GL.';
 
 -- ---------------------------------------------------------------------
--- 5. Log the migration
+-- 5. Log the migration (wrapped in DO block; PERFORM is PL/pgSQL-only)
 -- ---------------------------------------------------------------------
-PERFORM log_audit_event(
-    p_event_type := 'SYSTEM',
-    p_entity_type := 'AUDIT_TRAIL',
-    p_entity_id := NULL,
-    p_action := 'CONFIG',
-    p_new_value := jsonb_build_object(
-        'action', 'fix_audit_function_overload',
-        'migration', 'V67',
-        'dropped_versions', ARRAY['log_audit_event (11 params)'],
-        'kept_versions', ARRAY['log_audit_event (16 params)'],
-        'rebuilt_functions', ARRAY['post_journal', 'reverse_journal']
-    ),
-    p_user_id := '00000000-0000-0000-0000-000000000001'::UUID,
-    p_user_name := 'SYSTEM',
-    p_user_role := 'SYSTEM',
-    p_source_module := 'MIGRATION'
-);
+DO $$
+BEGIN
+    PERFORM log_audit_event(
+        p_event_type := 'SYSTEM',
+        p_entity_type := 'AUDIT_TRAIL',
+        p_entity_id := NULL,
+        p_action := 'CONFIG',
+        p_new_value := jsonb_build_object(
+            'action', 'fix_audit_function_overload',
+            'migration', 'V67',
+            'dropped_versions', ARRAY['log_audit_event (11 params)'],
+            'kept_versions', ARRAY['log_audit_event (16 params)'],
+            'rebuilt_functions', ARRAY['post_journal', 'reverse_journal']
+        ),
+        p_user_id := '00000000-0000-0000-0000-000000000001'::UUID,
+        p_user_name := 'SYSTEM',
+        p_user_role := 'SYSTEM',
+        p_source_module := 'MIGRATION'
+    );
+END $$;

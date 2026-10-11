@@ -15,6 +15,26 @@
 --   6. Fully backward compatible signature
 -- =====================================================================
 
+-- =====================================================================
+-- Drop any existing log_audit_event overloads (V63 created an 11-arg
+-- version; this migration defines a 16-arg version). Without dropping
+-- the old one, Postgres reports "function name is not unique".
+-- =====================================================================
+DO $$
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN
+        SELECT p.oid::regprocedure AS sig
+        FROM pg_proc p
+        JOIN pg_namespace n ON n.oid = p.pronamespace
+        WHERE n.nspname = 'public'
+          AND p.proname = 'log_audit_event'
+    LOOP
+        EXECUTE 'DROP FUNCTION IF EXISTS ' || r.sig || ' CASCADE';
+    END LOOP;
+END $$;
+
 CREATE OR REPLACE FUNCTION log_audit_event(
     p_event_type VARCHAR DEFAULT 'TRANSACTION',
     p_entity_type VARCHAR DEFAULT 'GENERAL',
