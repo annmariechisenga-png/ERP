@@ -66,16 +66,6 @@ BEGIN
             ADD CONSTRAINT fk_work_locations_updated_by
             FOREIGN KEY (updated_by) REFERENCES erp_employee(id);
     END IF;
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM pg_constraint
-        WHERE conname = 'fk_erp_employee_primary_location'
-    ) THEN
-        ALTER TABLE erp_employee
-            ADD CONSTRAINT fk_erp_employee_primary_location
-            FOREIGN KEY (primary_location_id) REFERENCES work_locations(id);
-    END IF;
 END $$;
 
 CREATE INDEX IF NOT EXISTS idx_work_locations_type

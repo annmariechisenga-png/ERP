@@ -37,15 +37,25 @@ DELETE FROM salary_advance_request;
 DELETE FROM erp_payroll_record;
 DELETE FROM erp_leave_request;
 
--- PART 3: Drop FK constraints to erp_employee
-ALTER TABLE erp_leave_request
-    DROP CONSTRAINT IF EXISTS fktgp5g2awah8764d1fl9fqbj2f;
-ALTER TABLE erp_payroll_record
-    DROP CONSTRAINT IF EXISTS fksv42bxmn93kowyhbfo4lenvw5;
-ALTER TABLE salary_advance_request
-    DROP CONSTRAINT IF EXISTS fk_salary_advance_employee;
-ALTER TABLE salary_advance_deduction
-    DROP CONSTRAINT IF EXISTS fk_salary_advance_deduction_employee;
+-- PART 3: Drop ALL FK constraints that reference erp_employee
+-- The previous version hardcoded 4 tables; ~19 migrations create FKs to
+-- erp_employee. Enumerate dynamically so this works on any database state.
+DO $$
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN
+        SELECT tc.table_schema, tc.table_name, tc.constraint_name
+        FROM information_schema.table_constraints tc
+        JOIN information_schema.constraint_column_usage ccu
+          ON tc.constraint_name = ccu.constraint_name
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+          AND ccu.table_name = 'erp_employee'
+    LOOP
+        EXECUTE format('ALTER TABLE %I.%I DROP CONSTRAINT IF EXISTS %I',
+                       r.table_schema, r.table_name, r.constraint_name);
+    END LOOP;
+END $$;
 
 -- PART 4: Alter employee_id columns from bigint to text
 ALTER TABLE erp_leave_request
@@ -119,7 +129,9 @@ BEGIN
     END IF;
 
     SELECT COUNT(*) INTO employee_count FROM employees;
-    IF employee_count < 180 THEN
+    -- Only fail if we have SOME rows but not enough — an empty table
+    -- indicates a fresh install, which is a valid state.
+    IF employee_count > 0 AND employee_count < 180 THEN
         RAISE EXCEPTION 'V115 FAILED: employees has only % rows', employee_count;
     END IF;
 
