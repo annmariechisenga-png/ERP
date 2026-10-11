@@ -6,6 +6,27 @@
 --      NOW() — eliminates the "rapid writes break the chain" race.
 -- =====================================================================
 
+-- =====================================================================
+-- Drop any existing verify_audit_chain overloads (V73 created a 2-arg
+-- version; V94 defines a zero-arg version). Without dropping the old
+-- one, Postgres reports "function name is not unique" and COMMENT ON
+-- FUNCTION becomes ambiguous.
+-- =====================================================================
+DO $$
+DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN
+        SELECT p.oid::regprocedure AS sig
+        FROM pg_proc p
+        JOIN pg_namespace n ON n.oid = p.pronamespace
+        WHERE n.nspname = 'public'
+          AND p.proname = 'verify_audit_chain'
+    LOOP
+        EXECUTE 'DROP FUNCTION IF EXISTS ' || r.sig || ' CASCADE';
+    END LOOP;
+END $$;
+
 -- ---------------------------------------------------------------------
 -- PART 1: Fix AP report function signatures
 -- ---------------------------------------------------------------------

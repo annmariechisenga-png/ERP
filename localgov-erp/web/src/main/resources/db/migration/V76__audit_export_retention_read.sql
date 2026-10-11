@@ -26,52 +26,47 @@ CREATE OR REPLACE FUNCTION export_audit(
     p_entity_type VARCHAR DEFAULT NULL,
     p_format VARCHAR DEFAULT 'CSV'
 )
-RETURNS TABLE (
-    export_line TEXT
-)
+RETURNS TABLE (export_line TEXT)
 LANGUAGE plpgsql STABLE AS $$
+DECLARE
+    v_header TEXT := 'event_id,occurred_at,event_type,entity_type,entity_id,action,user_id,user_name,user_role,session_id,authority_code,source_module,ip_address,old_value,new_value,changes,record_hash,previous_hash';
 BEGIN
     IF p_format = 'CSV' THEN
         RETURN QUERY
-        SELECT
-            -- Header row
-            CASE WHEN ROW_NUMBER() OVER (ORDER BY ae.occurred_at ASC) = 1
-                THEN 'event_id,occurred_at,event_type,entity_type,entity_id,action,user_id,user_name,user_role,session_id,authority_code,source_module,ip_address,old_value,new_value,changes,record_hash,previous_hash'
-                ELSE NULL
-            END
-        FROM audit_event ae
-        WHERE (p_from IS NULL OR ae.occurred_at >= p_from)
-          AND (p_to IS NULL OR ae.occurred_at <= p_to)
-          AND (p_authority_code IS NULL OR ae.authority_code = p_authority_code)
-          AND (p_entity_type IS NULL OR ae.entity_type = p_entity_type)
-        LIMIT 1
-        UNION ALL
-        SELECT
-            ae.event_id::text || ',' ||
-            ae.occurred_at::text || ',' ||
-            COALESCE(ae.event_type, '') || ',' ||
-            COALESCE(ae.entity_type, '') || ',' ||
-            COALESCE(ae.entity_id::text, '') || ',' ||
-            COALESCE(ae.action, '') || ',' ||
-            COALESCE(ae.user_id::text, '') || ',' ||
-            COALESCE(REPLACE(ae.user_name, ',', ';'), '') || ',' ||
-            COALESCE(ae.user_role, '') || ',' ||
-            COALESCE(ae.session_id, '') || ',' ||
-            COALESCE(ae.authority_code, '') || ',' ||
-            COALESCE(ae.source_module, '') || ',' ||
-            COALESCE(ae.ip_address::text, '') || ',' ||
-            COALESCE(REPLACE(ae.old_value::text, ',', ';'), '') || ',' ||
-            COALESCE(REPLACE(ae.new_value::text, ',', ';'), '') || ',' ||
-            COALESCE(REPLACE(ae.changes::text, ',', ';'), '') || ',' ||
-            ae.record_hash || ',' ||
-            COALESCE(ae.previous_hash, '')
-        FROM audit_event ae
-        WHERE (p_from IS NULL OR ae.occurred_at >= p_from)
-          AND (p_to IS NULL OR ae.occurred_at <= p_to)
-          AND (p_authority_code IS NULL OR ae.authority_code = p_authority_code)
-          AND (p_entity_type IS NULL OR ae.entity_type = p_entity_type)
-        ORDER BY ae.occurred_at ASC;
-
+        WITH data AS (
+            SELECT
+                ae.event_id::text || ',' ||
+                ae.occurred_at::text || ',' ||
+                COALESCE(ae.event_type, '') || ',' ||
+                COALESCE(ae.entity_type, '') || ',' ||
+                COALESCE(ae.entity_id::text, '') || ',' ||
+                COALESCE(ae.action, '') || ',' ||
+                COALESCE(ae.user_id::text, '') || ',' ||
+                COALESCE(REPLACE(ae.user_name, ',', ';'), '') || ',' ||
+                COALESCE(ae.user_role, '') || ',' ||
+                COALESCE(ae.session_id, '') || ',' ||
+                COALESCE(ae.authority_code, '') || ',' ||
+                COALESCE(ae.source_module, '') || ',' ||
+                COALESCE(ae.ip_address::text, '') || ',' ||
+                COALESCE(REPLACE(ae.old_value::text, ',', ';'), '') || ',' ||
+                COALESCE(REPLACE(ae.new_value::text, ',', ';'), '') || ',' ||
+                COALESCE(REPLACE(ae.changes::text, ',', ';'), '') || ',' ||
+                ae.record_hash || ',' ||
+                COALESCE(ae.previous_hash, '') AS line,
+                ae.occurred_at AS ord
+            FROM audit_event ae
+            WHERE (p_from IS NULL OR ae.occurred_at >= p_from)
+              AND (p_to IS NULL OR ae.occurred_at <= p_to)
+              AND (p_authority_code IS NULL OR ae.authority_code = p_authority_code)
+              AND (p_entity_type IS NULL OR ae.entity_type = p_entity_type)
+        )
+        SELECT combined.line AS export_line
+        FROM (
+            SELECT v_header AS line, NULL::timestamptz AS ord, 0 AS sort_group
+            UNION ALL
+            SELECT line, ord, 1 AS sort_group FROM data
+        ) combined
+        ORDER BY combined.sort_group, combined.ord NULLS FIRST;
     ELSIF p_format = 'JSON' THEN
         RETURN QUERY
         SELECT jsonb_pretty(jsonb_agg(to_jsonb(ae) ORDER BY ae.occurred_at ASC))::text
