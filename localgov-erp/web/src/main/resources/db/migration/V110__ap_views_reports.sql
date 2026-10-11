@@ -242,7 +242,7 @@ LANGUAGE sql STABLE AS $$
     ORDER BY entry_date, sort_ts;
 $$;
 
-COMMENT ON FUNCTION get_vendor_statement IS
+COMMENT ON FUNCTION get_vendor_statement(UUID, DATE, DATE) IS
 'Vendor statement — invoices (credit) and payments (debit) with running '
 'balance. Running balance is the amount owed to the vendor at each point.
 Example:
@@ -303,7 +303,7 @@ LANGUAGE sql STABLE AS $$
     ORDER BY v.vendor_number;
 $$;
 
-COMMENT ON FUNCTION get_ap_age_analysis IS
+COMMENT ON FUNCTION get_ap_age_analysis(VARCHAR, DATE) IS
 'AP aging analysis as of a specific date, one row per vendor with '
 'outstanding balance. Only includes invoices issued on or before the '
 'as-of date.
@@ -351,7 +351,7 @@ LANGUAGE sql STABLE AS $$
     ORDER BY coa.account_code, f.fund_code, cc.cost_center_code;
 $$;
 
-COMMENT ON FUNCTION get_ap_expense_summary IS
+COMMENT ON FUNCTION get_ap_expense_summary(VARCHAR, DATE, DATE) IS
 'AP expenditure summary for a date range, grouped by invoice type, '
 'account, fund, and cost center.
 Example:
