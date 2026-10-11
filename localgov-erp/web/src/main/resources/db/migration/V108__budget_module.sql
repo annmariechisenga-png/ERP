@@ -224,7 +224,11 @@ DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_l
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_fiscal_year_id_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_fiscal_year_id_fkey FOREIGN KEY (fiscal_year_id) REFERENCES fiscal_year(fiscal_year_id); END IF; END $$;
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_authority_code_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_authority_code_fkey FOREIGN KEY (authority_code) REFERENCES authorities(authority_code); END IF; END $$;
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_department_code_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_department_code_fkey FOREIGN KEY (department_code) REFERENCES mofnp_department(department_code); END IF; END $$;
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_unit_code_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_unit_code_fkey FOREIGN KEY (unit_code) REFERENCES mofnp_unit(unit_code); END IF; END $$;
+-- V108: budget_line.unit_code references mofnp_unit using the composite
+-- key declared in V103 (UNIQUE (authority_code, department_code, unit_code)).
+-- unit_code alone is only unique within (authority_code, department_code),
+-- so a single-column FK would fail.
+DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_unit_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_unit_fkey FOREIGN KEY (authority_code, department_code, unit_code) REFERENCES mofnp_unit(authority_code, department_code, unit_code); END IF; END $$;
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_function_code_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_function_code_fkey FOREIGN KEY (function_code) REFERENCES mofnp_function(function_code); END IF; END $$;
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_programme_id_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_programme_id_fkey FOREIGN KEY (programme_id) REFERENCES mofnp_programme(programme_id); END IF; END $$;
 DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'budget_line_commitment_type_code_fkey') THEN ALTER TABLE budget_line ADD CONSTRAINT budget_line_commitment_type_code_fkey FOREIGN KEY (commitment_type_code) REFERENCES mofnp_commitment_type(commitment_type_code); END IF; END $$;
