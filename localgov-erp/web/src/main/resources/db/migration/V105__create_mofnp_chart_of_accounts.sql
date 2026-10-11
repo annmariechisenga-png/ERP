@@ -356,9 +356,7 @@ VALUES
 ('213219',  'Risk allowance',                         'EXPENSE', '2', '2132', 3, TRUE),
 ('213220',  'Housing Allowance',                      'EXPENSE', '2', '2132', 3, TRUE),
 ('213221',  'Contract Gratuity',                      'EXPENSE', '2', '2132', 3, TRUE),
-('213222',  'Transport allowance (2)',                'EXPENSE', '2', '2132', 3, TRUE,
-    -- duplicate name in manual; distinct from 213218 by position
-    'Duplicate name in manual; verify with MoFNP'),
+('213222',  'Transport allowance (2)',                'EXPENSE', '2', '2132', 3, TRUE),
 ('213223',  'Education Allowance',                    'EXPENSE', '2', '2132', 3, TRUE),
 ('213224',  'Acting Allowance',                       'EXPENSE', '2', '2132', 3, TRUE),
 ('213225',  'Night Duty Allowance',                   'EXPENSE', '2', '2132', 3, TRUE),

@@ -360,7 +360,7 @@ BEGIN
     SELECT COUNT(*) INTO v_comm_types FROM mofnp_commitment_type;
 
     RAISE NOTICE 'MoFNP reference tables created:';
-    RAISE NOTICE '  authorities: % total, % with MoFNP head codes (%%)',
+    RAISE NOTICE '  authorities: % total, % with MoFNP head codes (%)',
         v_total, v_mapped, ROUND((v_mapped::NUMERIC / NULLIF(v_total, 0)) * 100, 1);
     RAISE NOTICE '  mofnp_department: % rows', v_depts;
     RAISE NOTICE '  mofnp_function: % rows', v_funcs;
