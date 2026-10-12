@@ -10,6 +10,14 @@
 -- as decimal strings (the current schema convention).
 -- =====================================================================
 
+-- =====================================================================
+-- Drop FKs on columns we're about to convert, then convert overtime_team.id
+-- =====================================================================
+ALTER TABLE overtime_sessions DROP CONSTRAINT IF EXISTS fk_ot_session_team;
+
+-- overtime_team.id: entity expects String
+ALTER TABLE overtime_team ALTER COLUMN id TYPE VARCHAR(50) USING id::text;
+
 -- employee_id columns
 ALTER TABLE commuted_overtime            ALTER COLUMN employee_id TYPE VARCHAR(50) USING employee_id::text;
 ALTER TABLE employee_work_locations      ALTER COLUMN employee_id TYPE VARCHAR(50) USING employee_id::text;
@@ -23,3 +31,8 @@ ALTER TABLE vacation_leave_allowance     ALTER COLUMN employee_id TYPE VARCHAR(5
 ALTER TABLE overtime_sessions ALTER COLUMN supervisor_id TYPE VARCHAR(50) USING supervisor_id::text;
 ALTER TABLE overtime_sessions ALTER COLUMN team_id       TYPE VARCHAR(50) USING team_id::text;
 ALTER TABLE overtime_team     ALTER COLUMN hod_id        TYPE VARCHAR(50) USING hod_id::text;
+
+-- Re-add the FK between overtime_sessions.team_id and overtime_team.id
+ALTER TABLE overtime_sessions
+    ADD CONSTRAINT fk_ot_session_team
+    FOREIGN KEY (team_id) REFERENCES overtime_team(id);
