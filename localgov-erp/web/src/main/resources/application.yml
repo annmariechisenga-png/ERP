@@ -3,7 +3,7 @@ spring:
     name: localgov-erp
   
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/marshaerp}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ymbji}
     username: ${DB_USERNAME:chisenga}
     password: ${DB_PASSWORD:erp2026}
     driver-class-name: org.postgresql.Driver
