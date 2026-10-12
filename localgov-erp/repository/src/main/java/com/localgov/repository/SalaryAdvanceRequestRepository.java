@@ -11,9 +11,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface SalaryAdvanceRequestRepository extends JpaRepository<SalaryAdvanceRequest, Long> {
-    List<SalaryAdvanceRequest> findByEmployeeIdOrderByCreatedAtDesc(String employeeId);
+    @Query("SELECT r FROM SalaryAdvanceRequest r WHERE r.employee.employeeId = :employeeId ORDER BY r.createdAt DESC")
+    List<SalaryAdvanceRequest> findByEmployeeIdOrderByCreatedAtDesc(@Param("employeeId") String employeeId);
 
-    Page<SalaryAdvanceRequest> findByEmployeeId(String employeeId, Pageable pageable);
+    @Query("SELECT r FROM SalaryAdvanceRequest r WHERE r.employee.employeeId = :employeeId")
+    Page<SalaryAdvanceRequest> findByEmployeeId(@Param("employeeId") String employeeId, Pageable pageable);
 
         @Query("""
             SELECT r FROM SalaryAdvanceRequest r
@@ -24,5 +26,6 @@ public interface SalaryAdvanceRequestRepository extends JpaRepository<SalaryAdva
             @Param("status") SalaryAdvanceRequestStatus status,
             Pageable pageable);
 
-    boolean existsByEmployeeIdAndStatusIn(String employeeId, List<SalaryAdvanceRequestStatus> statuses);
+    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END FROM SalaryAdvanceRequest r WHERE r.employee.employeeId = :employeeId AND r.status IN :statuses")
+    boolean existsByEmployeeIdAndStatusIn(@Param("employeeId") String employeeId, @Param("statuses") List<SalaryAdvanceRequestStatus> statuses);
 }
