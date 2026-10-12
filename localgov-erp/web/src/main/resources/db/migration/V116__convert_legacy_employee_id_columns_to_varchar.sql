@@ -36,3 +36,15 @@ ALTER TABLE overtime_team     ALTER COLUMN hod_id        TYPE VARCHAR(50) USING 
 ALTER TABLE overtime_sessions
     ADD CONSTRAINT fk_ot_session_team
     FOREIGN KEY (team_id) REFERENCES overtime_team(id);
+
+-- =====================================================================
+-- leave_policy: BIGINT → INTEGER
+-- V1_0_2 created these as BIGINT (copied from localgov_erp), but the
+-- LeavePolicy entity uses Integer for all six.
+-- =====================================================================
+ALTER TABLE leave_policy ALTER COLUMN max_days         TYPE INTEGER USING max_days::integer;
+ALTER TABLE leave_policy ALTER COLUMN carry_forward    TYPE INTEGER USING carry_forward::integer;
+ALTER TABLE leave_policy ALTER COLUMN fixed_days       TYPE INTEGER USING fixed_days::integer;
+ALTER TABLE leave_policy ALTER COLUMN max_accumulation TYPE INTEGER USING max_accumulation::integer;
+ALTER TABLE leave_policy ALTER COLUMN max_duration     TYPE INTEGER USING max_duration::integer;
+ALTER TABLE leave_policy ALTER COLUMN advance_notice   TYPE INTEGER USING advance_notice::integer;
